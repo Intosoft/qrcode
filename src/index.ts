@@ -1,43 +1,22 @@
+import { generateSquarePath } from "./path/square";
+import { generateCirclePath } from "./path/circle";
 import { generateMatrix } from "./utils";
 import fs from "fs";
-const value = "this is a QR code";
-const size = 100;
+
+const size = 500;
 const color = "black";
 const backgroundColor = "white";
 
-const logoSize = size * 0.2;
-const logoBackgroundColor = "transparent";
-const logoMargin = 2;
-const logoBorderRadius = 0;
 const quietZone = 0;
 const enableLinearGradient = false;
 const gradientDirection = ["0%", "0%", "100%", "100%"];
 const linearGradient = ["rgb(255,0,0)", "rgb(0,255,255)"];
-const ecl = "M";
 
 export const generateSVGFromMatrix = () => {
   const matrix = generateMatrix("https://intosoft.com", "L");
   const cellSize = size / matrix.length;
-  let path = "";
-  matrix.forEach((row, i) => {
-    let needDraw = false;
-    row.forEach((column, j) => {
-      if (column) {
-        if (!needDraw) {
-          path += `M${cellSize * j} ${cellSize / 2 + cellSize * i} `;
-          needDraw = true;
-        }
-        if (needDraw && j === matrix.length - 1) {
-          path += `L${cellSize * (j + 1)} ${cellSize / 2 + cellSize * i} `;
-        }
-      } else {
-        if (needDraw) {
-          path += `L${cellSize * j} ${cellSize / 2 + cellSize * i} `;
-          needDraw = false;
-        }
-      }
-    });
-  });
+  // const path = generateCirclePath(cellSize, matrix);
+  const path = generateSquarePath(cellSize, matrix);
 
   const svg = `<svg viewBox="${[
     -quietZone,
@@ -61,9 +40,12 @@ export const generateSVGFromMatrix = () => {
   }" height="${size + quietZone * 2}" fill="${backgroundColor}" />
     </g>
     <g>
-      <path d="${path}" stroke-linecap="butt" stroke="${
-    enableLinearGradient ? "url(#grad)" : color
-  }" stroke-width="${cellSize}" />
+      <path d="${path}" 
+      stroke-linecap="butt" 
+      fill="${enableLinearGradient ? "url(#grad)" : color}"
+      stroke="${
+        enableLinearGradient ? "url(#grad)" : color
+      }" stroke-width="${0}" />
     </g>
   </svg>`;
 
