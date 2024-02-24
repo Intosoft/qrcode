@@ -1,0 +1,19 @@
+{
+  "name": "qrcode",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "tsx ./src/index.ts"
+  },
+  "author": "sakulbudhathoki977@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "qrcode": "^1.5.3"
+  },
+  "devDependencies": {
+    "@types/qrcode": "^1.5.5",
+    "tsx": "^4.7.1",
+    "typescript": "^5.3.3"
+  }
+}
