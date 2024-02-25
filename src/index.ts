@@ -1,6 +1,10 @@
 import { generateSquarePath } from "./path/square";
 import { generateCirclePath } from "./path/circle";
-import { generateMatrix } from "./utils";
+import {
+  generateMatrix,
+  getEyeBallPositions,
+  getEyeFramePositions,
+} from "./utils";
 import fs from "fs";
 
 const size = 500;
@@ -14,9 +18,12 @@ const linearGradient = ["rgb(255,0,0)", "rgb(0,255,255)"];
 
 export const generateSVGFromMatrix = () => {
   const matrix = generateMatrix("https://intosoft.com", "L");
+  console.table(matrix);
+  console.log(getEyeFramePositions(matrix.length).length);
+  console.log(getEyeBallPositions(matrix.length).length);
   const cellSize = size / matrix.length;
   // const path = generateCirclePath(cellSize, matrix);
-  const path = generateSquarePath(cellSize, matrix);
+  const path = generateSquarePath({ cellSize, matrix });
 
   const svg = `<svg viewBox="${[
     -quietZone,
