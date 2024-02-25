@@ -1,21 +1,25 @@
-export const generateCirclePath = (cellSize: number, matrix: number[][]) => {
+interface GenerateItemPathProps {
+  i: number;
+  j: number;
+  cellSize: number;
+}
+
+export const generateCirclePath = ({
+  i,
+  j,
+  cellSize,
+}: GenerateItemPathProps) => {
   let path = "";
-  matrix.forEach((row, i) => {
-    row.forEach((column, j) => {
-      if (column) {
-        const centerX = cellSize * j + cellSize / 2;
-        const centerY = cellSize * i + cellSize / 2;
-        path += `
-          M${centerX},${centerY - cellSize / 2}
-          A${cellSize / 2},${cellSize / 2} 0 1,1 ${centerX},${
-          centerY + cellSize / 2
-        }
-          A${cellSize / 2},${cellSize / 2} 0 1,1 ${centerX},${
-          centerY - cellSize / 2
-        }`;
-      }
-    });
-  });
+  const x = cellSize * j;
+  const y = cellSize * i;
+
+  const cx = x + cellSize / 2;
+  const cy = y + cellSize / 2;
+  // Draw the circle
+  path += `M${cx},${cy} `;
+  path += `m-${cellSize / 2},0 `;
+  path += `a${cellSize / 2},${cellSize / 2} 0 1,0 ${cellSize},0 `;
+  path += `a${cellSize / 2},${cellSize / 2} 0 1,0 -${cellSize},0 `;
 
   return path;
 };
