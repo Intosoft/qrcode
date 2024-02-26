@@ -20,9 +20,7 @@ const Github = styled.img`
   height: 30px;
 `;
 
-interface HeaderProps {}
-
-export const Header = ({}: HeaderProps) => {
+export const Header = () => {
   return (
     <StyledHeader>
       <Logo src={logo} alt="Intosoft logo" />

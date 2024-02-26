@@ -1,11 +1,9 @@
 import styled from "styled-components";
 
-import github from "../assets/icons/github.png";
-import logo from "../assets/icons/logo.png";
 import { SVG } from "../../components/SVG";
 import { useEffect, useState } from "react";
 import { generateSVGFromMatrix } from "../../../../src/index";
-import useWindowDimension from "../../hooks/useWindowDimension";
+
 import { config } from "./config";
 const Container = styled.div`
   display: flex;
@@ -47,7 +45,6 @@ const ShapeWrapper = styled.div`
 `;
 
 export const HomePage = () => {
-  const { width } = useWindowDimension();
   const [qrConfig, setQrConfig] = useState({
     bodyShape: "circle",
     eyeballShape: "circle",
