@@ -1,4 +1,4 @@
-import { circleEyeFrame, squareEyeFrame } from "./eyeframes";
+import { circleEyeFrame, roundedEyeFrame, squareEyeFrame } from "./eyeframes";
 import { generatePath } from "./path";
 import { generateMatrix } from "./utils";
 import fs from "fs";
@@ -46,7 +46,7 @@ export const generateSVGFromMatrix = () => {
       stroke-width="${0}" /> 
       <path
       fill="none"
-      d="${circleEyeFrame({
+      d="${roundedEyeFrame({
         matrixLength: matrix.length,
         size,
       })}" 
