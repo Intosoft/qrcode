@@ -72,7 +72,7 @@ export const squareEyeball = ({
 }: StylePathGeneratorParams) => {
   const cellSize = size / matrixLength;
 
-  const length = cellSize * 3;
+  const length = cellSize * 3 - cellSize / 2;
   const positions = getPositionForEyes({ matrixLength, cellSize });
 
   let path = "";

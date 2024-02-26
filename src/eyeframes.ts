@@ -4,13 +4,25 @@ import { getPositionForEyes } from "./utils";
 interface CircleEyeFrameParams {
   x: number;
   y: number;
-  radius: number;
+  length: number;
+  cellSize: number;
 }
 
-export const circleEyeFramePath = ({ x, y, radius }: CircleEyeFrameParams) => {
-  return `M${x + radius},${y}A${radius},${radius},0,1,1,${
-    x - radius
-  },${y},${radius},${radius},0,0,1,${x + radius},${y}Z`;
+export const circleEyeFramePath = ({
+  x,
+  y,
+  length,
+  cellSize,
+}: CircleEyeFrameParams) => {
+  const radius = length / 2;
+
+  return `M${x + radius},${y + length}h0A${radius},${radius},0,0,1,${x},${
+    y + length / 2
+  }h0A${radius},${radius},0,0,1,${
+    x + radius
+  },${y}h0A${radius},${radius},0,0,1,${x + length},${
+    y + length / 2
+  }h0A${radius},${radius},0,0,1,${x + radius},${y + length}Z`;
 };
 
 export const circleEyeFrame = ({
@@ -19,25 +31,32 @@ export const circleEyeFrame = ({
 }: StylePathGeneratorParams) => {
   let path = "";
   const cellSize = size / matrixLength;
-  const positions = getPositionForEyes({ matrixLength, cellSize });
+  const positions = getPositionForEyes({
+    matrixLength,
+    cellSize,
+    addition: cellSize / 2,
+  });
 
-  const height = cellSize * 3;
-  const radius = height / 2;
+  const length = cellSize * 6;
+
   //top-left
   path += circleEyeFramePath({
     ...positions.eyeFrame.topLeft,
-    radius,
+    length,
+    cellSize,
   });
 
   //top-right
   path += circleEyeFramePath({
     ...positions.eyeFrame.topRight,
-    radius,
+    length,
+    cellSize,
   });
 
   path += circleEyeFramePath({
     ...positions.eyeFrame.bottomLeft,
-    radius,
+    length,
+    cellSize,
   });
 
   return path;
