@@ -1,4 +1,3 @@
-import { squareEyeFrame, squareEyeFramePath } from "./eyeframes";
 import { generatePath } from "./path";
 import { generateMatrix } from "./utils";
 import fs from "fs";

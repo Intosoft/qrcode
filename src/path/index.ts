@@ -28,14 +28,15 @@ export const generatePath = ({ size, matrix }: GeneratePathProps) => {
             return;
           }
         }
-        path += generateSquarePath({ i, j, cellSize });
+        // path += generateSquarePath({ i, j, cellSize });
+        path += generateCirclePath({ i, j, cellSize });
       }
     });
   });
   const matrixLength = matrix.length;
 
-  path += squareEyeball({ matrixLength, size });
-  // path += circleEyeball({ matrixLength, size });
+  // path += squareEyeball({ matrixLength, size });
+  path += circleEyeball({ matrixLength, size });
 
   return path;
 };

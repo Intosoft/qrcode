@@ -1,4 +1,5 @@
 import { StylePathGeneratorParams } from "./types";
+import { getPositionForEyes } from "./utils";
 
 interface CircleEyeballParams {
   x: number;
@@ -18,27 +19,25 @@ export const circleEyeball = ({
 }: StylePathGeneratorParams) => {
   let path = "";
   const cellSize = size / matrixLength;
+  const positions = getPositionForEyes({ matrixLength, cellSize });
 
   const height = cellSize * 3;
-
+  const radius = height / 2;
   //top-left
   path += circleEyeballPath({
-    x: 4 * cellSize,
-    y: 4 * cellSize,
-    radius: height / 2,
+    ...positions.eyeball.topLeft,
+    radius,
   });
 
   //top-right
   path += circleEyeballPath({
-    x: (matrixLength - 3) * cellSize,
-    y: 4 * cellSize,
-    radius: height / 2,
+    ...positions.eyeball.topRight,
+    radius,
   });
 
   path += circleEyeballPath({
-    x: 4 * cellSize,
-    y: (matrixLength - 3) * cellSize,
-    radius: height / 2,
+    ...positions.eyeball.bottomLeft,
+    radius,
   });
 
   return path;
@@ -47,13 +46,13 @@ export const circleEyeball = ({
 interface SquareEyeballParams {
   x: number;
   y: number;
-  size: number;
+  length: number;
   cellSize: number;
   strokeColor?: string;
 }
 
-const squareEyeballPath = ({ size, x, y, cellSize }: SquareEyeballParams) => {
-  const halfSize = size / 2;
+const squareEyeballPath = ({ length, x, y, cellSize }: SquareEyeballParams) => {
+  const halfSize = length / 2;
   const startX = x - halfSize - cellSize / 2;
   const startY = y - halfSize - cellSize / 2;
   const endX = x + halfSize + cellSize / 2;
@@ -73,28 +72,28 @@ export const squareEyeball = ({
 }: StylePathGeneratorParams) => {
   const cellSize = size / matrixLength;
 
+  const length = cellSize * 3;
+  const positions = getPositionForEyes({ matrixLength, cellSize });
+
   let path = "";
   //top-left
   path += squareEyeballPath({
-    x: 4 * cellSize,
-    y: 4 * cellSize,
-    size: cellSize * 3,
+    ...positions.eyeball.topLeft,
+    length,
     cellSize,
   });
 
   //top-right
   path += squareEyeballPath({
-    x: (matrixLength - 3) * cellSize,
-    y: 4 * cellSize,
-    size: cellSize * 3,
+    ...positions.eyeball.topRight,
+    length,
     cellSize,
   });
 
   //bottom-left
   path += squareEyeballPath({
-    x: 4 * cellSize,
-    y: (matrixLength - 3) * cellSize,
-    size: cellSize * 3,
+    ...positions.eyeball.bottomLeft,
+    length,
     cellSize,
   });
 

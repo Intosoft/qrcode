@@ -91,3 +91,43 @@ export const getPositions = ({ matrixLength, offset, count }: GetPositions) => {
     ]),
   ];
 };
+interface GetEyesPositionProps {
+  matrixLength: number;
+  cellSize: number;
+}
+
+export const getPositionForEyes = ({
+  matrixLength,
+  cellSize,
+}: GetEyesPositionProps) => {
+  return {
+    eyeball: {
+      topLeft: {
+        x: 4 * cellSize,
+        y: 4 * cellSize,
+      },
+      topRight: {
+        x: (matrixLength - 3) * cellSize,
+        y: 4 * cellSize,
+      },
+      bottomLeft: {
+        x: 4 * cellSize,
+        y: (matrixLength - 3) * cellSize,
+      },
+    },
+    eyeFrame: {
+      topLeft: {
+        x: 0,
+        y: 0,
+      },
+      topRight: {
+        x: (matrixLength - 1) * cellSize,
+        y: 0,
+      },
+      bottomLeft: {
+        x: 0,
+        y: (matrixLength - 1) * cellSize,
+      },
+    },
+  };
+};
