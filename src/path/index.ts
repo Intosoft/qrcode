@@ -1,5 +1,7 @@
+import { squareEyeFramePath } from "../eyeframes";
 import { getEyeBallPositions, getEyeFramePositions } from "./../utils";
 import { generateCirclePath } from "./circle";
+import { circleEyeball, squareEyeball } from "../eyeball";
 import { generateSquarePath } from "./square";
 interface GeneratePathProps {
   size: number;
@@ -17,21 +19,23 @@ export const generatePath = ({ size, matrix }: GeneratePathProps) => {
       if (column) {
         for (let pos of eyeFramePositions) {
           if (pos[0] === i && pos[1] === j) {
-            path += generateCirclePath({ i, j, cellSize });
             return;
           }
         }
 
         for (let pos of eyeBallPositions) {
           if (pos[0] === i && pos[1] === j) {
-            path += generateSquarePath({ path, i, j, cellSize });
             return;
           }
         }
-        path += generateSquarePath({ path, i, j, cellSize });
+        path += generateSquarePath({ i, j, cellSize });
       }
     });
   });
+  const matrixLength = matrix.length;
+
+  path += squareEyeball({ matrixLength, size });
+  // path += circleEyeball({ matrixLength, size });
 
   return path;
 };

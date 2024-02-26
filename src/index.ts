@@ -1,17 +1,14 @@
+import { squareEyeFrame, squareEyeFramePath } from "./eyeframes";
 import { generatePath } from "./path";
-import {
-  generateMatrix,
-  getEyeBallPositions,
-  getEyeFramePositions,
-} from "./utils";
+import { generateMatrix } from "./utils";
 import fs from "fs";
 
 const size = 500;
-const color = "black";
+const color = "red";
 const backgroundColor = "white";
 
 const quietZone = 0;
-const enableLinearGradient = false;
+const enableLinearGradient = true;
 const gradientDirection = ["0%", "0%", "100%", "100%"];
 const linearGradient = ["rgb(255,0,0)", "rgb(0,255,255)"];
 
@@ -41,14 +38,14 @@ export const generateSVGFromMatrix = () => {
     size + quietZone * 2
   }" height="${size + quietZone * 2}" fill="${backgroundColor}" />
     </g>
-    <g>
+    <g fill="${enableLinearGradient ? "url(#grad)" : color}"  stroke="${
+    enableLinearGradient ? "url(#grad)" : color
+  }">
       <path d="${path}" 
       stroke-linecap="butt" 
-      fill="${enableLinearGradient ? "url(#grad)" : color}"
-      stroke="${
-        enableLinearGradient ? "url(#grad)" : color
-      }" stroke-width="${0}" />
+      stroke-width="${0}" />      
     </g>
+    
   </svg>`;
 
   return svg;
