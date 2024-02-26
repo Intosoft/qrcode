@@ -103,16 +103,16 @@ export const getPositionForEyes = ({
   return {
     eyeball: {
       topLeft: {
-        x: 4 * cellSize,
-        y: 4 * cellSize,
+        x: 3.5 * cellSize,
+        y: 3.5 * cellSize,
       },
       topRight: {
-        x: (matrixLength - 3) * cellSize,
-        y: 4 * cellSize,
+        x: (matrixLength - 3.5) * cellSize,
+        y: 3.5 * cellSize,
       },
       bottomLeft: {
-        x: 4 * cellSize,
-        y: (matrixLength - 3) * cellSize,
+        x: 3.5 * cellSize,
+        y: (matrixLength - 3.5) * cellSize,
       },
     },
     eyeFrame: {
@@ -121,12 +121,12 @@ export const getPositionForEyes = ({
         y: 0,
       },
       topRight: {
-        x: (matrixLength - 1) * cellSize,
+        x: (matrixLength - 7) * cellSize,
         y: 0,
       },
       bottomLeft: {
         x: 0,
-        y: (matrixLength - 1) * cellSize,
+        y: (matrixLength - 7) * cellSize,
       },
     },
   };

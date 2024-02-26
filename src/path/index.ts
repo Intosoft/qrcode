@@ -1,4 +1,4 @@
-import { squareEyeFramePath } from "../eyeframes";
+import { squareEyeFrame } from "../eyeframes";
 import { getEyeBallPositions, getEyeFramePositions } from "./../utils";
 import { generateCirclePath } from "./circle";
 import { circleEyeball, squareEyeball } from "../eyeball";
