@@ -4,7 +4,9 @@ export const generateMatrix = (
   value: string,
   errorCorrectionLevel: QRCodeErrorCorrectionLevel
 ) => {
-  const arr = [...QRCode.create(value, { errorCorrectionLevel }).modules.data];
+  const arr = Array.from(
+    QRCode.create(value, { errorCorrectionLevel }).modules.data
+  );
   const sqrt = Math.sqrt(arr.length);
 
   const rows = [];

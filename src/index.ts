@@ -1,9 +1,8 @@
-import { Config, defaultConfig } from "./config";
+import { Config, ConfigParam, defaultConfig } from "./config";
 import { circleEyeball, squareEyeball } from "./eyeball";
 import { circleEyeFrame, roundedEyeFrame, squareEyeFrame } from "./eyeframes";
 import { generatePath } from "./path";
 import { generateMatrix } from "./utils";
-import fs from "fs";
 
 const quietZone = 0;
 const enableLinearGradient = true;
@@ -31,7 +30,10 @@ const eyeballFunction: {
   circle: circleEyeball,
 };
 
-export const generateSVGFromMatrix = (paramConfig = defaultConfig) => {
+export const generateSVGFromMatrix = (
+  paramConfig: ConfigParam = defaultConfig
+) => {
+  //@ts-ignore
   const config: Config = {
     ...defaultConfig,
     ...paramConfig,
@@ -74,12 +76,12 @@ export const generateSVGFromMatrix = (paramConfig = defaultConfig) => {
     <g fill="${enableLinearGradient ? "url(#grad)" : config.color}"  stroke="${
     enableLinearGradient ? "url(#grad)" : config.color
   }">
+  <path d="${path}" 
+     stroke-linecap="butt" 
+     stroke-width="${0}" /> 
      ${
        config.eyeFrameShape !== "circle-item"
-         ? `<path d="${path}" 
-      stroke-linecap="butt" 
-      stroke-width="${0}" /> 
-      <path
+         ? `<path
       fill="none"
       d="${eyeFrameFunction[config.eyeFrameShape]({
         matrixLength: matrix.length,
@@ -92,10 +94,7 @@ export const generateSVGFromMatrix = (paramConfig = defaultConfig) => {
 
      ${
        config.eyeballShape !== "circle-item"
-         ? `<path d="${path}" 
-     stroke-linecap="butt" 
-     stroke-width="${0}" /> 
-     <path
+         ? `<path
      fill="${enableLinearGradient ? "url(#grad)" : config.color}"
      d="${eyeballFunction[config.eyeballShape]({
        matrixLength: matrix.length,
