@@ -1,0 +1,10 @@
+/node_modules
+/examples
+/web
+/nodemon.json
+/test.ts
+/test-svg.svg
+/tsconfig.json
+/.github
+/src
+.nvmrc

@@ -1,10 +1,11 @@
 {
-  "name": "qrcode",
-  "version": "1.0.0",
+  "name": "@intosoft/qrcode",
+  "version": "0.0.1",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "start": "nodemon"
+    "start": "nodemon",
+    "prepare": "tsc"
   },
   "author": "sakulbudhathoki977@gmail.com",
   "license": "MIT",
@@ -16,5 +17,8 @@
     "nodemon": "^3.1.0",
     "tsx": "^4.7.1",
     "typescript": "^5.3.3"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
