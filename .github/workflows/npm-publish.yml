@@ -16,7 +16,7 @@ jobs:
         run: yarn
 
       - name: Build
-        run: yarn prepare
+        run: yarn build
 
       - uses: JS-DevTools/npm-publish@v3
         with:
