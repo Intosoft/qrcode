@@ -25,6 +25,8 @@ jobs:
       - name: "Compare Version"
         id: compare
         uses: sharesight/compare-package-json-version-with-latest@v2.0.0
+        with:
+          repository: ${{ github.repository }}
 
       - name: Fix dist index.js Version
         if: steps.compare.outputs.newer == 'true'
