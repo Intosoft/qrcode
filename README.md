@@ -41,6 +41,24 @@ export  const  RenderQR = () => {
 	return (<SvgFromXml  xml={svgString}  />);
 };
 ```
+
+Vanilla JS
+
+```jsx
+ <!DOCTYPE html>
+<html>
+  <body>
+    <div id="svg-container"></div>
+  </body>
+  <script src="./index.js"></script>
+  <script>
+    window.addEventListener("load", function () {
+      const svgString = window.IntosoftQRCode.generateSVGString();
+      document.getElementById("svg-container").innerHTML = svgString;
+    });
+  </script>
+</html>
+```
  
 ### License   [MIT licensed](./LICENSE).
 
