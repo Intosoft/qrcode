@@ -22,19 +22,16 @@ jobs:
         with:
           token: ${{ secrets.NPM_TOKEN }}
 
-      - uses: MontyD/package-json-updated-action
-        id: version-updated
-        with:
-          path: package.json
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check package version
+        id: cpv
+        uses: PostHog/check-package-version@v2
 
       - name: Fix dist index.js Version
-        if: steps.version-updated.outputs.has-updated
+        if: steps.cpv.outputs.is-new-version == 'true'
         run: yarn fix:dist-version
 
       - uses: ryand56/r2-upload-action@latest
-        if: steps.version-updated.outputs.has-updated
+        if: steps.cpv.outputs.is-new-version == 'true'
         with:
           r2-account-id: ${{ secrets.R2_ACCOUNT_ID }}
           r2-access-key-id: ${{ secrets.R2_ACCESS_KEY_ID }}
