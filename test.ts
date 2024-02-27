@@ -1,8 +1,8 @@
 import fs from "fs";
-import { generateSVGFromMatrix } from "./src/index";
+import { generateSVGString } from "./src/index";
 
 function main() {
-  const svg = generateSVGFromMatrix();
+  const svg = generateSVGString();
   fs.writeFile("./test-svg.svg", svg, (err) => {
     if (err) {
       console.error("Error writing file:", err);

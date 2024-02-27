@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 import { SVG } from "../../components/SVG";
 import { useEffect, useState } from "react";
-import { generateSVGFromMatrix } from "../../../../src/index";
+import { generateSVGString } from "../../../../src/index";
 
 import { config } from "./config";
 const Container = styled.div`
@@ -52,7 +52,7 @@ export const HomePage = () => {
   });
   const [svgString, setSvgString] = useState(
     //@ts-ignore
-    generateSVGFromMatrix({
+    generateSVGString({
       length: 200,
       ...qrConfig,
     })
@@ -61,7 +61,7 @@ export const HomePage = () => {
   useEffect(() => {
     setSvgString(
       //@ts-ignore
-      generateSVGFromMatrix({
+      generateSVGString({
         length: 200,
         ...qrConfig,
       })

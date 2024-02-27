@@ -30,9 +30,7 @@ const eyeballFunction: {
   circle: circleEyeball,
 };
 
-export const generateSVGFromMatrix = (
-  paramConfig: ConfigParam = defaultConfig
-) => {
+export const generateSVGString = (paramConfig: ConfigParam = defaultConfig) => {
   //@ts-ignore
   const config: Config = {
     ...defaultConfig,
@@ -110,3 +108,12 @@ export const generateSVGFromMatrix = (
 
   return svg;
 };
+
+export default {
+  generateSVGString,
+};
+
+if (window) {
+  //@ts-ignore
+  window.IntosoftQRCode = { generateSVGString: generateSVGString };
+}

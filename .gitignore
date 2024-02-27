@@ -1,3 +1,4 @@
 node_modules
 /test-svg.svg
 /dist
+.DS_Store

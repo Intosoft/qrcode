@@ -1,9 +1,9 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
-import { generateSVGFromMatrix } from "@qrcode";
+import { generateSVGString } from "@qrcode";
 import { SvgFromXml } from "react-native-svg";
 
-const svgString = generateSVGFromMatrix();
+const svgString = generateSVGString();
 
 export default function App() {
   return (

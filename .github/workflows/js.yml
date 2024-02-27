@@ -20,5 +20,8 @@ jobs:
       - name: Install node modules
         run: yarn
 
+      - name: TSC
+        run: yarn tsc
+
       - name: Build
-        run: yarn prepare
+        run: yarn build

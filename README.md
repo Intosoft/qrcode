@@ -20,9 +20,9 @@ yarn add @intosoft/qrcode
 
 React
 ```jsx
-import { generateSVGFromMatrix } from  '@intosoft/qrcode';
+import { generateSVGString } from  '@intosoft/qrcode';
 
-const svgString = generateSVGFromMatrix();
+const svgString = generateSVGString();
 
 export  const  RenderQR = () => {
 	return (<div dangerouslySetInnerHTML={{__html: svgString}}/>);
@@ -33,9 +33,9 @@ React Native
 First Install [react-native-svg](https://github.com/software-mansion/react-native-svg)
 ```jsx
 import { SvgFromXml } from  "react-native-svg";
-import { generateSVGFromMatrix } from  '@intosoft/qrcode';
+import { generateSVGString } from  '@intosoft/qrcode';
 
-const svgString = generateSVGFromMatrix();
+const svgString = generateSVGString();
 
 export  const  RenderQR = () => {
 	return (<SvgFromXml  xml={svgString}  />);
