@@ -45,7 +45,7 @@ jobs:
           destination-dir: ./
 
       - name: Release
-        uses: justincy/github-action-npm-release@v1.2.0
+        uses: justincy/github-action-npm-release@v1.0.0
         id: release
 
       - name: Print release output
