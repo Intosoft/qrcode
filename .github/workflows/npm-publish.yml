@@ -22,16 +22,18 @@ jobs:
         with:
           token: ${{ secrets.NPM_TOKEN }}
 
-      - name: Check package version
-        id: cpv
-        uses: PostHog/check-package-version@v2
+      - name: "Compare Version"
+        id: compare
+        uses: sharesight/compare-package-json-version-with-latest@v2.0.0
+        with:
+          repository: ${{ github.repository }}
 
       - name: Fix dist index.js Version
-        if: steps.cpv.outputs.is-new-version == 'true'
+        if: steps.compare.outputs.newer == 'true'
         run: yarn fix:dist-version
 
       - uses: ryand56/r2-upload-action@latest
-        if: steps.cpv.outputs.is-new-version == 'true'
+        if: steps.compare.outputs.newer == 'true'
         with:
           r2-account-id: ${{ secrets.R2_ACCOUNT_ID }}
           r2-access-key-id: ${{ secrets.R2_ACCESS_KEY_ID }}
