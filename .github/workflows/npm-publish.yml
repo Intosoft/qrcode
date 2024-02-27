@@ -7,6 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v3
         with:
           cache: "yarn"
@@ -41,3 +43,11 @@ jobs:
           r2-bucket: ${{ secrets.R2_BUCKET }}
           source-dir: dist/
           destination-dir: ./
+
+      - name: Release
+        uses: justincy/github-action-npm-release@v1.2.0
+        id: release
+
+      - name: Print release output
+        if: ${{ steps.release.outputs.released == 'true' }}
+        run: echo Release ID ${{ steps.release.outputs.release_id }}
