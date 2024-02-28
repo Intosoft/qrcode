@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { CustomizationSectionProps } from "./type";
 import { SketchPicker } from "react-color";
 import { useState } from "react";
-import { DownloadButton } from "..";
 
 const Label = styled.p`
   width: 80px;
