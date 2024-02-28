@@ -5,7 +5,7 @@ import { generatePath } from "./path";
 import { generateMatrix } from "./utils";
 
 const quietZone = 0;
-const enableLinearGradient = true;
+const enableLinearGradient = false;
 const gradientDirection = ["0%", "0%", "100%", "100%"];
 const linearGradient = ["black", "black"];
 
@@ -86,6 +86,8 @@ export const generateSVGString = (paramConfig: ConfigParam = defaultConfig) => {
         size: config.length,
       })}" 
       stroke-width="${config.length / matrix.length}"
+      stroke="${config.colors.eyeFrame}"
+     
       />`
          : ""
      }  
@@ -93,12 +95,13 @@ export const generateSVGString = (paramConfig: ConfigParam = defaultConfig) => {
      ${
        config.eyeballShape !== "circle-item"
          ? `<path
-     fill="${enableLinearGradient ? "url(#grad)" : config.color}"
+     fill="${enableLinearGradient ? "url(#grad)" : config.colors.eyeball}"
      d="${eyeballFunction[config.eyeballShape]({
        matrixLength: matrix.length,
        size: config.length,
      })}" 
      stroke-width="0"
+    
      />`
          : ""
      }  
