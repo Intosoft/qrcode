@@ -1,7 +1,7 @@
 
-# [Intosoft QRCode](https://qrcode.intosoft.com/) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Intosoft/qrcode/blob/main/LICENSE) 
+# [Intosoft QR Code](https://qrcode.intosoft.com/) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Intosoft/qrcode/blob/main/LICENSE) 
 
-Intosoft QRCode is a fully customizable open source QR code generator tool.
+Intosoft QR Code is a fully customizable open source QR code generator tool.
 -    **Versatile and Customizable:**  Fully color, style, content customization
 -   **Seamless Integration:** Integrate Intosoft QRcode seamlessly into your existing tech stack, whether you're working with React, React Native, NodeJS, Vue.js, Angular, or pure JavaScript.  
  

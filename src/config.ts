@@ -36,7 +36,7 @@ export const defaultConfig: Config = {
   bodyShape: "square",
   eyeballShape: "circle-item",
   color: "black",
-  backgroundColor: "transparent",
+  backgroundColor: "white",
   length: 400,
   gradient: "",
   colors: {

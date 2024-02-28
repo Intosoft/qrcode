@@ -4,66 +4,119 @@ import { SVG } from "../../components/SVG";
 import { useEffect, useState } from "react";
 import { generateSVGString } from "../../../../src/index";
 
-import { config } from "./config";
+import { downloadSVG } from "../../utils/file";
+import Slider from "rc-slider";
+import "rc-slider/assets/index.css";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import "react-tabs/style/react-tabs.css";
+
+import { Shape } from "./customization/Shape";
+import { Colors } from "./customization/Colors";
+import { Logo } from "./customization/Logo";
+import { Config, defaultConfig } from "../../../../src/config";
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: #f7f8fa;
+  min-height: calc(100vh - 50px);
 `;
-const CustomizeSection = styled.div``;
-const QR = styled.div``;
+const CustomizeSection = styled.div`
+  background-color: #f4f4f4;
+  border: 1px solid #d0d7df;
+  border-right: 0;
+  width: 100%;
+  padding: 20px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+`;
+const QR = styled.div`
+  background-color: white;
+  padding: 20px;
+  flex: 1;
+  border: 1px solid #d0d7df;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+`;
 const Content = styled.div`
   width: 100%;
-  margin-top: 40px;
+  margin-top: 20px;
   max-width: 900px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 20px;
+  padding: 10px 20px;
 `;
 const Title = styled.p`
-  font-size: 18px;
+  font-size: 16px;
   margin-top: 20px;
 `;
 
-const ShapeImg = styled.img`
-  height: 30px;
-  width: 30px;
-`;
-
-const Shape = styled.div<{ $active: boolean }>`
-  cursor: pointer;
-  border: 4px solid ${({ $active }) => ($active ? "#41E08E" : "transparent")};
-  border-radius: 4px;
-  padding: 4px;
-`;
-
-const ShapeWrapper = styled.div`
+const DownloadSection = styled.div`
+  border-top: 1px solid #d0d7df;
   margin-top: 10px;
+  padding: 10px;
+  gap: 5px;
   display: flex;
-  flex-direction: row;
+  justify-content: center;
+`;
+
+export const DownloadButton = styled.button`
+  padding: 6px 10px;
+  color: black;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  &:hover {
+    background-color: #41e08e;
+    color: white;
+  }
+`;
+
+const Row = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
 
 export const HomePage = () => {
-  const [qrConfig, setQrConfig] = useState({
+  const [qrConfig, setQrConfig] = useState<Config>({
+    ...defaultConfig,
     bodyShape: "circle",
     eyeballShape: "circle",
     eyeFrameShape: "rounded",
   });
   const [svgString, setSvgString] = useState(
-    //@ts-ignore
     generateSVGString({
-      length: 200,
       ...qrConfig,
+      length: 200,
     })
   );
 
+  const [imageSize, setImageSize] = useState(1000);
+
+  const [selectedCustomizationTabIndex, setSelectedCustomizationTabIndex] =
+    useState(1);
+
+  const TABS = [
+    {
+      title: "Shape",
+      Component: Shape,
+    },
+    {
+      title: "Colors",
+      Component: Colors,
+    },
+    {
+      title: "Logo",
+      Component: Logo,
+    },
+  ];
+
   useEffect(() => {
     setSvgString(
-      //@ts-ignore
       generateSVGString({
-        length: 200,
         ...qrConfig,
+        length: 200,
       })
     );
   }, [qrConfig]);
@@ -72,60 +125,80 @@ export const HomePage = () => {
     <Container>
       <Content>
         <CustomizeSection>
-          <Title>Body Shape</Title>
-          <ShapeWrapper>
-            {config.body.map((item) => (
-              <Shape
-                key={item[0]}
-                $active={item[0] === qrConfig.bodyShape}
-                onClick={() =>
-                  setQrConfig((prev) => ({
-                    ...prev,
-                    bodyShape: item[0],
-                  }))
-                }
-              >
-                <ShapeImg src={item[1]} />
-              </Shape>
+          <Tabs
+            selectedIndex={selectedCustomizationTabIndex}
+            onSelect={(index) => setSelectedCustomizationTabIndex(index)}
+          >
+            <TabList>
+              {TABS.map(({ title }) => (
+                <Tab key={title}>{title}</Tab>
+              ))}
+            </TabList>
+
+            {TABS.map(({ title, Component }) => (
+              <TabPanel key={title}>
+                {Component({ qrConfig, setQrConfig })}
+              </TabPanel>
             ))}
-          </ShapeWrapper>
-          <Title>Eyeball Shape</Title>
-          <ShapeWrapper>
-            {config.eyeball.map((item) => (
-              <Shape
-                key={item[0]}
-                $active={item[0] === qrConfig.eyeballShape}
-                onClick={() =>
-                  setQrConfig((prev) => ({
-                    ...prev,
-                    eyeballShape: item[0],
-                  }))
-                }
-              >
-                <ShapeImg src={item[1]} />
-              </Shape>
-            ))}
-          </ShapeWrapper>
-          <Title>Eye Frame Shape</Title>
-          <ShapeWrapper>
-            {config.eyeFrame.map((item) => (
-              <Shape
-                key={item[0]}
-                $active={item[0] === qrConfig.eyeFrameShape}
-                onClick={() =>
-                  setQrConfig((prev) => ({
-                    ...prev,
-                    eyeFrameShape: item[0],
-                  }))
-                }
-              >
-                <ShapeImg src={item[1]} />
-              </Shape>
-            ))}
-          </ShapeWrapper>
+          </Tabs>
         </CustomizeSection>
         <QR>
           <SVG svgString={svgString} />
+
+          <Row>
+            <Title
+              style={{
+                textAlign: "center",
+              }}
+            >
+              Low
+            </Title>
+            <Title
+              style={{
+                textAlign: "center",
+              }}
+            >
+              {imageSize} x {imageSize} px
+            </Title>
+            <Title
+              style={{
+                textAlign: "center",
+              }}
+            >
+              Hight
+            </Title>
+          </Row>
+          <Slider
+            min={100}
+            max={3200}
+            onChange={(val) => setImageSize(val as number)}
+            value={imageSize}
+          />
+          <Title
+            style={{
+              textAlign: "center",
+            }}
+          >
+            Download
+          </Title>
+
+          <DownloadSection>
+            <DownloadButton
+              onClick={() => downloadSVG({ svgString, downloadType: "png" })}
+            >
+              PNG
+            </DownloadButton>
+            <DownloadButton
+              onClick={() => downloadSVG({ svgString, downloadType: "jpeg" })}
+            >
+              JPEG
+            </DownloadButton>
+            <DownloadButton
+              onClick={() => downloadSVG({ svgString, downloadType: "svg" })}
+            >
+              SVG
+            </DownloadButton>
+          </DownloadSection>
         </QR>
       </Content>
     </Container>
