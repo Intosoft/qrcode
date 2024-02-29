@@ -21,6 +21,15 @@ const Github = styled.img`
 `;
 
 export const Header = () => {
+  // const [star, setStar] = useState<undefined | number>();
+
+  // useEffect(() => {
+  //   fetch("https://api.github.com/repos/Intosoft/qrcode")
+  //     .then((data) => data.json())
+  //     .then((data) => {
+  //       setStar(data.stargazers_count);
+  //     });
+  // }, []);
   return (
     <StyledHeader>
       <Logo src={logo} alt="Intosoft logo" />

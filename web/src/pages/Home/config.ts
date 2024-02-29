@@ -9,12 +9,12 @@ import squareEyeFrame from "../../assets/qrconfig/eyeframe/square.png";
 import circleEyeFrame from "../../assets/qrconfig/eyeframe/circle.png";
 import circleItemEyeFrame from "../../assets/qrconfig/eyeframe/circle-item.png";
 import roundedEyeFrame from "../../assets/qrconfig/eyeframe/rounded.png";
-import { Config } from "../../../../src/config";
+import { BodyShape, EyeFrameShape, EyeballShape } from "../../../../src/config";
 
 export const config: {
-  body: [Config["bodyShape"], string][];
-  eyeball: [Config["eyeballShape"], string][];
-  eyeFrame: [Config["eyeFrameShape"], string][];
+  body: [BodyShape, string][];
+  eyeball: [EyeballShape, string][];
+  eyeFrame: [EyeFrameShape, string][];
 } = {
   body: [
     ["circle", circleBody],

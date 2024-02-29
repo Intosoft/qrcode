@@ -41,7 +41,6 @@ const QR = styled.div`
 `;
 const Content = styled.div`
   width: 100%;
-  margin-top: 20px;
   max-width: 900px;
   display: flex;
   justify-content: space-between;
@@ -81,9 +80,6 @@ const Row = styled.div`
 export const HomePage = () => {
   const [qrConfig, setQrConfig] = useState<Config>({
     ...defaultConfig,
-    bodyShape: "circle",
-    eyeballShape: "circle",
-    eyeFrameShape: "rounded",
   });
   const [svgString, setSvgString] = useState(
     generateSVGString({
@@ -129,7 +125,7 @@ export const HomePage = () => {
             selectedIndex={selectedCustomizationTabIndex}
             onSelect={(index) => setSelectedCustomizationTabIndex(index)}
           >
-            <TabList>
+            <TabList style={{ maxWidth: 200 }}>
               {TABS.map(({ title }) => (
                 <Tab key={title}>{title}</Tab>
               ))}
