@@ -50,7 +50,7 @@ Vanilla JS
   <body>
     <div id="svg-container"></div>
   </body>
-  <script src="./index.js"></script>
+  <script src="https://unpkg.com/@intosoft/qrcode@0.0.4/dist/index.js"></script>
   <script>
     window.addEventListener("load", function () {
       const svgString = window.IntosoftQRCode.generateSVGString();
