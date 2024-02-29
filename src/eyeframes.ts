@@ -1,5 +1,11 @@
-import { StylePathGeneratorParams } from "./types";
+import { isGradientColor } from "./utils/gradient";
+import {
+  GenerateEyeFrameSVGParams,
+  StylePathGeneratorParams,
+  StyledEyePathGeneratorParams,
+} from "./types";
 import { getPositionForEyes } from "./utils";
+import { Config, EyeFrameShape } from "./config";
 
 interface CircleEyeFrameParams {
   x: number;
@@ -28,7 +34,8 @@ export const circleEyeFramePath = ({
 export const circleEyeFrame = ({
   matrixLength,
   size,
-}: StylePathGeneratorParams) => {
+  position,
+}: StyledEyePathGeneratorParams) => {
   let path = "";
   const cellSize = size / matrixLength;
   const positions = getPositionForEyes({
@@ -39,22 +46,8 @@ export const circleEyeFrame = ({
 
   const length = cellSize * 6;
 
-  //top-left
   path += circleEyeFramePath({
-    ...positions.eyeFrame.topLeft,
-    length,
-    cellSize,
-  });
-
-  //top-right
-  path += circleEyeFramePath({
-    ...positions.eyeFrame.topRight,
-    length,
-    cellSize,
-  });
-
-  path += circleEyeFramePath({
-    ...positions.eyeFrame.bottomLeft,
+    ...positions.eyeFrame[position],
     length,
     cellSize,
   });
@@ -84,7 +77,8 @@ const squareEyeFramePath = ({
 export const squareEyeFrame = ({
   matrixLength,
   size,
-}: StylePathGeneratorParams) => {
+  position,
+}: StyledEyePathGeneratorParams) => {
   const cellSize = size / matrixLength;
 
   const length = cellSize * 7;
@@ -93,21 +87,7 @@ export const squareEyeFrame = ({
   let path = "";
   //top-left
   path += squareEyeFramePath({
-    ...positions.eyeFrame.topLeft,
-    length,
-    cellSize,
-  });
-
-  //top-right
-  path += squareEyeFramePath({
-    ...positions.eyeFrame.topRight,
-    length,
-    cellSize,
-  });
-
-  //bottom-left
-  path += squareEyeFramePath({
-    ...positions.eyeFrame.bottomLeft,
+    ...positions.eyeFrame[position],
     length,
     cellSize,
   });
@@ -187,4 +167,72 @@ export const roundedEyeFrame = ({
   });
 
   return path;
+};
+const eyeFrameFunction: {
+  [key in Exclude<EyeFrameShape, "circle-item"> as string]: Function;
+} = {
+  square: squareEyeFrame,
+  circle: circleEyeFrame,
+};
+
+const generateEyeFrameSVG = ({
+  shape,
+  color,
+  size,
+  matrixLength,
+  position,
+}: GenerateEyeFrameSVGParams) => {
+  if (shape == "circle-item") {
+    return "";
+  }
+  return `<path
+  fill="none"
+  d="${eyeFrameFunction[shape]({
+    matrixLength: matrixLength,
+    size: size,
+    position,
+  })}" 
+  stroke-width="${size / matrixLength}"
+  stroke="${isGradientColor(color) ? "url(#eyeFrame)" : color}"
+ 
+  />`;
+};
+
+export const generateEyeFrameSVGFromConfig = (
+  config: Config,
+  matrixLength: number
+) => {
+  const shape = config.shapes.eyeFrame;
+  const colors = config.colors.eyeball;
+
+  let svgString = "";
+
+  //top-left
+  svgString += generateEyeFrameSVG({
+    shape,
+    color: colors.topLeft,
+    size: config.length,
+    matrixLength,
+    position: "topLeft",
+  });
+
+  //top-right
+  svgString += generateEyeFrameSVG({
+    shape,
+    color: colors.topLeft,
+    size: config.length,
+    matrixLength,
+    position: "topRight",
+  });
+
+  //bottom-left
+  svgString += generateEyeFrameSVG({
+    shape,
+    color: colors.topLeft,
+    size: config.length,
+    matrixLength,
+    position: "bottomLeft",
+  });
+
+  return svgString;
 };

@@ -1,8 +1,11 @@
 import styled from "styled-components";
 
 import { CustomizationSectionProps } from "./type";
-import { SketchPicker } from "react-color";
+
+import GradientPicker from "react-best-gradient-color-picker";
+
 import { useState } from "react";
+import { isGradientColor } from "../../../../../src/utils/gradient";
 
 const Label = styled.p`
   width: 80px;
@@ -11,12 +14,15 @@ const Label = styled.p`
 const Title = styled.p``;
 
 const ColorPicker = styled.button<{ $value: string }>`
-  height: 40px;
+  height: 30px;
   width: 100px;
-  background-color: ${({ $value }) => $value};
-  border: 1px solid #abe2fb;
+  border: 2px solid #ccffdd;
   border-radius: 4px;
   cursor: pointer;
+  ${({ $value }) =>
+    isGradientColor($value)
+      ? `background-image: ${$value}`
+      : `background-color:${$value}`};
 `;
 
 const Container = styled.div`
@@ -29,6 +35,7 @@ const RightSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: -70px;
 `;
 const Row = styled.div`
   display: flex;
@@ -38,9 +45,8 @@ const Row = styled.div`
 `;
 
 const Button = styled.button`
-  margin-top: -4px;
-
-  padding: 10px 10px 6px 10px;
+  margin-top: 4px;
+  padding: 10px;
   transition: all 0.2s ease;
   cursor: pointer;
   background-color: #41e08e;
@@ -49,8 +55,7 @@ const Button = styled.button`
     color: black;
     background-color: white;
   }
-  border-bottom-left-radius: 2px;
-  border-bottom-right-radius: 2px;
+  border-radius: 4px;
 `;
 
 type ColorConfigLabel = "Background" | "Body" | "EyeFrame" | "Eyeball";
@@ -65,46 +70,60 @@ export const Colors = ({
   }[] = [
     {
       label: "Background",
-      value: qrConfig.backgroundColor,
-      onChange: (value: string) => {
-        setQrConfig((prev) => ({
-          ...prev,
-          backgroundColor: value,
-        }));
-      },
-    },
-    {
-      label: "Body",
-      value: qrConfig.color,
-      onChange: (value: string) => {
-        setQrConfig((prev) => ({
-          ...prev,
-          color: value,
-        }));
-      },
-    },
-    {
-      label: "EyeFrame",
-      value: qrConfig.colors.eyeFrame,
+      value: qrConfig.colors.background,
       onChange: (value: string) => {
         setQrConfig((prev) => ({
           ...prev,
           colors: {
             ...prev.colors,
-            eyeFrame: value,
+            background: value,
+          },
+        }));
+      },
+    },
+    {
+      label: "Body",
+      value: qrConfig.colors.body,
+      onChange: (value: string) => {
+        setQrConfig((prev) => ({
+          ...prev,
+          colors: {
+            ...prev.colors,
+            body: value,
+          },
+        }));
+      },
+    },
+    {
+      label: "EyeFrame",
+      value: qrConfig.colors.eyeFrame.topLeft,
+      onChange: (value: string) => {
+        setQrConfig((prev) => ({
+          ...prev,
+          colors: {
+            ...prev.colors,
+            eyeFrame: {
+              topLeft: value,
+              topRight: value,
+              bottomLeft: value,
+            },
           },
         }));
       },
     },
     {
       label: "Eyeball",
-      value: qrConfig.colors.eyeball,
+      value: qrConfig.colors.eyeball.topLeft,
       onChange: (value: string) => {
         setQrConfig((prev) => ({
           ...prev,
           colors: {
             ...prev.colors,
-            eyeball: value,
+            eyeball: {
+              topLeft: value,
+              topRight: value,
+              bottomLeft: value,
+            },
           },
         }));
       },
@@ -114,6 +133,7 @@ export const Colors = ({
   const [activeColorLabel, setActiveColorLabel] = useState<
     ColorConfigLabel | undefined
   >();
+
   return (
     <Container>
       <LeftSection>
@@ -122,32 +142,41 @@ export const Colors = ({
             <Label>{config.label}</Label>
             <ColorPicker
               $value={config.value}
-              onClick={() => setActiveColorLabel(config.label)}
+              onClick={() => {
+                setActiveColorLabel(config.label);
+              }}
             />
           </Row>
         ))}
       </LeftSection>
       {activeColorLabel && (
         <RightSection>
-          <Title style={{ marginBottom: 10 }}>{activeColorLabel} Color</Title>
+          <Title style={{ marginBottom: 4, marginTop: -10, fontSize: 12 }}>
+            {activeColorLabel} Color
+          </Title>
           <div
             style={{
               zIndex: 9,
             }}
           >
-            <SketchPicker
-              color={
+            <GradientPicker
+              value={
                 COLOR_CONFIG.find((config) => config.label === activeColorLabel)
                   ?.value
               }
-              onChange={({ hex }) =>
+              onChange={(value) => {
                 COLOR_CONFIG.find(
                   (config) => config.label === activeColorLabel
-                )?.onChange(hex)
-              }
+                )?.onChange(value);
+              }}
             />
           </div>
-          <Button style={{ width: "100%" }}>Done</Button>
+          <Button
+            style={{ width: "100%" }}
+            onClick={() => setActiveColorLabel(undefined)}
+          >
+            Done
+          </Button>
         </RightSection>
       )}
     </Container>

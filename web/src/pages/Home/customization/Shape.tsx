@@ -37,11 +37,14 @@ export const Shape = ({ setQrConfig, qrConfig }: CustomizationSectionProps) => {
         {config.body.map((item) => (
           <StyledShape
             key={item[0]}
-            $active={item[0] === qrConfig.bodyShape}
+            $active={item[0] === qrConfig.shapes.body}
             onClick={() =>
               setQrConfig((prev) => ({
                 ...prev,
-                bodyShape: item[0],
+                shapes: {
+                  ...prev.shapes,
+                  body: item[0],
+                },
               }))
             }
           >
@@ -54,11 +57,14 @@ export const Shape = ({ setQrConfig, qrConfig }: CustomizationSectionProps) => {
         {config.eyeball.map((item) => (
           <StyledShape
             key={item[0]}
-            $active={item[0] === qrConfig.eyeballShape}
+            $active={item[0] === qrConfig.shapes.eyeball}
             onClick={() =>
               setQrConfig((prev) => ({
                 ...prev,
-                eyeballShape: item[0],
+                shapes: {
+                  ...prev.shapes,
+                  eyeball: item[0],
+                },
               }))
             }
           >
@@ -71,11 +77,14 @@ export const Shape = ({ setQrConfig, qrConfig }: CustomizationSectionProps) => {
         {config.eyeFrame.map((item) => (
           <StyledShape
             key={item[0]}
-            $active={item[0] === qrConfig.eyeFrameShape}
+            $active={item[0] === qrConfig.shapes.eyeFrame}
             onClick={() =>
               setQrConfig((prev) => ({
                 ...prev,
-                eyeFrameShape: item[0],
+                shapes: {
+                  ...prev.shapes,
+                  eyeFrame: item[0],
+                },
               }))
             }
           >

@@ -1,19 +1,26 @@
-import { Config, ConfigParam, defaultConfig } from "./config";
-import { circleEyeball, squareEyeball } from "./eyeball";
-import { circleEyeFrame, roundedEyeFrame, squareEyeFrame } from "./eyeframes";
+import {
+  generateLinearGradientByConfig,
+  isGradientColor,
+} from "./utils/gradient";
+import { Config, EyeFrameShape, EyeballShape } from "./config";
+import {
+  circleEyeball,
+  generateEyeballSVGFromConfig,
+  squareEyeball,
+} from "./eyeball";
+import {
+  circleEyeFrame,
+  generateEyeFrameSVGFromConfig,
+  roundedEyeFrame,
+  squareEyeFrame,
+} from "./eyeframes";
 import { generatePath } from "./path";
 import { generateMatrix } from "./utils";
 
 const quietZone = 0;
-const enableLinearGradient = false;
-const gradientDirection = ["0%", "0%", "100%", "100%"];
-const linearGradient = ["black", "black"];
 
 const eyeFrameFunction: {
-  [key in Exclude<
-    keyof Config["eyeFrameShape"],
-    "circle-item"
-  > as string]: Function;
+  [key in Exclude<EyeFrameShape, "circle-item">]: Function;
 } = {
   square: squareEyeFrame,
   circle: circleEyeFrame,
@@ -21,29 +28,13 @@ const eyeFrameFunction: {
 };
 
 const eyeballFunction: {
-  [key in Exclude<
-    keyof Config["eyeballShape"],
-    "circle-item"
-  > as string]: Function;
+  [key in Exclude<EyeballShape, "circle-item">]: Function;
 } = {
   square: squareEyeball,
   circle: circleEyeball,
 };
 
-export const generateSVGString = (paramConfig: ConfigParam = defaultConfig) => {
-  //@ts-ignore
-  const config: Config = {
-    ...defaultConfig,
-    ...paramConfig,
-  };
-
-  for (const [key, value] of Object.entries(config.colors)) {
-    if (!value) {
-      //@ts-ignore
-      config.colors[key] = config.color || defaultConfig.color;
-    }
-  }
-
+export const generateSVGString = (config: Config) => {
   const matrix = generateMatrix("https://intosoft.com", "L");
 
   const path = generatePath({ matrix, size: config.length, config });
@@ -57,54 +48,25 @@ export const generateSVGString = (paramConfig: ConfigParam = defaultConfig) => {
     config.length
   }" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <linearGradient id="grad" x1="${gradientDirection[0]}" y1="${
-    gradientDirection[1]
-  }" x2="${gradientDirection[2]}" y2="${gradientDirection[3]}">
-        <stop offset="0" stop-color="${linearGradient[0]}" stop-opacity="1" />
-        <stop offset="1" stop-color="${linearGradient[1]}" stop-opacity="1" />
-      </linearGradient>
+      ${generateLinearGradientByConfig(config)}
     </defs>
     <g>
       <rect x="${-quietZone}" y="${-quietZone}" width="${
     config.length + quietZone * 2
   }" height="${config.length + quietZone * 2}" fill="${
-    config.backgroundColor
+    config.colors.background
   }" />
     </g>
-    <g fill="${enableLinearGradient ? "url(#grad)" : config.color}"  stroke="${
-    enableLinearGradient ? "url(#grad)" : config.color
-  }">
+    <g>
   <path d="${path}" 
      stroke-linecap="butt" 
-     stroke-width="${0}" /> 
-     ${
-       config.eyeFrameShape !== "circle-item"
-         ? `<path
-      fill="none"
-      d="${eyeFrameFunction[config.eyeFrameShape]({
-        matrixLength: matrix.length,
-        size: config.length,
-      })}" 
-      stroke-width="${config.length / matrix.length}"
-      stroke="${config.colors.eyeFrame}"
-     
-      />`
-         : ""
-     }  
-
-     ${
-       config.eyeballShape !== "circle-item"
-         ? `<path
-     fill="${enableLinearGradient ? "url(#grad)" : config.colors.eyeball}"
-     d="${eyeballFunction[config.eyeballShape]({
-       matrixLength: matrix.length,
-       size: config.length,
-     })}" 
-     stroke-width="0"
-    
-     />`
-         : ""
-     }  
+     stroke-width="${0}"  fill="${
+    isGradientColor(config.colors.body) ? "url(#body)" : config.colors.body
+  }"  stroke="${
+    isGradientColor(config.colors.body) ? "url(#body)" : config.colors.body
+  }" /> 
+  ${generateEyeFrameSVGFromConfig(config, matrix.length)}      
+   ${generateEyeballSVGFromConfig(config, matrix.length)} 
     </g>
     
   </svg>`;

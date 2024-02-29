@@ -1,47 +1,49 @@
-type EyeFrameShape = "square" | "circle" | "rounded" | "circle-item";
-type EyeballShape = "square" | "circle" | "circle-item";
-type BodyShape = "square" | "circle";
+export type EyeFrameShape = "square" | "circle" | "rounded" | "circle-item";
+export type EyeballShape = "square" | "circle" | "circle-item";
+export type BodyShape = "square" | "circle";
 
-export interface ConfigParam {
-  eyeFrameShape?: EyeFrameShape;
-  bodyShape?: BodyShape;
-  eyeballShape?: EyeballShape;
-  length?: number;
-  color?: string;
-  backgroundColor?: string;
-  gradient?: string;
-  colors?: {
-    eyeFrame?: string;
-    eyeball?: string;
-    body?: string;
-  };
-}
 export interface Config {
-  eyeFrameShape: EyeFrameShape;
-  bodyShape: BodyShape;
-  eyeballShape: EyeballShape;
   length: number;
-  color: string;
-  backgroundColor: string;
-  gradient: string;
+  shapes: {
+    eyeFrame: EyeFrameShape;
+    body: BodyShape;
+    eyeball: EyeballShape;
+  };
   colors: {
-    eyeFrame: string;
-    eyeball: string;
+    background: string;
     body: string;
+    eyeFrame: {
+      topLeft: string;
+      topRight: string;
+      bottomLeft: string;
+    };
+    eyeball: {
+      topLeft: string;
+      topRight: string;
+      bottomLeft: string;
+    };
   };
 }
 
 export const defaultConfig: Config = {
-  eyeFrameShape: "circle",
-  bodyShape: "square",
-  eyeballShape: "circle-item",
-  color: "black",
-  backgroundColor: "white",
   length: 400,
-  gradient: "",
+  shapes: {
+    eyeFrame: "circle",
+    body: "square",
+    eyeball: "circle",
+  },
   colors: {
-    eyeFrame: "black",
-    eyeball: "black",
+    background: "white",
     body: "black",
+    eyeFrame: {
+      topLeft: "black",
+      topRight: "black",
+      bottomLeft: "black",
+    },
+    eyeball: {
+      topLeft: "black",
+      topRight: "black",
+      bottomLeft: "black",
+    },
   },
 };
