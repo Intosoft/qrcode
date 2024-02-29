@@ -14,13 +14,14 @@ import { Shape } from "./customization/Shape";
 import { Colors } from "./customization/Colors";
 import { Logo } from "./customization/Logo";
 import { Config, defaultConfig } from "../../../../src/config";
+import { CodeBlock } from "./Code";
 
 const Container = styled.div`
+  background-color: #f7f8fa;
+  min-height: calc(100vh - 50px);
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #f7f8fa;
-  min-height: calc(100vh - 50px);
 `;
 const CustomizeSection = styled.div`
   background-color: #f4f4f4;
@@ -40,11 +41,18 @@ const QR = styled.div`
   border-bottom-right-radius: 4px;
 `;
 const Content = styled.div`
-  width: 100%;
-  max-width: 900px;
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 900px;
+  max-width: 100vw;
+`;
+
+const CustomizationWrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 10px 20px;
+  width: 100%;
 `;
 const Title = styled.p`
   font-size: 16px;
@@ -120,82 +128,85 @@ export const HomePage = () => {
   return (
     <Container>
       <Content>
-        <CustomizeSection>
-          <Tabs
-            selectedIndex={selectedCustomizationTabIndex}
-            onSelect={(index) => setSelectedCustomizationTabIndex(index)}
-          >
-            <TabList style={{ maxWidth: 200 }}>
-              {TABS.map(({ title }) => (
-                <Tab key={title}>{title}</Tab>
+        <CustomizationWrapper>
+          <CustomizeSection>
+            <Tabs
+              selectedIndex={selectedCustomizationTabIndex}
+              onSelect={(index) => setSelectedCustomizationTabIndex(index)}
+            >
+              <TabList style={{ maxWidth: 200 }}>
+                {TABS.map(({ title }) => (
+                  <Tab key={title}>{title}</Tab>
+                ))}
+              </TabList>
+
+              {TABS.map(({ title, Component }) => (
+                <TabPanel key={title}>
+                  {Component({ qrConfig, setQrConfig })}
+                </TabPanel>
               ))}
-            </TabList>
+            </Tabs>
+          </CustomizeSection>
+          <QR>
+            <SVG svgString={svgString} />
 
-            {TABS.map(({ title, Component }) => (
-              <TabPanel key={title}>
-                {Component({ qrConfig, setQrConfig })}
-              </TabPanel>
-            ))}
-          </Tabs>
-        </CustomizeSection>
-        <QR>
-          <SVG svgString={svgString} />
-
-          <Row>
+            <Row>
+              <Title
+                style={{
+                  textAlign: "center",
+                }}
+              >
+                Low
+              </Title>
+              <Title
+                style={{
+                  textAlign: "center",
+                }}
+              >
+                {imageSize} x {imageSize} px
+              </Title>
+              <Title
+                style={{
+                  textAlign: "center",
+                }}
+              >
+                Hight
+              </Title>
+            </Row>
+            <Slider
+              min={100}
+              max={3200}
+              onChange={(val) => setImageSize(val as number)}
+              value={imageSize}
+            />
             <Title
               style={{
                 textAlign: "center",
               }}
             >
-              Low
+              Download
             </Title>
-            <Title
-              style={{
-                textAlign: "center",
-              }}
-            >
-              {imageSize} x {imageSize} px
-            </Title>
-            <Title
-              style={{
-                textAlign: "center",
-              }}
-            >
-              Hight
-            </Title>
-          </Row>
-          <Slider
-            min={100}
-            max={3200}
-            onChange={(val) => setImageSize(val as number)}
-            value={imageSize}
-          />
-          <Title
-            style={{
-              textAlign: "center",
-            }}
-          >
-            Download
-          </Title>
 
-          <DownloadSection>
-            <DownloadButton
-              onClick={() => downloadSVG({ svgString, downloadType: "png" })}
-            >
-              PNG
-            </DownloadButton>
-            <DownloadButton
-              onClick={() => downloadSVG({ svgString, downloadType: "jpeg" })}
-            >
-              JPEG
-            </DownloadButton>
-            <DownloadButton
-              onClick={() => downloadSVG({ svgString, downloadType: "svg" })}
-            >
-              SVG
-            </DownloadButton>
-          </DownloadSection>
-        </QR>
+            <DownloadSection>
+              <DownloadButton
+                onClick={() => downloadSVG({ svgString, downloadType: "png" })}
+              >
+                PNG
+              </DownloadButton>
+              <DownloadButton
+                onClick={() => downloadSVG({ svgString, downloadType: "jpeg" })}
+              >
+                JPEG
+              </DownloadButton>
+              <DownloadButton
+                onClick={() => downloadSVG({ svgString, downloadType: "svg" })}
+              >
+                SVG
+              </DownloadButton>
+            </DownloadSection>
+          </QR>
+        </CustomizationWrapper>
+        <CodeBlock config={qrConfig} />
       </Content>
     </Container>
   );

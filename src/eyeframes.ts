@@ -138,41 +138,25 @@ const roundedEyeFramePath = ({
 export const roundedEyeFrame = ({
   matrixLength,
   size,
-}: StylePathGeneratorParams) => {
+  position,
+}: StyledEyePathGeneratorParams) => {
   const cellSize = size / matrixLength;
 
   const length = cellSize * 7;
   const positions = getPositionForEyes({ matrixLength, cellSize });
 
-  let path = "";
-  //top-left
-  path += roundedEyeFramePath({
-    ...positions.eyeFrame.topLeft,
+  return roundedEyeFramePath({
+    ...positions.eyeFrame[position],
     length,
     cellSize,
   });
-
-  //top-right
-  path += roundedEyeFramePath({
-    ...positions.eyeFrame.topRight,
-    length,
-    cellSize,
-  });
-
-  //bottom-left
-  path += roundedEyeFramePath({
-    ...positions.eyeFrame.bottomLeft,
-    length,
-    cellSize,
-  });
-
-  return path;
 };
 const eyeFrameFunction: {
   [key in Exclude<EyeFrameShape, "circle-item"> as string]: Function;
 } = {
   square: squareEyeFrame,
   circle: circleEyeFrame,
+  rounded: roundedEyeFrame,
 };
 
 const generateEyeFrameSVG = ({
