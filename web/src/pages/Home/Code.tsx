@@ -4,6 +4,10 @@ import { Config } from "../../../../src/config";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import { useState } from "react";
+import copy from "copy-to-clipboard";
+import CopyPNG from "../../assets/icons/copy-white.png";
+import toast from "react-hot-toast";
+
 interface CodeBlockProps {
   config: Config;
 }
@@ -54,7 +58,26 @@ export const QRCodeRenderer = () => {
 };
 const PlatformCode = ({ id }: { id: Platform }) => {
   return (
-    <>
+    <div style={{ position: "relative" }}>
+      <button
+        onClick={() => {
+          copy(CODES[id]);
+          toast.success("Code copied!", {
+            position: "top-center",
+          });
+        }}
+        style={{
+          position: "absolute",
+          right: 0,
+          top: 0,
+          zIndex: 9999,
+          backgroundColor: "transparent",
+          padding: 20,
+          cursor: "pointer",
+        }}
+      >
+        <img src={CopyPNG} alt="Copy to clipboard" height={20} />
+      </button>
       <SyntaxHighlighter
         language="javascript"
         style={materialDark}
@@ -64,11 +87,11 @@ const PlatformCode = ({ id }: { id: Platform }) => {
       >
         {CODES[id]}
       </SyntaxHighlighter>
-    </>
+    </div>
   );
 };
 export const CodeBlock = ({ config }: CodeBlockProps) => {
-  const codeString = JSON.stringify(config, undefined, 4);
+  const codeString = `const config = ${JSON.stringify(config, undefined, 4)}`;
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const TABS: { id: Platform; title: string }[] = [
@@ -98,7 +121,26 @@ export const CodeBlock = ({ config }: CodeBlockProps) => {
     },
   ];
   return (
-    <div style={{ width: "100%" }}>
+    <div style={{ width: "100%", position: "relative" }}>
+      <button
+        onClick={() => {
+          copy(codeString);
+          toast.success("Config copied!", {
+            position: "top-center",
+          });
+        }}
+        style={{
+          position: "absolute",
+          right: 0,
+          top: 0,
+          zIndex: 9999,
+          backgroundColor: "transparent",
+          padding: 20,
+          cursor: "pointer",
+        }}
+      >
+        <img src={CopyPNG} alt="Copy to clipboard" height={20} />
+      </button>
       <SyntaxHighlighter
         language="javascript"
         style={materialDark}
@@ -106,7 +148,7 @@ export const CodeBlock = ({ config }: CodeBlockProps) => {
           width: "100%",
         }}
       >
-        {`const config = ${codeString};`}
+        {codeString}
       </SyntaxHighlighter>
       <Tabs
         selectedIndex={selectedIndex}
