@@ -1,10 +1,30 @@
+import { generateSVGString } from "../../../src";
+import { Config } from "../../../src/config";
+import { cloneDeep } from "lodash";
+
 interface DownloadSVGParams {
-  svgString: string;
   downloadType: "svg" | "png" | "jpeg";
+  imageSize: number;
+  config: Config;
 }
 
 const FILE_NAME = "intosoft-qrcode";
-export const downloadSVG = ({ svgString, downloadType }: DownloadSVGParams) => {
+export const downloadSVG = ({
+  config,
+  imageSize,
+  downloadType,
+}: DownloadSVGParams) => {
+  const sizeConfig = cloneDeep(config);
+  if (sizeConfig.logo?.url) {
+    sizeConfig.logo.height =
+      (sizeConfig.logo.height / sizeConfig.length) * imageSize;
+    sizeConfig.logo.width =
+      (sizeConfig.logo.width / sizeConfig.length) * imageSize;
+  }
+  const svgString = generateSVGString({
+    ...sizeConfig,
+    length: imageSize,
+  });
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
   const img = new Image();
@@ -42,4 +62,22 @@ const downloadFile = (url: string, type: string, filename: string) => {
   link.setAttribute("type", type);
   document.body.appendChild(link);
   link.click();
+};
+
+export const fileToBase64 = (file: File): Promise<string> => {
+  var reader = new FileReader();
+
+  reader.readAsDataURL(file);
+  return new Promise((resolve, reject) => {
+    reader.onloadend = function () {
+      if (typeof reader.result === "string") {
+        resolve(reader.result);
+      } else {
+        reject("result is not string");
+      }
+    };
+    reader.onerror = () => {
+      reject("Couldn't process file");
+    };
+  });
 };

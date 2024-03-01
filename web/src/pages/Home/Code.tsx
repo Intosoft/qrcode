@@ -21,28 +21,29 @@ type Platform =
   | "vanilla";
 
 const CODES: { [key in Platform]: string } = {
-  react: `
-import QRCode from "@intosoft/qrcode/react";
+  react: `import { generateSVGString } from  '@intosoft/qrcode';
 
-export const QRCodeRenderer = () => {
-    return <QRCode config={config} size={400} />
-}
+  const svgString = generateSVGString(config);
   
+  export  const  RenderQR = () => {
+    return (<div dangerouslySetInnerHTML={{__html: svgString}}/>);
+  };
   `,
-  "react-native": `
-// Prerequisite
+  "react-native": `// Prerequisite
 // npm i react-native-svg | yarn add react-native-svg
-import QRCode from  '@intosoft/qrcode/native';
+import { SvgFromXml } from  "react-native-svg";
+import { generateSVGString } from  '@intosoft/qrcode';
 
-export const QRCodeRenderer = () => {
-    return <QRCode config={config} size={400} />
-}
+const svgString = generateSVGString(config);
+
+export  const  RenderQR = () => {
+	return (<SvgFromXml  xml={svgString}  />);
+};
 `,
   node: ``,
   angular: ``,
   vue: ``,
-  vanilla: `
-<!DOCTYPE html>
+  vanilla: `<!DOCTYPE html>
 <html>
   <body>
     <div id="svg-container"></div>
@@ -83,6 +84,8 @@ const PlatformCode = ({ id }: { id: Platform }) => {
         style={materialDark}
         customStyle={{
           width: "100%",
+          fontSize: 14,
+          borderRadius: 4,
         }}
       >
         {CODES[id]}
@@ -146,6 +149,8 @@ export const CodeBlock = ({ config }: CodeBlockProps) => {
         style={materialDark}
         customStyle={{
           width: "100%",
+          fontSize: 14,
+          borderRadius: 4,
         }}
       >
         {codeString}

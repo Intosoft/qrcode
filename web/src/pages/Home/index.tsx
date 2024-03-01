@@ -1,5 +1,5 @@
 import styled from "styled-components";
-
+import packageJSON from "../../../package.json";
 import { SVG } from "../../components/SVG";
 import { useEffect, useState } from "react";
 import { generateSVGString } from "../../../../src/index";
@@ -15,6 +15,7 @@ import { Colors } from "./customization/Colors";
 import { Logo } from "./customization/Logo";
 import { Config, defaultConfig } from "../../../../src/config";
 import { CodeBlock } from "./Code";
+import { Content as ContentTab } from "./customization/Content";
 
 const Container = styled.div`
   background-color: #f7f8fa;
@@ -103,6 +104,10 @@ export const HomePage = () => {
 
   const TABS = [
     {
+      title: "Content",
+      Component: ContentTab,
+    },
+    {
       title: "Shape",
       Component: Shape,
     },
@@ -125,87 +130,144 @@ export const HomePage = () => {
     );
   }, [qrConfig]);
 
+  const handleSetConfig = (config: Config) => {
+    localStorage.setItem(
+      "qr-config",
+      JSON.stringify({
+        config: {
+          ...config,
+          length: 200,
+        },
+        version: packageJSON.version,
+      })
+    );
+
+    setQrConfig(config);
+  };
+
+  useEffect(() => {
+    const _config = localStorage.getItem("qr-config");
+    if (_config) {
+      try {
+        const { config, version } = JSON.parse(_config);
+        if (version === packageJSON.version) {
+          setQrConfig(config);
+          console.log("set from storage");
+        }
+      } catch (err) {
+        console.log("Err", err);
+      }
+    }
+  }, []);
+
   return (
     <Container>
       <Content>
-        <CustomizationWrapper>
-          <CustomizeSection>
-            <Tabs
-              selectedIndex={selectedCustomizationTabIndex}
-              onSelect={(index) => setSelectedCustomizationTabIndex(index)}
-            >
-              <TabList style={{ maxWidth: 200 }}>
-                {TABS.map(({ title }) => (
-                  <Tab key={title}>{title}</Tab>
-                ))}
-              </TabList>
-
+        <Tabs
+          selectedIndex={selectedCustomizationTabIndex}
+          onSelect={(index) => setSelectedCustomizationTabIndex(index)}
+          style={{
+            width: "100%",
+          }}
+        >
+          <TabList
+            style={{
+              marginBottom: 0,
+              margin: "0px 5px",
+              width: "calc(100% - 10px)",
+            }}
+          >
+            {TABS.map(({ title }) => (
+              <Tab key={title}>{title}</Tab>
+            ))}
+          </TabList>
+          <CustomizationWrapper>
+            <CustomizeSection>
               {TABS.map(({ title, Component }) => (
                 <TabPanel key={title}>
-                  {Component({ qrConfig, setQrConfig })}
+                  <Component {...{ qrConfig, setQrConfig: handleSetConfig }} />
                 </TabPanel>
               ))}
-            </Tabs>
-          </CustomizeSection>
-          <QR>
-            <SVG svgString={svgString} />
+            </CustomizeSection>
 
-            <Row>
-              <Title
-                style={{
-                  textAlign: "center",
-                }}
-              >
-                Low
-              </Title>
-              <Title
-                style={{
-                  textAlign: "center",
-                }}
-              >
-                {imageSize} x {imageSize} px
-              </Title>
-              <Title
-                style={{
-                  textAlign: "center",
-                }}
-              >
-                Hight
-              </Title>
-            </Row>
-            <Slider
-              min={100}
-              max={3200}
-              onChange={(val) => setImageSize(val as number)}
-              value={imageSize}
-            />
-            <Title
-              style={{
-                textAlign: "center",
-              }}
-            >
-              Download
-            </Title>
+            <QR>
+              <SVG svgString={svgString} />
 
-            <DownloadSection>
-              <DownloadButton
-                onClick={() => downloadSVG({ svgString, downloadType: "png" })}
+              <Row>
+                <Title
+                  style={{
+                    textAlign: "center",
+                  }}
+                >
+                  Low
+                </Title>
+                <Title
+                  style={{
+                    textAlign: "center",
+                  }}
+                >
+                  {imageSize} x {imageSize} px
+                </Title>
+                <Title
+                  style={{
+                    textAlign: "center",
+                  }}
+                >
+                  High
+                </Title>
+              </Row>
+              <Slider
+                min={100}
+                max={3200}
+                onChange={(val) => setImageSize(val as number)}
+                value={imageSize}
+              />
+              <Title
+                style={{
+                  textAlign: "center",
+                }}
               >
-                PNG
-              </DownloadButton>
-              <DownloadButton
-                onClick={() => downloadSVG({ svgString, downloadType: "jpeg" })}
-              >
-                JPEG
-              </DownloadButton>
-              <DownloadButton
-                onClick={() => downloadSVG({ svgString, downloadType: "svg" })}
-              >
-                SVG
-              </DownloadButton>
-            </DownloadSection>
-          </QR>
-        </CustomizationWrapper>
+                Download
+              </Title>
+
+              <DownloadSection>
+                <DownloadButton
+                  onClick={() =>
+                    downloadSVG({
+                      config: qrConfig,
+                      imageSize,
+                      downloadType: "png",
+                    })
+                  }
+                >
+                  PNG
+                </DownloadButton>
+                <DownloadButton
+                  onClick={() =>
+                    downloadSVG({
+                      config: qrConfig,
+                      imageSize,
+                      downloadType: "jpeg",
+                    })
+                  }
+                >
+                  JPEG
+                </DownloadButton>
+                <DownloadButton
+                  onClick={() =>
+                    downloadSVG({
+                      config: qrConfig,
+                      imageSize,
+                      downloadType: "svg",
+                    })
+                  }
+                >
+                  SVG
+                </DownloadButton>
+              </DownloadSection>
+            </QR>
+          </CustomizationWrapper>
+        </Tabs>
         <CodeBlock config={qrConfig} />
       </Content>
     </Container>
