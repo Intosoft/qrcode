@@ -39,13 +39,13 @@ export const Shape = ({ setQrConfig, qrConfig }: CustomizationSectionProps) => {
             key={item[0]}
             $active={item[0] === qrConfig.shapes.body}
             onClick={() =>
-              setQrConfig((prev) => ({
-                ...prev,
+              setQrConfig({
+                ...qrConfig,
                 shapes: {
-                  ...prev.shapes,
+                  ...qrConfig.shapes,
                   body: item[0],
                 },
-              }))
+              })
             }
           >
             <ShapeImg src={item[1]} />
@@ -59,13 +59,13 @@ export const Shape = ({ setQrConfig, qrConfig }: CustomizationSectionProps) => {
             key={item[0]}
             $active={item[0] === qrConfig.shapes.eyeball}
             onClick={() =>
-              setQrConfig((prev) => ({
-                ...prev,
+              setQrConfig({
+                ...qrConfig,
                 shapes: {
-                  ...prev.shapes,
+                  ...qrConfig.shapes,
                   eyeball: item[0],
                 },
-              }))
+              })
             }
           >
             <ShapeImg src={item[1]} />
@@ -79,13 +79,13 @@ export const Shape = ({ setQrConfig, qrConfig }: CustomizationSectionProps) => {
             key={item[0]}
             $active={item[0] === qrConfig.shapes.eyeFrame}
             onClick={() =>
-              setQrConfig((prev) => ({
-                ...prev,
+              setQrConfig({
+                ...qrConfig,
                 shapes: {
-                  ...prev.shapes,
+                  ...qrConfig.shapes,
                   eyeFrame: item[0],
                 },
-              }))
+              })
             }
           >
             <ShapeImg src={item[1]} />

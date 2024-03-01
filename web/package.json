@@ -11,6 +11,7 @@
     "@types/react": "^18.2.58",
     "@types/react-dom": "^18.2.19",
     "copy-to-clipboard": "^3.3.3",
+    "lodash": "^4.17.21",
     "rc-slider": "^10.5.0",
     "react": "^18.2.0",
     "react-best-gradient-color-picker": "^3.0.7",
@@ -49,6 +50,7 @@
   },
   "devDependencies": {
     "@craco/craco": "^7.1.0",
+    "@types/lodash": "^4.14.202",
     "@types/react-color": "^3.0.12",
     "@types/react-syntax-highlighter": "^15.5.11",
     "customize-cra": "^1.0.0",

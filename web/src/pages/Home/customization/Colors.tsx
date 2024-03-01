@@ -72,60 +72,60 @@ export const Colors = ({
       label: "Background",
       value: qrConfig.colors.background,
       onChange: (value: string) => {
-        setQrConfig((prev) => ({
-          ...prev,
+        setQrConfig({
+          ...qrConfig,
           colors: {
-            ...prev.colors,
+            ...qrConfig.colors,
             background: value,
           },
-        }));
+        });
       },
     },
     {
       label: "Body",
       value: qrConfig.colors.body,
       onChange: (value: string) => {
-        setQrConfig((prev) => ({
-          ...prev,
+        setQrConfig({
+          ...qrConfig,
           colors: {
-            ...prev.colors,
+            ...qrConfig.colors,
             body: value,
           },
-        }));
+        });
       },
     },
     {
       label: "EyeFrame",
       value: qrConfig.colors.eyeFrame.topLeft,
       onChange: (value: string) => {
-        setQrConfig((prev) => ({
-          ...prev,
+        setQrConfig({
+          ...qrConfig,
           colors: {
-            ...prev.colors,
+            ...qrConfig.colors,
             eyeFrame: {
               topLeft: value,
               topRight: value,
               bottomLeft: value,
             },
           },
-        }));
+        });
       },
     },
     {
       label: "Eyeball",
       value: qrConfig.colors.eyeball.topLeft,
       onChange: (value: string) => {
-        setQrConfig((prev) => ({
-          ...prev,
+        setQrConfig({
+          ...qrConfig,
           colors: {
-            ...prev.colors,
+            ...qrConfig.colors,
             eyeball: {
               topLeft: value,
               topRight: value,
               bottomLeft: value,
             },
           },
-        }));
+        });
       },
     },
   ];

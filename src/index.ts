@@ -15,7 +15,7 @@ import {
   squareEyeFrame,
 } from "./eyeframes";
 import { generatePath } from "./path";
-import { generateMatrix } from "./utils";
+import { generateMatrix, renderLogoFromConfig } from "./utils";
 
 const quietZone = 0;
 
@@ -35,7 +35,7 @@ const eyeballFunction: {
 };
 
 export const generateSVGString = (config: Config) => {
-  const matrix = generateMatrix("https://intosoft.com", "L");
+  const matrix = generateMatrix(config.value || "https://intosoft.com", "L");
 
   const path = generatePath({ matrix, size: config.length, config });
 
@@ -48,16 +48,16 @@ export const generateSVGString = (config: Config) => {
     config.length
   }" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      ${generateLinearGradientByConfig(config)}
+    ${generateLinearGradientByConfig(config)}
     </defs>
-    <g>
-      <rect x="${-quietZone}" y="${-quietZone}" width="${
+<g>
+<rect x="${-quietZone}" y="${-quietZone}" width="${
     config.length + quietZone * 2
   }" height="${config.length + quietZone * 2}" fill="${
     config.colors.background
   }" />
-    </g>
-    <g>
+  </g>
+  ${renderLogoFromConfig(config)}
   <path d="${path}" 
      stroke-linecap="butt" 
      stroke-width="${0}"  fill="${
@@ -67,8 +67,8 @@ export const generateSVGString = (config: Config) => {
   }" /> 
   ${generateEyeFrameSVGFromConfig(config, matrix.length)}      
    ${generateEyeballSVGFromConfig(config, matrix.length)} 
-    </g>
     
+   <use xlink:href="#logo"/>
   </svg>`;
 
   return svg;
