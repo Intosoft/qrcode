@@ -5,7 +5,7 @@ Intosoft QR Code is a fully customizable open source QR code generator tool.
 -    **Versatile and Customizable:**  Fully color, style, content customization
 -   **Seamless Integration:** Integrate Intosoft QRcode seamlessly into your existing tech stack, whether you're working with React, React Native, NodeJS, Vue.js, Angular, or pure JavaScript.  
  
-[Start cutomizing](https://qrcode.intosoft.com)
+[Start customizing](https://qrcode.intosoft.com)
 
 ## Installation
 NPM

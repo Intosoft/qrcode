@@ -9,15 +9,15 @@ const Title = styled.p`
 `;
 
 const ShapeImg = styled.img`
-  height: 40px;
+  height: 34px;
   width: 40px;
   object-fit: contain;
 `;
 
 const StyledShape = styled.div<{ $active: boolean }>`
   cursor: pointer;
-  border: 4px solid ${({ $active }) => ($active ? "#007C02" : "transparent")};
-  border-radius: 4px;
+  border: 2px solid ${({ $active }) => ($active ? "#03C29C" : "transparent")};
+  border-radius: 2px;
   padding: 4px;
   background-color: white;
   transition: all 0.3s ease-in-out;

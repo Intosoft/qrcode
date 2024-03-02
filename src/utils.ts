@@ -141,7 +141,10 @@ export const renderLogoFromConfig = (config: Config) => {
   if (config.logo?.url) {
     const centerX = (config.length - config.logo.width) / 2;
     const centerY = (config.length - config.logo.height) / 2;
-    return `<image id="logo" xlink:href="${config.logo.url}"  height="${config.logo.height}"
+    return `<image 
+    id="logo" 
+    xlink:href="${config.logo.url}" 
+    height="${config.logo.height}"
     width="${config.logo.width}" x="${centerX}" y="${centerY}" />`;
   }
 

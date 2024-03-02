@@ -18,7 +18,7 @@ import { CodeBlock } from "./Code";
 import { Content as ContentTab } from "./customization/Content";
 
 const Container = styled.div`
-  background-color: #f7f8fa;
+  background-color: #f1f9ff;
   min-height: calc(100vh - 50px);
   display: flex;
   flex-direction: column;
@@ -149,11 +149,10 @@ export const HomePage = () => {
     const _config = localStorage.getItem("qr-config");
     if (_config) {
       try {
-        const { config, version } = JSON.parse(_config);
-        if (version === packageJSON.version) {
-          setQrConfig(config);
-          console.log("set from storage");
-        }
+        // const { config, version } = JSON.parse(_config);
+        // if (version === packageJSON.version) {
+        //   setQrConfig(config);
+        // }
       } catch (err) {
         console.log("Err", err);
       }
@@ -193,7 +192,11 @@ export const HomePage = () => {
             <QR>
               <SVG svgString={svgString} />
 
-              <Row>
+              <Row
+                style={{
+                  marginBottom: 4,
+                }}
+              >
                 <Title
                   style={{
                     textAlign: "center",
@@ -221,6 +224,14 @@ export const HomePage = () => {
                 max={3200}
                 onChange={(val) => setImageSize(val as number)}
                 value={imageSize}
+                styles={{
+                  track: {
+                    background: "#03C29C",
+                  },
+                  handle: {
+                    background: "#03C29C",
+                  },
+                }}
               />
               <Title
                 style={{

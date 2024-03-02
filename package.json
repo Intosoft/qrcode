@@ -4,7 +4,6 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "start": "nodemon",
     "tsc": "tsc",
     "fix:dist-version": "node ./scripts/fix-dist-version.js",
     "build": "esbuild ./src/index.ts --bundle --outfile=dist/index.js"
@@ -17,7 +16,6 @@
   "devDependencies": {
     "@types/qrcode": "^1.5.5",
     "esbuild": "^0.20.1",
-    "nodemon": "^3.1.0",
     "tsx": "^4.7.1",
     "typescript": "^5.3.3"
   },

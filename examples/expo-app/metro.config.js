@@ -10,6 +10,11 @@ module.exports = (() => {
 
   const { transformer, resolver } = config;
   config.watchFolders = [path.resolve(__dirname, "../../src")];
+
+  config.transformer = {
+    ...config.transformer,
+    babelTransformerPath: require.resolve("react-native-svg-transformer"),
+  };
   config.resolver = {
     ...resolver,
     extraNodeModules: new Proxy(extraNodeModules, {
