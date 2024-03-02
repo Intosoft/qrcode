@@ -58,7 +58,8 @@ export const generateStarPath = ({
   width: _width,
   height: _height,
   cellSize,
-}: GenerateItemPathProps) => {
+  points = 5,
+}: GenerateItemPathProps & { points?: number }) => {
   const height = _height || cellSize;
   const width = _width || cellSize;
   const halfWidth = width / 2;
@@ -67,23 +68,20 @@ export const generateStarPath = ({
   const cy = cellSize * i + halfHeight;
   const outerRadius = Math.min(halfWidth, halfHeight);
   const innerRadius = outerRadius / 2;
-  const numPoints = 5;
 
   let path = "";
 
-  for (let i = 0; i < numPoints; i++) {
+  for (let i = 0; i < points; i++) {
     const outerX =
-      cx + outerRadius * Math.cos((Math.PI * 2 * i) / numPoints - Math.PI / 2);
+      cx + outerRadius * Math.cos((Math.PI * 2 * i) / points - Math.PI / 2);
     const outerY =
-      cy + outerRadius * Math.sin((Math.PI * 2 * i) / numPoints - Math.PI / 2);
+      cy + outerRadius * Math.sin((Math.PI * 2 * i) / points - Math.PI / 2);
     const innerX =
       cx +
-      innerRadius *
-        Math.cos((Math.PI * 2 * (i + 0.5)) / numPoints - Math.PI / 2);
+      innerRadius * Math.cos((Math.PI * 2 * (i + 0.5)) / points - Math.PI / 2);
     const innerY =
       cy +
-      innerRadius *
-        Math.sin((Math.PI * 2 * (i + 0.5)) / numPoints - Math.PI / 2);
+      innerRadius * Math.sin((Math.PI * 2 * (i + 0.5)) / points - Math.PI / 2);
 
     if (i === 0) {
       path += `M${outerX},${outerY} `;

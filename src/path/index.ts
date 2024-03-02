@@ -72,6 +72,15 @@ export const generatePath = ({ size, matrix, config }: GeneratePathProps) => {
             width: cellSize,
             cellSize,
           });
+        } else if (config.shapes.body === "star-small") {
+          path += generateStarPath({
+            i,
+            j,
+            height: cellSize,
+            width: cellSize,
+            cellSize,
+            points: 4,
+          });
         } else if (config.shapes.body === "circle") {
           path += generateCirclePath({ i, j, cellSize });
         } else if (config.shapes.body === "circle-small") {
