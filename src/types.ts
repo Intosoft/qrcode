@@ -12,6 +12,7 @@ export interface GenerateEyeballSVGParams {
   size: number;
   matrixLength: number;
   position: EyePosition;
+  pathOnly: boolean;
 }
 
 export interface GenerateEyeFrameSVGParams {
@@ -20,6 +21,7 @@ export interface GenerateEyeFrameSVGParams {
   size: number;
   matrixLength: number;
   position: EyePosition;
+  pathOnly: boolean;
 }
 
 export interface StyledEyePathGeneratorParams extends StylePathGeneratorParams {

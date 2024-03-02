@@ -6,6 +6,7 @@ import GradientPicker from "react-best-gradient-color-picker";
 
 import { useState } from "react";
 import { isGradientColor } from "../../../../../src/utils/gradient";
+import { StyledShape } from "./Shape";
 
 const Label = styled.p`
   width: 80px;
@@ -67,6 +68,7 @@ export const Colors = ({
     label: ColorConfigLabel;
     value: string;
     onChange: (value: string) => void;
+    RightComponent?: () => JSX.Element;
   }[] = [
     {
       label: "Background",
@@ -110,6 +112,30 @@ export const Colors = ({
           },
         });
       },
+      RightComponent: () => (
+        <StyledShape
+          $active={qrConfig.colors.eyeFrame.topLeft === "body"}
+          onClick={() =>
+            setQrConfig({
+              ...qrConfig,
+              colors: {
+                ...qrConfig.colors,
+                eyeFrame: {
+                  topLeft: "body",
+                  topRight: "body",
+                  bottomLeft: "body",
+                },
+              },
+            })
+          }
+          style={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <p>Same as body</p>
+        </StyledShape>
+      ),
     },
     {
       label: "Eyeball",
@@ -127,6 +153,30 @@ export const Colors = ({
           },
         });
       },
+      RightComponent: () => (
+        <StyledShape
+          $active={qrConfig.colors.eyeball.topLeft === "body"}
+          onClick={() =>
+            setQrConfig({
+              ...qrConfig,
+              colors: {
+                ...qrConfig.colors,
+                eyeball: {
+                  topLeft: "body",
+                  topRight: "body",
+                  bottomLeft: "body",
+                },
+              },
+            })
+          }
+          style={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <p>Same as body</p>
+        </StyledShape>
+      ),
     },
   ];
 
@@ -137,15 +187,18 @@ export const Colors = ({
   return (
     <Container>
       <LeftSection>
-        {COLOR_CONFIG.map((config) => (
+        {COLOR_CONFIG.map(({ RightComponent, ...config }) => (
           <Row key={config.label}>
-            <Label>{config.label}</Label>
-            <ColorPicker
-              $value={config.value}
-              onClick={() => {
-                setActiveColorLabel(config.label);
-              }}
-            />
+            <Row>
+              <Label>{config.label}</Label>
+              <ColorPicker
+                $value={config.value}
+                onClick={() => {
+                  setActiveColorLabel(config.label);
+                }}
+              />
+            </Row>
+            {RightComponent && <RightComponent />}
           </Row>
         ))}
       </LeftSection>

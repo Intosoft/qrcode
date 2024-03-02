@@ -1,5 +1,10 @@
-export type EyeFrameShape = "square" | "circle" | "rounded" | "circle-item";
-export type EyeballShape = "square" | "circle" | "circle-item";
+export type EyeFrameShape =
+  | "body"
+  | "square"
+  | "circle"
+  | "rounded"
+  | "circle-item";
+export type EyeballShape = "body" | "square" | "circle" | "circle-item";
 export type BodyShape =
   | "square"
   | "square-small"
@@ -53,26 +58,20 @@ export const defaultConfig: Config = {
   shapes: {
     eyeFrame: "circle",
     body: "rounded-horizontal",
-    eyeball: "circle",
+    eyeball: "square",
   },
   colors: {
     background: "white",
     body: "linear-gradient(90deg, rgba(255,31,234,1) 4%, RGBA(225,147,129,1) 35%, rgba(0,212,255,1) 100%)",
     eyeFrame: {
-      topLeft:
-        "linear-gradient(90deg, RGBA(66, 58, 187, 1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%)",
-      topRight:
-        "linear-gradient(90deg, RGBA(66, 58, 187, 1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%)",
-      bottomLeft:
-        "linear-gradient(90deg, RGBA(66, 58, 187, 1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%)",
+      topLeft: "body",
+      topRight: "body",
+      bottomLeft: "body",
     },
     eyeball: {
-      topLeft:
-        "linear-gradient(90deg, rgba(244,209,74,1) 0%, RGB(5, 5, 5) 35%, rgba(0,212,255,1) 100%)",
-      topRight:
-        "linear-gradient(90deg, rgba(244,209,74,1) 0%, RGB(5, 5, 5) 35%, rgba(0,212,255,1) 100%)",
-      bottomLeft:
-        "linear-gradient(90deg, rgba(244,209,74,1) 0%, RGB(5, 5, 5) 35%, rgba(0,212,255,1) 100%)",
+      topLeft: "body",
+      topRight: "body",
+      bottomLeft: "body",
     },
   },
 };

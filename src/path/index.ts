@@ -12,6 +12,8 @@ import {
 } from "./square";
 import { Config } from "../config";
 import { checkNeighbors } from "../utils/path";
+import { generateEyeFrameSVGFromConfig } from "../eyeframes";
+import { generateEyeballSVGFromConfig } from "../eyeball";
 interface GeneratePathProps {
   size: number;
   matrix: number[][];
@@ -47,7 +49,9 @@ export const generatePath = ({ size, matrix, config }: GeneratePathProps) => {
             if (config.shapes.eyeFrame === "circle-item") {
               path += generateCirclePath({ i, j, cellSize });
             }
-            return;
+            if (config.shapes.eyeFrame !== "body") {
+              return;
+            }
           }
         }
 
@@ -56,7 +60,9 @@ export const generatePath = ({ size, matrix, config }: GeneratePathProps) => {
             if (config.shapes.eyeball === "circle-item") {
               path += generateCirclePath({ i, j, cellSize });
             }
-            return;
+            if (config.shapes.eyeball !== "body") {
+              return;
+            }
           }
         }
         if (config.shapes.body === "square") {
@@ -214,5 +220,7 @@ export const generatePath = ({ size, matrix, config }: GeneratePathProps) => {
     });
   });
 
+  path += generateEyeFrameSVGFromConfig(config, matrix.length, true);
+  path += generateEyeballSVGFromConfig(config, matrix.length, true);
   return path;
 };
