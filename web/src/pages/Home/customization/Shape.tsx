@@ -14,7 +14,7 @@ const ShapeImg = styled.img`
   object-fit: contain;
 `;
 
-const StyledShape = styled.div<{ $active: boolean }>`
+export const StyledShape = styled.div<{ $active: boolean }>`
   cursor: pointer;
   border: 2px solid ${({ $active }) => ($active ? "#03C29C" : "transparent")};
   border-radius: 2px;
@@ -33,6 +33,7 @@ const ShapeWrapper = styled.div`
 export const Shape = ({ setQrConfig, qrConfig }: CustomizationSectionProps) => {
   return (
     <>
+      <Title>Body Shape</Title>
       <ShapeWrapper>
         {config.body.map((item) => (
           <StyledShape
@@ -71,6 +72,24 @@ export const Shape = ({ setQrConfig, qrConfig }: CustomizationSectionProps) => {
             <ShapeImg src={item[1]} />
           </StyledShape>
         ))}
+        <StyledShape
+          $active={"body" === qrConfig.shapes.eyeball}
+          onClick={() =>
+            setQrConfig({
+              ...qrConfig,
+              shapes: {
+                ...qrConfig.shapes,
+                eyeball: "body",
+              },
+            })
+          }
+          style={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <p>Same as body</p>
+        </StyledShape>
       </ShapeWrapper>
       <Title>Eye Frame Shape</Title>
       <ShapeWrapper>
@@ -91,6 +110,24 @@ export const Shape = ({ setQrConfig, qrConfig }: CustomizationSectionProps) => {
             <ShapeImg src={item[1]} />
           </StyledShape>
         ))}
+        <StyledShape
+          $active={"body" === qrConfig.shapes.eyeFrame}
+          onClick={() =>
+            setQrConfig({
+              ...qrConfig,
+              shapes: {
+                ...qrConfig.shapes,
+                eyeFrame: "body",
+              },
+            })
+          }
+          style={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <p>Same as body</p>
+        </StyledShape>
       </ShapeWrapper>
     </>
   );

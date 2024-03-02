@@ -92,17 +92,23 @@ const generateEyeballSVG = ({
   size,
   matrixLength,
   position,
+  pathOnly,
 }: GenerateEyeballSVGParams) => {
   if (shape == "circle-item") {
     return "";
   }
+
+  const path = eyeballFunction[shape]({
+    matrixLength: matrixLength,
+    size: size,
+    position,
+  });
+  if (pathOnly) {
+    return path;
+  }
   return `<path
   fill="${isGradientColor(color) ? "url(#eyeball)" : color}"
-  d="${eyeballFunction[shape]({
-    matrixLength,
-    size,
-    position,
-  })}" 
+  d="${path}" 
   stroke-width="0"
  
   />`;
@@ -110,39 +116,62 @@ const generateEyeballSVG = ({
 
 export const generateEyeballSVGFromConfig = (
   config: Config,
-  matrixLength: number
+  matrixLength: number,
+  isFromBody?: boolean
 ) => {
-  const eyeballShape = config.shapes.eyeball;
-  const eyeballColor = config.colors.eyeball;
+  const shape = config.shapes.eyeball;
+  const colors = config.colors.eyeball;
 
   let svgString = "";
-
+  if (shape === "body") {
+    return "";
+  }
   //top-left
-  svgString += generateEyeballSVG({
-    shape: eyeballShape,
-    color: eyeballColor.topLeft,
-    size: config.length,
-    matrixLength,
-    position: "topLeft",
-  });
+
+  if (
+    (colors.topLeft === "body" && isFromBody) ||
+    (colors.topLeft !== "body" && !isFromBody)
+  ) {
+    svgString += generateEyeballSVG({
+      shape: shape,
+      color: colors.topLeft === "body" ? config.colors.body : colors.topLeft,
+      size: config.length,
+      matrixLength,
+      position: "topLeft",
+      pathOnly: colors.topLeft === "body",
+    });
+  }
 
   //top-right
-  svgString += generateEyeballSVG({
-    shape: eyeballShape,
-    color: eyeballColor.topLeft,
-    size: config.length,
-    matrixLength,
-    position: "topRight",
-  });
+  if (
+    (colors.topRight === "body" && isFromBody) ||
+    (colors.topRight !== "body" && !isFromBody)
+  ) {
+    svgString += generateEyeballSVG({
+      shape: shape,
+      color: colors.topRight === "body" ? config.colors.body : colors.topRight,
+      size: config.length,
+      matrixLength,
+      position: "topRight",
+      pathOnly: colors.bottomLeft === "body",
+    });
+  }
 
   //bottom-left
-  svgString += generateEyeballSVG({
-    shape: eyeballShape,
-    color: eyeballColor.topLeft,
-    size: config.length,
-    matrixLength,
-    position: "bottomLeft",
-  });
+  if (
+    (colors.bottomLeft === "body" && isFromBody) ||
+    (colors.bottomLeft !== "body" && !isFromBody)
+  ) {
+    svgString += generateEyeballSVG({
+      shape: shape,
+      color:
+        colors.bottomLeft === "body" ? config.colors.body : colors.bottomLeft,
+      size: config.length,
+      matrixLength,
+      position: "bottomLeft",
+      pathOnly: colors.bottomLeft === "body",
+    });
+  }
 
   return svgString;
 };

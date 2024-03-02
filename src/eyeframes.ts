@@ -1,7 +1,6 @@
 import { isGradientColor } from "./utils/gradient";
 import {
   GenerateEyeFrameSVGParams,
-  StylePathGeneratorParams,
   StyledEyePathGeneratorParams,
 } from "./types";
 import { getPositionForEyes } from "./utils";
@@ -165,17 +164,23 @@ const generateEyeFrameSVG = ({
   size,
   matrixLength,
   position,
+  pathOnly,
 }: GenerateEyeFrameSVGParams) => {
   if (shape == "circle-item") {
     return "";
   }
-  return `<path
-  fill="none"
-  d="${eyeFrameFunction[shape]({
+
+  const path = eyeFrameFunction[shape]({
     matrixLength: matrixLength,
     size: size,
     position,
-  })}" 
+  });
+  if (pathOnly) {
+    return path;
+  }
+  return `<path
+  fill="none"
+  d="${path}" 
   stroke-width="${size / matrixLength}"
   stroke="${isGradientColor(color) ? "url(#eyeFrame)" : color}"
  
@@ -184,39 +189,63 @@ const generateEyeFrameSVG = ({
 
 export const generateEyeFrameSVGFromConfig = (
   config: Config,
-  matrixLength: number
+  matrixLength: number,
+  isFromBody?: boolean
 ) => {
   const shape = config.shapes.eyeFrame;
-  const colors = config.colors.eyeball;
+  const colors = config.colors.eyeFrame;
 
   let svgString = "";
 
+  if (shape === "body") {
+    return "";
+  }
+
   //top-left
-  svgString += generateEyeFrameSVG({
-    shape,
-    color: colors.topLeft,
-    size: config.length,
-    matrixLength,
-    position: "topLeft",
-  });
+  if (
+    (colors.topLeft === "body" && isFromBody) ||
+    (colors.topLeft !== "body" && !isFromBody)
+  ) {
+    svgString += generateEyeFrameSVG({
+      shape,
+      color: colors.topLeft === "body" ? config.colors.body : colors.topLeft,
+      size: config.length,
+      matrixLength,
+      position: "topLeft",
+      pathOnly: colors.topLeft === "body",
+    });
+  }
 
   //top-right
-  svgString += generateEyeFrameSVG({
-    shape,
-    color: colors.topLeft,
-    size: config.length,
-    matrixLength,
-    position: "topRight",
-  });
+  if (
+    (colors.topRight === "body" && isFromBody) ||
+    (colors.topRight !== "body" && !isFromBody)
+  ) {
+    svgString += generateEyeFrameSVG({
+      shape,
+      color: colors.topRight === "body" ? config.colors.body : colors.topRight,
+      size: config.length,
+      matrixLength,
+      position: "topRight",
+      pathOnly: colors.topLeft === "body",
+    });
+  }
 
   //bottom-left
-  svgString += generateEyeFrameSVG({
-    shape,
-    color: colors.topLeft,
-    size: config.length,
-    matrixLength,
-    position: "bottomLeft",
-  });
+  if (
+    (colors.bottomLeft === "body" && isFromBody) ||
+    (colors.bottomLeft !== "body" && !isFromBody)
+  ) {
+    svgString += generateEyeFrameSVG({
+      shape,
+      color:
+        colors.bottomLeft === "body" ? config.colors.body : colors.bottomLeft,
+      size: config.length,
+      matrixLength,
+      position: "bottomLeft",
+      pathOnly: colors.topLeft === "body",
+    });
+  }
 
   return svgString;
 };
