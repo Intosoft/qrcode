@@ -19,6 +19,14 @@ export const generatePath = ({ size, matrix, config }: GeneratePathProps) => {
   matrix.forEach((row, i) => {
     row.forEach((column, j) => {
       if (column) {
+        const neighbors = checkNeighbors({ matrix, i, j });
+
+        const isXLast = j == matrix.length - 1;
+        const isXFirst = j == 0;
+
+        const isYLast = i == matrix.length - 1;
+        const isYFirst = i == 0;
+
         for (let pos of eyeFramePositions) {
           if (pos[0] === i && pos[1] === j) {
             if (config.shapes.eyeFrame === "circle-item") {
@@ -47,14 +55,6 @@ export const generatePath = ({ size, matrix, config }: GeneratePathProps) => {
         } else if (config.shapes.body === "circle") {
           path += generateCirclePath({ i, j, cellSize });
         } else if (config.shapes.body === "rounded-horizontal") {
-          const neighbors = checkNeighbors({ matrix, i, j });
-
-          const isXLast = j == matrix.length - 1;
-          const isXFirst = j == 0;
-
-          const isYLast = i == matrix.length - 1;
-          const isYFirst = i == 0;
-
           if (!neighbors.left && !neighbors.right) {
             path += generateCirclePath({
               i,
@@ -94,6 +94,48 @@ export const generatePath = ({ size, matrix, config }: GeneratePathProps) => {
               cellSize,
               roundedSide: "right",
               height: cellSize - 1,
+            });
+            return;
+          }
+        } else if (config.shapes.body === "rounded-vertical") {
+          if (!neighbors.top && !neighbors.bottom) {
+            path += generateCirclePath({
+              i,
+              j,
+              cellSize,
+              diameter: cellSize - 1,
+            });
+            return;
+          }
+
+          if (neighbors.top && neighbors.bottom) {
+            path += generateSquarePath({
+              i,
+              j,
+              cellSize,
+              width: cellSize - 1,
+            });
+            return;
+          }
+
+          if (!neighbors.top || (neighbors.bottom && isXFirst)) {
+            path += generateRoundedPath({
+              i,
+              j,
+              cellSize,
+              roundedSide: "top",
+              width: cellSize - 1,
+            });
+            return;
+          }
+
+          if (!neighbors.bottom || (neighbors.top && isXLast)) {
+            path += generateRoundedPath({
+              i,
+              j,
+              cellSize,
+              roundedSide: "bottom",
+              width: cellSize - 1,
             });
             return;
           }
