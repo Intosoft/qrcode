@@ -46,7 +46,7 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 900px;
+  width: 1200px;
   max-width: 100vw;
 `;
 
@@ -125,7 +125,7 @@ export const HomePage = () => {
     setSvgString(
       generateSVGString({
         ...qrConfig,
-        length: 200,
+        length: 300,
       })
     );
   }, [qrConfig]);

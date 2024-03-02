@@ -22,7 +22,7 @@ const Github = styled.img`
 
 const Content = styled.div`
   width: 100%;
-  max-width: 900px;
+  max-width: 1200px;
 `;
 export const Footer = () => {
   return (

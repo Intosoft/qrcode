@@ -150,3 +150,22 @@ export const renderLogoFromConfig = (config: Config) => {
 
   return "";
 };
+
+export const getLogoPathPositions = (matrixLength: number) => {
+  const count = 7;
+  const startPos = Math.ceil((matrixLength - 1) / 2 - count / 2);
+
+  const positions = Array(count)
+    .fill(0)
+    .map((_, i) => {
+      return Array(count)
+        .fill(0)
+        .map((_, j) => {
+          return [startPos + i, startPos + j];
+        });
+    })
+    .flat();
+
+  console.log("logo path positions", positions);
+  return positions;
+};

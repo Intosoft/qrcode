@@ -1,4 +1,8 @@
-import { getEyeBallPositions, getEyeFramePositions } from "./../utils";
+import {
+  getEyeBallPositions,
+  getEyeFramePositions,
+  getLogoPathPositions,
+} from "./../utils";
 import { generateCirclePath, generateRoundedPath } from "./circle";
 
 import {
@@ -18,6 +22,7 @@ export const generatePath = ({ size, matrix, config }: GeneratePathProps) => {
   const cellSize = size / matrix.length;
   const eyeBallPositions = getEyeBallPositions(matrix.length);
   const eyeFramePositions = getEyeFramePositions(matrix.length);
+  const logoPathPositions = getLogoPathPositions(matrix.length);
   let path = "";
 
   matrix.forEach((row, i) => {
@@ -30,6 +35,12 @@ export const generatePath = ({ size, matrix, config }: GeneratePathProps) => {
 
         const isYLast = i == matrix.length - 1;
         const isYFirst = i == 0;
+
+        for (let pos of logoPathPositions) {
+          if (pos[0] === i && pos[1] === j) {
+            return;
+          }
+        }
 
         for (let pos of eyeFramePositions) {
           if (pos[0] === i && pos[1] === j) {
@@ -54,6 +65,29 @@ export const generatePath = ({ size, matrix, config }: GeneratePathProps) => {
             j,
             height: cellSize,
             width: cellSize,
+            cellSize,
+          });
+        } else if (config.shapes.body === "square-small") {
+          path += generateSquarePath({
+            i,
+            j,
+            height: cellSize - 0.5,
+            width: cellSize - 0.5,
+            cellSize,
+          });
+        } else if (config.shapes.body === "square-vertical") {
+          path += generateSquarePath({
+            i,
+            j,
+            height: cellSize - 0.5,
+
+            cellSize,
+          });
+        } else if (config.shapes.body === "square-horizontal") {
+          path += generateSquarePath({
+            i,
+            j,
+            width: cellSize - 0.5,
             cellSize,
           });
         } else if (config.shapes.body === "diamond") {
