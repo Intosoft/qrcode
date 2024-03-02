@@ -2,6 +2,7 @@ import { Header } from "./components/Header";
 import { HomePage } from "./pages/Home";
 import GlobalStyle from "./GlobalStyle";
 import { Toaster } from "react-hot-toast";
+import { Footer } from "./components/Footer";
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
       <GlobalStyle />
       <Header />
       <HomePage />
+      <Footer />
     </div>
   );
 }

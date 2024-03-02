@@ -1,3 +1,4 @@
+import { read } from "fs";
 import { generateSVGString } from "../../../src";
 import { Config } from "../../../src/config";
 import { cloneDeep } from "lodash";
@@ -69,15 +70,56 @@ export const fileToBase64 = (file: File): Promise<string> => {
 
   reader.readAsDataURL(file);
   return new Promise((resolve, reject) => {
-    reader.onloadend = function () {
+    reader.onloadend = async function () {
       if (typeof reader.result === "string") {
         resolve(reader.result);
+        // if (reader.result.includes("image/svg+xml")) {
+        //   const pngFromSVG = await svgToPng({
+        //     base64: reader.result,
+        //     height: 100,
+        //     width: 100,
+        //   });
+        //   resolve(pngFromSVG);
+        // } else {
+        //   resolve(reader.result);
+        // }
       } else {
         reject("result is not string");
       }
     };
     reader.onerror = () => {
       reject("Couldn't process file");
+    };
+  });
+};
+
+interface SVGToPNG {
+  base64: string;
+  height: number;
+  width: number;
+}
+
+export const svgToPng = ({
+  base64,
+  width,
+  height,
+}: SVGToPNG): Promise<string> => {
+  var canvas = document.createElement("canvas");
+
+  var context = canvas.getContext("2d");
+
+  canvas.width = width;
+  canvas.height = height;
+
+  const image = new Image();
+  image.src = base64;
+
+  return new Promise((resolve, reject) => {
+    image.onload = function () {
+      context?.clearRect(0, 0, width, height);
+      context?.drawImage(image, 0, 0, width, height);
+
+      resolve(canvas.toDataURL("image/" + "png"));
     };
   });
 };

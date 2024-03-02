@@ -167,7 +167,7 @@ export const Colors = ({
               onChange={(value) => {
                 COLOR_CONFIG.find(
                   (config) => config.label === activeColorLabel
-                )?.onChange(value);
+                )?.onChange(value.toLowerCase());
               }}
             />
           </div>

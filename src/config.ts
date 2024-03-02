@@ -1,6 +1,6 @@
 export type EyeFrameShape = "square" | "circle" | "rounded" | "circle-item";
 export type EyeballShape = "square" | "circle" | "circle-item";
-export type BodyShape = "square" | "circle";
+export type BodyShape = "square" | "circle" | "rounded-horizontal";
 
 export interface Config {
   length: number;
@@ -41,7 +41,7 @@ export const defaultConfig: Config = {
   },
   shapes: {
     eyeFrame: "circle",
-    body: "circle",
+    body: "rounded-horizontal",
     eyeball: "circle",
   },
   colors: {

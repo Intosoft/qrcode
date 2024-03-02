@@ -75,7 +75,7 @@ export const generateSvgLinearGradient = (input: string, id: string) => {
       }
     });
     svgCode += `</linearGradient>`;
-    console.log(svgCode);
+
     return svgCode;
   } catch (err) {
     console.error(err);

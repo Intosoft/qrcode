@@ -2,7 +2,6 @@ const fs = require("fs");
 const packageJson = require("../package.json");
 
 const version = packageJson.version;
-console.log("version", version);
 
 const FILE_PATH = "./dist/index.js";
 const NEW_FILE_NAME = `./dist/intosoft-qrcode-v${version}.js`;
