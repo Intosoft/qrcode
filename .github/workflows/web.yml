@@ -1,4 +1,4 @@
-name: JS
+name: Web
 
 on:
   push:
@@ -20,6 +20,9 @@ jobs:
         with:
           cache: "yarn"
           node-version: 18
+
+      - name: Install node modules (Root)
+        run: cd ../ && yarn
 
       - name: Install node modules
         run: yarn
