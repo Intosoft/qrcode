@@ -1,7 +1,11 @@
 import { getEyeBallPositions, getEyeFramePositions } from "./../utils";
 import { generateCirclePath, generateRoundedPath } from "./circle";
 
-import { generateSquarePath } from "./square";
+import {
+  generateDiamondPath,
+  generateSquarePath,
+  generateStarPath,
+} from "./square";
 import { Config } from "../config";
 import { checkNeighbors } from "../utils/path";
 interface GeneratePathProps {
@@ -52,8 +56,31 @@ export const generatePath = ({ size, matrix, config }: GeneratePathProps) => {
             width: cellSize,
             cellSize,
           });
+        } else if (config.shapes.body === "diamond") {
+          path += generateDiamondPath({
+            i,
+            j,
+            height: cellSize,
+            width: cellSize,
+            cellSize,
+          });
+        } else if (config.shapes.body === "star") {
+          path += generateStarPath({
+            i,
+            j,
+            height: cellSize,
+            width: cellSize,
+            cellSize,
+          });
         } else if (config.shapes.body === "circle") {
           path += generateCirclePath({ i, j, cellSize });
+        } else if (config.shapes.body === "circle-small") {
+          path += generateCirclePath({
+            i,
+            j,
+            cellSize,
+            diameter: cellSize - 2,
+          });
         } else if (config.shapes.body === "rounded-horizontal") {
           if (!neighbors.left && !neighbors.right) {
             path += generateCirclePath({

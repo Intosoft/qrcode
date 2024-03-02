@@ -18,9 +18,12 @@ export const config: {
 } = {
   body: [
     ["circle", circleBody],
+    ["circle-small", circleBody],
     ["square", squareBody],
     ["rounded-horizontal", squareBody],
     ["rounded-vertical", squareBody],
+    ["diamond", squareBody],
+    ["star", squareBody],
   ],
   eyeball: [
     ["circle", circleEyeball],

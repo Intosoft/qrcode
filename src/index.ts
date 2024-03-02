@@ -11,7 +11,7 @@ import { generateMatrix, renderLogoFromConfig } from "./utils";
 const quietZone = 0;
 
 export const generateSVGString = (config: Config) => {
-  const matrix = generateMatrix(config.value || "https://intosoft.com", "L");
+  const matrix = generateMatrix(config.value || "https://intosoft.com", "H");
 
   const path = generatePath({ matrix, size: config.length, config });
 
@@ -42,7 +42,7 @@ export const generateSVGString = (config: Config) => {
     isGradientColor(config.colors.body) ? "url(#body)" : config.colors.body
   }" /> 
   ${generateEyeFrameSVGFromConfig(config, matrix.length)}      
-   ${generateEyeballSVGFromConfig(config, matrix.length)} 
+  ${generateEyeballSVGFromConfig(config, matrix.length)} 
     
    <use xlink:href="#logo"/>
   </svg>`;

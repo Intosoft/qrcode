@@ -4,7 +4,10 @@ export type BodyShape =
   | "square"
   | "circle"
   | "rounded-horizontal"
-  | "rounded-vertical";
+  | "rounded-vertical"
+  | "diamond"
+  | "star"
+  | "circle-small";
 
 export interface Config {
   length: number;
