@@ -2,6 +2,9 @@ export type EyeFrameShape = "square" | "circle" | "rounded" | "circle-item";
 export type EyeballShape = "square" | "circle" | "circle-item";
 export type BodyShape =
   | "square"
+  | "square-small"
+  | "square-horizontal"
+  | "square-vertical"
   | "circle"
   | "rounded-horizontal"
   | "rounded-vertical"
