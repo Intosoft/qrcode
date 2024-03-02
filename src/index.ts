@@ -2,37 +2,13 @@ import {
   generateLinearGradientByConfig,
   isGradientColor,
 } from "./utils/gradient";
-import { Config, EyeFrameShape, EyeballShape } from "./config";
-import {
-  circleEyeball,
-  generateEyeballSVGFromConfig,
-  squareEyeball,
-} from "./eyeball";
-import {
-  circleEyeFrame,
-  generateEyeFrameSVGFromConfig,
-  roundedEyeFrame,
-  squareEyeFrame,
-} from "./eyeframes";
+import { Config } from "./config";
+import { generateEyeballSVGFromConfig } from "./eyeball";
+import { generateEyeFrameSVGFromConfig } from "./eyeframes";
 import { generatePath } from "./path";
 import { generateMatrix, renderLogoFromConfig } from "./utils";
 
 const quietZone = 0;
-
-const eyeFrameFunction: {
-  [key in Exclude<EyeFrameShape, "circle-item">]: Function;
-} = {
-  square: squareEyeFrame,
-  circle: circleEyeFrame,
-  rounded: roundedEyeFrame,
-};
-
-const eyeballFunction: {
-  [key in Exclude<EyeballShape, "circle-item">]: Function;
-} = {
-  square: squareEyeball,
-  circle: circleEyeball,
-};
 
 export const generateSVGString = (config: Config) => {
   const matrix = generateMatrix(config.value || "https://intosoft.com", "L");

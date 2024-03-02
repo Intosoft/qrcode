@@ -1,6 +1,10 @@
 export type EyeFrameShape = "square" | "circle" | "rounded" | "circle-item";
 export type EyeballShape = "square" | "circle" | "circle-item";
-export type BodyShape = "square" | "circle" | "rounded-horizontal";
+export type BodyShape =
+  | "square"
+  | "circle"
+  | "rounded-horizontal"
+  | "rounded-vertical";
 
 export interface Config {
   length: number;
