@@ -1,4 +1,3 @@
-import { read } from "fs";
 import { generateSVGString } from "../../../src";
 import { Config } from "../../../src/config";
 import { cloneDeep } from "lodash";
@@ -119,7 +118,7 @@ export const svgToPng = ({
       context?.clearRect(0, 0, width, height);
       context?.drawImage(image, 0, 0, width, height);
 
-      resolve(canvas.toDataURL("image/" + "png"));
+      resolve(canvas.toDataURL("image/png"));
     };
   });
 };

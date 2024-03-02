@@ -149,10 +149,10 @@ export const HomePage = () => {
     const _config = localStorage.getItem("qr-config");
     if (_config) {
       try {
-        const { config, version } = JSON.parse(_config);
-        if (version === packageJSON.version) {
-          // setQrConfig(config);
-        }
+        // const { config, version } = JSON.parse(_config);
+        // if (version === packageJSON.version) {
+        //   setQrConfig(config);
+        // }
       } catch (err) {
         console.log("Err", err);
       }
