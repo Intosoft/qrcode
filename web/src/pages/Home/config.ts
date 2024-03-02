@@ -24,6 +24,7 @@ export const config: {
     ["rounded-vertical", squareBody],
     ["diamond", squareBody],
     ["star", squareBody],
+    ["star-small", squareBody],
   ],
   eyeball: [
     ["circle", circleEyeball],

@@ -7,6 +7,7 @@ export type BodyShape =
   | "rounded-vertical"
   | "diamond"
   | "star"
+  | "star-small"
   | "circle-small";
 
 export interface Config {
