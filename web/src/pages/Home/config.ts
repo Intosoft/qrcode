@@ -33,6 +33,9 @@ export const config: {
     ["circle", circleEyeball],
     ["circle-item", circleItemEyeball],
     ["square", squareEyeball],
+    ["rounded", squareEyeball],
+    ["rounded-bottom-right", squareEyeball],
+    ["rounded-diagonal", squareEyeball],
   ],
   eyeFrame: [
     ["rounded", roundedEyeFrame],

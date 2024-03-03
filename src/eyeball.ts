@@ -1,3 +1,7 @@
+import {
+  generateRoundedCornerEyeballPath,
+  generateRoundedEyeballPath,
+} from "./path/square";
 import { Config, EyeballShape } from "./config";
 import {
   GenerateEyeballSVGParams,
@@ -79,11 +83,113 @@ export const squareEyeball = ({
   });
 };
 
+export const roundedEyeball = ({
+  matrixLength,
+  size,
+  position,
+}: StyledEyePathGeneratorParams) => {
+  const cellSize = size / matrixLength;
+
+  const length = cellSize * 3 + cellSize / 1.5;
+  const positions = {
+    topLeft: {
+      x: 1.7 * cellSize,
+      y: 1.7 * cellSize,
+    },
+    topRight: {
+      x: (matrixLength - 5.3) * cellSize,
+      y: 1.7 * cellSize,
+    },
+    bottomLeft: {
+      x: 1.7 * cellSize,
+      y: (matrixLength - 5.3) * cellSize,
+    },
+  };
+
+  return generateRoundedEyeballPath({
+    ...positions[position],
+    length,
+    cellSize,
+  });
+};
+
+export const roundedBottomRightEyeball = ({
+  matrixLength,
+  size,
+  position,
+}: StyledEyePathGeneratorParams) => {
+  const cellSize = size / matrixLength;
+
+  const length = cellSize * 3 + cellSize / 1.5;
+  const positions = {
+    topLeft: {
+      x: 1.7 * cellSize,
+      y: 1.7 * cellSize,
+    },
+    topRight: {
+      x: (matrixLength - 5.3) * cellSize,
+      y: 1.7 * cellSize,
+    },
+    bottomLeft: {
+      x: 1.7 * cellSize,
+      y: (matrixLength - 5.3) * cellSize,
+    },
+  };
+
+  const roundedCorners = {
+    topLeft: ["top-left", "top-right", "bottom-left"],
+    topRight: ["top-left", "top-right", "bottom-right"],
+    bottomLeft: ["top-left", "bottom-right", "bottom-left"],
+  };
+
+  return generateRoundedCornerEyeballPath({
+    ...positions[position],
+    length,
+    cellSize,
+    //@ts-ignore
+    roundedCorners: roundedCorners[position],
+  });
+};
+
+export const roundedDiagonalEyeball = ({
+  matrixLength,
+  size,
+  position,
+}: StyledEyePathGeneratorParams) => {
+  const cellSize = size / matrixLength;
+
+  const length = cellSize * 3 + cellSize / 1.5;
+  const positions = {
+    topLeft: {
+      x: 1.7 * cellSize,
+      y: 1.7 * cellSize,
+    },
+    topRight: {
+      x: (matrixLength - 5.3) * cellSize,
+      y: 1.7 * cellSize,
+    },
+    bottomLeft: {
+      x: 1.7 * cellSize,
+      y: (matrixLength - 5.3) * cellSize,
+    },
+  };
+
+  return generateRoundedCornerEyeballPath({
+    ...positions[position],
+    length,
+    cellSize,
+    roundedCorners: ["top-left", "bottom-right"],
+  });
+};
+
 const eyeballFunction: {
   [key in Exclude<EyeballShape, "circle-item"> as string]: Function;
 } = {
   square: squareEyeball,
   circle: circleEyeball,
+  rounded: roundedEyeball,
+  "rounded-bottom-right": roundedBottomRightEyeball,
+  "rounded-diagonal": roundedDiagonalEyeball,
 };
 
 const generateEyeballSVG = ({
