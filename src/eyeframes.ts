@@ -6,6 +6,12 @@ import {
 import { getPositionForEyes } from "./utils";
 import { Config, EyeFrameShape } from "./config";
 
+import {
+  generateOutlineCirclePath,
+  generateOutlineRoundedSquarePath,
+  generateOutlineSquarePath,
+} from "./path/square";
+
 interface CircleEyeFrameParams {
   x: number;
   y: number;
@@ -13,12 +19,7 @@ interface CircleEyeFrameParams {
   cellSize: number;
 }
 
-export const circleEyeFramePath = ({
-  x,
-  y,
-  length,
-  cellSize,
-}: CircleEyeFrameParams) => {
+export const circleEyeFramePath = ({ x, y, length }: CircleEyeFrameParams) => {
   const radius = length / 2;
 
   return `M${x + radius},${y + length}h0A${radius},${radius},0,0,1,${x},${
@@ -40,15 +41,14 @@ export const circleEyeFrame = ({
   const positions = getPositionForEyes({
     matrixLength,
     cellSize,
-    addition: cellSize / 2,
   });
 
-  const length = cellSize * 6;
+  const length = cellSize * 7;
 
-  path += circleEyeFramePath({
+  path += generateOutlineCirclePath({
     ...positions.eyeFrame[position],
+    cellSize: cellSize,
     length,
-    cellSize,
   });
 
   return path;
@@ -84,8 +84,7 @@ export const squareEyeFrame = ({
   const positions = getPositionForEyes({ matrixLength, cellSize });
 
   let path = "";
-  //top-left
-  path += squareEyeFramePath({
+  path += generateOutlineSquarePath({
     ...positions.eyeFrame[position],
     length,
     cellSize,
@@ -144,10 +143,10 @@ export const roundedEyeFrame = ({
   const length = cellSize * 7;
   const positions = getPositionForEyes({ matrixLength, cellSize });
 
-  return roundedEyeFramePath({
+  return generateOutlineRoundedSquarePath({
     ...positions.eyeFrame[position],
-    length,
     cellSize,
+    length,
   });
 };
 const eyeFrameFunction: {
@@ -179,10 +178,8 @@ const generateEyeFrameSVG = ({
     return path;
   }
   return `<path
-  fill="none"
   d="${path}" 
-  stroke-width="${size / matrixLength}"
-  stroke="${isGradientColor(color) ? "url(#eyeFrame)" : color}"
+  fill="${isGradientColor(color) ? "url(#eyeFrame)" : color}"
  
   />`;
 };
