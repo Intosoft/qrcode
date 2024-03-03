@@ -19,11 +19,36 @@ export const generateCirclePath = ({
 
   const cx = x + cellSize / 2;
   const cy = y + cellSize / 2;
-  // Draw the circle
+
   path += `M${cx},${cy} `;
   path += `m-${diameter / 2},0 `;
   path += `a${diameter / 2},${diameter / 2} 0 1,0 ${diameter},0 `;
   path += `a${diameter / 2},${diameter / 2} 0 1,0 -${diameter},0 `;
+
+  return path;
+};
+
+export const generateCircleOutlinePath = ({
+  x,
+  y,
+  cellSize,
+  diameter: _diameter,
+}: {
+  cellSize: number;
+  x: number;
+  y: number;
+  diameter?: number;
+}) => {
+  let path = "";
+  const diameter = _diameter || cellSize;
+
+  const cx = x + cellSize / 2;
+  const cy = y + cellSize / 2;
+
+  path += `M${cx + diameter / 2},${cy} `;
+  path += `a${diameter / 2},${diameter / 2} 0 1,0 -${diameter},0 `;
+  path += `a${diameter / 2},${diameter / 2} 0 1,0 ${diameter},0 `;
+  path += `M${cx + diameter / 2},${cy}`;
 
   return path;
 };

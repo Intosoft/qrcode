@@ -29,6 +29,16 @@ export const generatePath = ({ size, matrix, config }: GeneratePathProps) => {
 
   matrix.forEach((row, i) => {
     row.forEach((column, j) => {
+      for (let pos of logoPathPositions) {
+        if (pos[0] === i && pos[1] === j) {
+          matrix[i][j] = 0;
+        }
+      }
+    });
+  });
+
+  matrix.forEach((row, i) => {
+    row.forEach((column, j) => {
       if (column) {
         const neighbors = checkNeighbors({ matrix, i, j });
 
@@ -37,12 +47,6 @@ export const generatePath = ({ size, matrix, config }: GeneratePathProps) => {
 
         const isYLast = i == matrix.length - 1;
         const isYFirst = i == 0;
-
-        for (let pos of logoPathPositions) {
-          if (pos[0] === i && pos[1] === j) {
-            return;
-          }
-        }
 
         for (let pos of eyeFramePositions) {
           if (pos[0] === i && pos[1] === j) {
@@ -128,7 +132,7 @@ export const generatePath = ({ size, matrix, config }: GeneratePathProps) => {
             i,
             j,
             cellSize,
-            diameter: cellSize - 2,
+            diameter: cellSize - cellSize * 0.1,
           });
         } else if (config.shapes.body === "rounded-horizontal") {
           if (!neighbors.left && !neighbors.right) {
@@ -136,7 +140,7 @@ export const generatePath = ({ size, matrix, config }: GeneratePathProps) => {
               i,
               j,
               cellSize,
-              diameter: cellSize - 1,
+              diameter: cellSize - cellSize * 0.1,
             });
             return;
           }
@@ -146,7 +150,7 @@ export const generatePath = ({ size, matrix, config }: GeneratePathProps) => {
               i,
               j,
               cellSize,
-              height: cellSize - 1,
+              height: cellSize - cellSize * 0.1,
               width: cellSize,
             });
             return;
@@ -158,7 +162,7 @@ export const generatePath = ({ size, matrix, config }: GeneratePathProps) => {
               j,
               cellSize,
               roundedSide: "left",
-              height: cellSize - 1,
+              height: cellSize - cellSize * 0.1,
             });
             return;
           }
@@ -169,7 +173,7 @@ export const generatePath = ({ size, matrix, config }: GeneratePathProps) => {
               j,
               cellSize,
               roundedSide: "right",
-              height: cellSize - 1,
+              height: cellSize - cellSize * 0.1,
             });
             return;
           }
@@ -179,7 +183,7 @@ export const generatePath = ({ size, matrix, config }: GeneratePathProps) => {
               i,
               j,
               cellSize,
-              diameter: cellSize - 1,
+              diameter: cellSize - cellSize * 0.1,
             });
             return;
           }
@@ -189,7 +193,7 @@ export const generatePath = ({ size, matrix, config }: GeneratePathProps) => {
               i,
               j,
               cellSize,
-              width: cellSize - 1,
+              width: cellSize - cellSize * 0.1,
             });
             return;
           }
@@ -200,7 +204,7 @@ export const generatePath = ({ size, matrix, config }: GeneratePathProps) => {
               j,
               cellSize,
               roundedSide: "top",
-              width: cellSize - 1,
+              width: cellSize - cellSize * 0.1,
             });
             return;
           }
@@ -211,7 +215,7 @@ export const generatePath = ({ size, matrix, config }: GeneratePathProps) => {
               j,
               cellSize,
               roundedSide: "bottom",
-              width: cellSize - 1,
+              width: cellSize - cellSize * 0.1,
             });
             return;
           }

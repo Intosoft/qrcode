@@ -95,3 +95,98 @@ export const generateStarPath = ({
 
   return path;
 };
+
+export const generateOutlineSquarePath = ({
+  x,
+  y,
+  length,
+  cellSize,
+}: {
+  x: number;
+  y: number;
+  cellSize: number;
+  length: number;
+}) => {
+  let path = "";
+
+  path += `M${x + length},${y + length}`;
+  path += `H${x}V${y}`;
+  path += `H${x + length}Z`;
+
+  path += `M${x + cellSize},${y + length - cellSize}`;
+  path += `H${x + length - cellSize}V${y + cellSize}`;
+  path += `H${x + cellSize}Z`;
+
+  return path;
+};
+
+export const generateOutlineRoundedSquarePath = ({
+  x,
+  y,
+  length,
+  cellSize,
+}: {
+  x: number;
+  y: number;
+  cellSize: number;
+  length: number;
+}) => {
+  const dynamic1 = length * 0.267;
+  const dynamic2 = length - dynamic1;
+  const dynamic3 = dynamic1 - cellSize;
+
+  let path = "";
+
+  path += `M${x + dynamic2},${y + length}`;
+  path += `H${x + dynamic1}`;
+  path += `A${dynamic1},${dynamic1},0,0,1,${x},${y + dynamic2}`;
+  path += `V${y + dynamic1}`;
+  path += `A${dynamic1},${dynamic1},0,0,1,${x + dynamic1},${y}`;
+  path += `H${x + dynamic2}`;
+  path += `A${dynamic1},${dynamic1},0,0,1,${x + length},${y + dynamic1}`;
+  path += `V${y + dynamic2}`;
+  path += `A${dynamic1},${dynamic1},0,0,1,${x + dynamic2},${y + length}`;
+  path += `Z`;
+
+  path += `M${x + dynamic1},${y + cellSize}`;
+  path += `a${dynamic3},${dynamic3},0,0,0,-${dynamic3},${dynamic3}`;
+  path += `V${y + dynamic2}`;
+  path += `a${dynamic3},${dynamic3},0,0,0,${dynamic3},${dynamic3}`;
+  path += `H${x + dynamic2}`;
+  path += `a${dynamic3},${dynamic3},0,0,0,${dynamic3}-${dynamic3}`;
+  path += `V${y + dynamic1}`;
+  path += `a${dynamic3},${dynamic3},0,0,0,-${dynamic3}-${dynamic3}`;
+  path += `Z`;
+
+  return path;
+};
+
+export const generateOutlineCirclePath = ({
+  x,
+  y,
+  length,
+  cellSize,
+}: {
+  x: number;
+  y: number;
+  cellSize: number;
+  length: number;
+}) => {
+  let path = "";
+
+  const radius = length / 2;
+  path += `M${x + radius},${y + length}`;
+  path += `A${radius},${radius},0,1,1,${length + x},${
+    radius + y
+  },${radius},${radius},0,0,1,${radius + x},${length + y}`;
+  path += `Z`;
+  path += `m${0},${-(length - cellSize)}`;
+  path += `A${radius - cellSize},${radius - cellSize},0,1,0,${
+    length - cellSize + x
+  },${radius + y},${radius - cellSize},${radius - cellSize},0,0,0,${
+    radius + x
+  },${cellSize + y}`;
+  path += `Z`;
+
+  return path;
+};
