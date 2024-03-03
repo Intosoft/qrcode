@@ -141,7 +141,7 @@ export const renderLogoFromConfig = (config: Config) => {
     const centerY = (config.length - config.logo.height) / 2;
     return `<image 
     id="logo" 
-    xlink:href="${config.logo.url}" 
+    href="${config.logo.url}" 
     height="${config.logo.height}"
     width="${config.logo.width}" x="${centerX}" y="${centerY}" />`;
   }
@@ -164,6 +164,5 @@ export const getLogoPathPositions = (matrixLength: number) => {
     })
     .flat();
 
-  console.log("logo path positions", positions);
   return positions;
 };

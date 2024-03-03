@@ -202,7 +202,7 @@ export const generateRoundedEyeballPath = ({
   cellSize: number;
   length: number;
 }) => {
-  const dynamic1 = length * 0.2;
+  const dynamic1 = length * 0.267;
   const dynamic2 = length - dynamic1;
   const dynamic3 = dynamic1 - cellSize;
   let path = "";
@@ -236,7 +236,7 @@ export const generateRoundedCornerEyeballPath = ({
 }) => {
   let path = "";
 
-  const dynamic1 = length * 0.2;
+  const dynamic1 = length * 0.267;
   const dynamic2 = length - dynamic1;
 
   path += `M${x},${y + length}`;
