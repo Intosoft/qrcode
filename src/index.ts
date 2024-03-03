@@ -44,7 +44,7 @@ export const generateSVGString = (config: Config) => {
   ${generateEyeFrameSVGFromConfig(config, matrix.length)}      
   ${generateEyeballSVGFromConfig(config, matrix.length)} 
     
-   <use xlink:href="#logo"/>
+   <use href="#logo"/>
   </svg>`;
 
   return svg;
