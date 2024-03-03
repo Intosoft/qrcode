@@ -190,3 +190,152 @@ export const generateOutlineCirclePath = ({
 
   return path;
 };
+
+export const generateRoundedEyeballPath = ({
+  x,
+  y,
+  length,
+  cellSize,
+}: {
+  x: number;
+  y: number;
+  cellSize: number;
+  length: number;
+}) => {
+  const dynamic1 = length * 0.2;
+  const dynamic2 = length - dynamic1;
+  const dynamic3 = dynamic1 - cellSize;
+  let path = "";
+
+  path += `M${x + dynamic2},${y + length}`;
+  path += `H${x + dynamic1}`;
+  path += `A${dynamic1},${dynamic1},0,0,1,${x},${y + dynamic2}`;
+  path += `V${y + dynamic1}`;
+  path += `A${dynamic1},${dynamic1},0,0,1,${x + dynamic1},${y}`;
+  path += `H${x + dynamic2}`;
+  path += `A${dynamic1},${dynamic1},0,0,1,${x + length},${y + dynamic1}`;
+  path += `V${y + dynamic2}`;
+  path += `A${dynamic1},${dynamic1},0,0,1,${x + dynamic2},${y + length}`;
+  path += `Z`;
+
+  return path;
+};
+
+export const generateRoundedCornerEyeballPath = ({
+  x,
+  y,
+  length,
+  cellSize,
+  roundedCorners,
+}: {
+  x: number;
+  y: number;
+  cellSize: number;
+  length: number;
+  roundedCorners: ("top-left" | "top-right" | "bottom-left" | "bottom-right")[];
+}) => {
+  let path = "";
+
+  const dynamic1 = length * 0.2;
+  const dynamic2 = length - dynamic1;
+
+  path += `M${x},${y + length}`;
+  if (roundedCorners.includes("bottom-left")) {
+    path += `H${x + dynamic1}`;
+    path += `A${dynamic1},${dynamic1},0,0,1,${x},${y + dynamic2}`;
+  } else {
+    path += `H${x}`;
+    path += `A${0},${0},0,0,1,${x},${y}`;
+  }
+  if (roundedCorners.includes("top-left")) {
+    path += `V${y + dynamic1}`;
+    path += `A${dynamic1},${dynamic1},0,0,1,${x + dynamic1},${y}`;
+  } else {
+    path += `V${y}`;
+    path += `A${0},${0},0,0,1,${x + dynamic1},${y}`;
+  }
+
+  if (roundedCorners.includes("top-right")) {
+    path += `H${x + dynamic2}`;
+    path += `A${dynamic1},${dynamic1},0,0,1,${x + length},${y + dynamic1}`;
+  } else {
+    path += `H${x}`;
+    path += `A${0},${0},0,0,1,${x + length},${y}`;
+  }
+
+  if (roundedCorners.includes("bottom-right")) {
+    path += `V${y + length - dynamic1}`;
+    path += `A${dynamic1},${dynamic1},0,0,1,${x + dynamic2},${y + length}`;
+  } else {
+    path += `V${y + length}`;
+    path += `H${x + dynamic2}`;
+  }
+
+  path += `Z`;
+
+  return path;
+};
+
+export const generateStyle1EyeballPath = ({
+  x,
+  y,
+  length,
+  cellSize,
+  roundedCorners,
+}: {
+  x: number;
+  y: number;
+  cellSize: number;
+  length: number;
+  roundedCorners: ("top-left" | "top-right" | "bottom-left" | "bottom-right")[];
+}) => {
+  const cornerRadius = cellSize / 2;
+  let path = "";
+
+  path += `M${x},${y + cornerRadius}`;
+
+  if (roundedCorners.includes("top-left")) {
+    path += `A${cornerRadius},${cornerRadius},0,0,1,${x + cornerRadius},${y}`;
+    path += `H${x + length - cornerRadius}`;
+  } else {
+    path += `H${x + length}`;
+  }
+
+  if (!roundedCorners.includes("top-right")) {
+    path += `V${y}`;
+  }
+
+  if (roundedCorners.includes("top-right")) {
+    path += `A${cornerRadius},${cornerRadius},0,0,1,${x + length},${
+      y + cornerRadius
+    }`;
+  }
+
+  path += `V${y + length - cornerRadius}`;
+
+  if (!roundedCorners.includes("bottom-right")) {
+    path += `H${x + length}`;
+  }
+
+  if (roundedCorners.includes("bottom-right")) {
+    path += `A${cornerRadius},${cornerRadius},0,0,1,${
+      x + length - cornerRadius
+    },${y + length}`;
+  }
+
+  path += `H${x + cornerRadius}`;
+
+  if (!roundedCorners.includes("bottom-left")) {
+    path += `V${y + length}`;
+  }
+
+  if (roundedCorners.includes("bottom-left")) {
+    path += `A${cornerRadius},${cornerRadius},0,0,1,${x},${
+      y + length - cornerRadius
+    }`;
+  }
+
+  path += `Z`;
+
+  return path;
+};

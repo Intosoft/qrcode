@@ -4,7 +4,15 @@ export type EyeFrameShape =
   | "circle"
   | "rounded"
   | "circle-item";
-export type EyeballShape = "body" | "square" | "circle" | "circle-item";
+export type EyeballShape =
+  | "body"
+  | "square"
+  | "circle"
+  | "circle-item"
+  | "rounded"
+  | "rounded-bottom-right"
+  | "rounded-diagonal";
+
 export type BodyShape =
   | "square"
   | "square-small"
