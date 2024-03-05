@@ -3,15 +3,39 @@ export type EyeFrameShape =
   | "square"
   | "circle"
   | "rounded"
-  | "circle-item";
+  | "styleA"
+  | "styleB"
+  | "body-square"
+  | "body-square-small"
+  | "body-square-horizontal"
+  | "body-square-vertical"
+  | "body-circle"
+  | "body-rounded-horizontal"
+  | "body-rounded-vertical"
+  | "body-diamond"
+  | "body-star"
+  | "body-star-small"
+  | "body-circle-small";
+
 export type EyeballShape =
   | "body"
   | "square"
   | "circle"
-  | "circle-item"
   | "rounded"
-  | "rounded-bottom-right"
-  | "rounded-diagonal";
+  | "styleA"
+  | "styleB"
+  | "styleC"
+  | "body-square"
+  | "body-square-small"
+  | "body-square-horizontal"
+  | "body-square-vertical"
+  | "body-circle"
+  | "body-rounded-horizontal"
+  | "body-rounded-vertical"
+  | "body-diamond"
+  | "body-star"
+  | "body-star-small"
+  | "body-circle-small";
 
 export type BodyShape =
   | "square"

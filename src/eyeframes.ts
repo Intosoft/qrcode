@@ -11,6 +11,7 @@ import {
   generateOutlineRoundedSquarePath,
   generateOutlineSquarePath,
 } from "./path/square";
+import { generatePath } from "./path";
 
 interface CircleEyeFrameParams {
   x: number;
@@ -147,14 +148,66 @@ export const roundedEyeFrame = ({
     ...positions.eyeFrame[position],
     cellSize,
     length,
+    roundedCorners: ["top-left", "top-right", "bottom-right", "bottom-left"],
   });
 };
+
+export const styleAEyeFrame = ({
+  matrixLength,
+  size,
+  position,
+}: StyledEyePathGeneratorParams) => {
+  const cellSize = size / matrixLength;
+
+  const length = cellSize * 7;
+  const positions = getPositionForEyes({ matrixLength, cellSize });
+  const roundedCorners = {
+    topLeft: ["top-left", "top-right", "bottom-left"],
+    topRight: ["top-left", "top-right", "bottom-right"],
+    bottomLeft: ["top-left", "bottom-right", "bottom-left"],
+  };
+  return generateOutlineRoundedSquarePath({
+    ...positions.eyeFrame[position],
+    cellSize,
+    length,
+    //@ts-ignore
+    roundedCorners: roundedCorners[position],
+  });
+};
+
+export const styleBEyeFrame = ({
+  matrixLength,
+  size,
+  position,
+}: StyledEyePathGeneratorParams) => {
+  const cellSize = size / matrixLength;
+
+  const length = cellSize * 7;
+  const positions = getPositionForEyes({ matrixLength, cellSize });
+
+  const roundedCorners = {
+    topLeft: ["top-left"],
+    topRight: ["top-right"],
+    bottomLeft: ["bottom-left"],
+  };
+
+  return generateOutlineRoundedSquarePath({
+    ...positions.eyeFrame[position],
+    cellSize,
+    length,
+    //@ts-ignore
+    roundedCorners: roundedCorners[position],
+  });
+};
+
 const eyeFrameFunction: {
   [key in Exclude<EyeFrameShape, "circle-item"> as string]: Function;
 } = {
   square: squareEyeFrame,
   circle: circleEyeFrame,
   rounded: roundedEyeFrame,
+  styleA: styleAEyeFrame,
+  styleB: styleBEyeFrame,
 };
 
 const generateEyeFrameSVG = ({
@@ -164,11 +217,36 @@ const generateEyeFrameSVG = ({
   matrixLength,
   position,
   pathOnly,
+  config,
+  matrix,
 }: GenerateEyeFrameSVGParams) => {
-  if (shape == "circle-item") {
+  if (shape === "body") {
     return "";
   }
-
+  if (shape.includes("body-")) {
+    const path = generatePath({
+      matrix,
+      size: config.length,
+      config: {
+        ...config,
+        shapes: {
+          ...config.shapes,
+          //@ts-ignore
+          body: config.shapes.eyeFrame.replace("body-", ""),
+        },
+      },
+      eyeFrameOnly: true,
+    });
+    if (pathOnly) {
+      return path;
+    } else {
+      return `<path
+      d="${path}" 
+      fill="${isGradientColor(color) ? "url(#eyeFrame)" : color}"
+     
+      />`;
+    }
+  }
   const path = eyeFrameFunction[shape]({
     matrixLength: matrixLength,
     size: size,
@@ -187,6 +265,7 @@ const generateEyeFrameSVG = ({
 export const generateEyeFrameSVGFromConfig = (
   config: Config,
   matrixLength: number,
+  matrix: number[][],
   isFromBody?: boolean
 ) => {
   const shape = config.shapes.eyeFrame;
@@ -210,6 +289,8 @@ export const generateEyeFrameSVGFromConfig = (
       matrixLength,
       position: "topLeft",
       pathOnly: colors.topLeft === "body",
+      config,
+      matrix,
     });
   }
 
@@ -225,6 +306,8 @@ export const generateEyeFrameSVGFromConfig = (
       matrixLength,
       position: "topRight",
       pathOnly: colors.topLeft === "body",
+      config,
+      matrix,
     });
   }
 
@@ -241,6 +324,8 @@ export const generateEyeFrameSVGFromConfig = (
       matrixLength,
       position: "bottomLeft",
       pathOnly: colors.topLeft === "body",
+      config,
+      matrix,
     });
   }
 

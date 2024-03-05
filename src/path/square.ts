@@ -125,37 +125,110 @@ export const generateOutlineRoundedSquarePath = ({
   y,
   length,
   cellSize,
+  roundedCorners,
 }: {
   x: number;
   y: number;
   cellSize: number;
   length: number;
+  roundedCorners: ("top-left" | "top-right" | "bottom-left" | "bottom-right")[];
 }) => {
   const dynamic1 = length * 0.267;
-  const dynamic2 = length - dynamic1;
-  const dynamic3 = dynamic1 - cellSize;
+  let dynamic2 = length - dynamic1;
+  let dynamic3 = dynamic1 - cellSize;
 
   let path = "";
 
-  path += `M${x + dynamic2},${y + length}`;
-  path += `H${x + dynamic1}`;
-  path += `A${dynamic1},${dynamic1},0,0,1,${x},${y + dynamic2}`;
-  path += `V${y + dynamic1}`;
-  path += `A${dynamic1},${dynamic1},0,0,1,${x + dynamic1},${y}`;
-  path += `H${x + dynamic2}`;
-  path += `A${dynamic1},${dynamic1},0,0,1,${x + length},${y + dynamic1}`;
-  path += `V${y + dynamic2}`;
-  path += `A${dynamic1},${dynamic1},0,0,1,${x + dynamic2},${y + length}`;
+  // Outer path
+  path += `M${x},${y + length}`;
+
+  // Draw top-left corner
+  if (roundedCorners.includes("bottom-left")) {
+    path += `H${x + dynamic1}`;
+    path += `A${dynamic1},${dynamic1},0,0,1,${x},${y + dynamic2}`;
+  } else {
+    path += `H${x}`;
+  }
+
+  // Draw top-right corner
+  if (roundedCorners.includes("top-left")) {
+    path += `V${y + dynamic1}`;
+    path += `A${dynamic1},${dynamic1},0,0,1,${x + dynamic1},${y}`;
+  } else {
+    path += `V${y}`;
+  }
+
+  // Draw bottom-right corner
+  if (roundedCorners.includes("top-right")) {
+    path += `H${x + dynamic2}`;
+    path += `A${dynamic1},${dynamic1},0,0,1,${x + length},${y + dynamic1}`;
+  } else {
+    path += `H${x + length}`;
+  }
+
+  // Draw bottom-left corner
+  if (roundedCorners.includes("bottom-right")) {
+    path += `V${y + dynamic2}`;
+    path += `A${dynamic1},${dynamic1},0,0,1,${x + dynamic2},${y + length}`;
+  } else {
+    path += `V${y + length}`;
+  }
+
+  // Close outer path
   path += `Z`;
 
-  path += `M${x + dynamic1},${y + cellSize}`;
-  path += `a${dynamic3},${dynamic3},0,0,0,-${dynamic3},${dynamic3}`;
-  path += `V${y + dynamic2}`;
-  path += `a${dynamic3},${dynamic3},0,0,0,${dynamic3},${dynamic3}`;
-  path += `H${x + dynamic2}`;
-  path += `a${dynamic3},${dynamic3},0,0,0,${dynamic3}-${dynamic3}`;
-  path += `V${y + dynamic1}`;
-  path += `a${dynamic3},${dynamic3},0,0,0,-${dynamic3}-${dynamic3}`;
+  // Inner path
+
+  let pathFixMX = x + dynamic1;
+  let pathFixMY = y + cellSize;
+  let hDynamic2 = dynamic2;
+  let vDynamic2 = dynamic2;
+
+  let hDynamic3 = dynamic3;
+  let vDynamic3 = dynamic3;
+
+  if (!roundedCorners.includes("top-left")) {
+    pathFixMX = x + cellSize;
+  } else {
+  }
+
+  if (!roundedCorners.includes("bottom-left")) {
+    vDynamic2 = dynamic2 + cellSize / 1.25;
+  }
+
+  if (!roundedCorners.includes("bottom-right")) {
+    hDynamic2 = dynamic2 + cellSize / 1.25;
+  }
+
+  path += `M${pathFixMX},${pathFixMY}`;
+  if (roundedCorners.includes("top-left")) {
+    path += `a${vDynamic3},${vDynamic3},0,0,0,-${vDynamic3},${vDynamic3}`;
+    path += `V${y + vDynamic2}`;
+  } else {
+    path += `V${y + vDynamic2}`;
+  }
+
+  if (roundedCorners.includes("bottom-left")) {
+    path += `a${hDynamic3},${hDynamic3},0,0,0,${hDynamic3},${hDynamic3}`;
+    path += `H${x + hDynamic2}`;
+  } else {
+    path += `H${x + hDynamic2}`;
+  }
+
+  if (roundedCorners.includes("bottom-right")) {
+    path += `a${vDynamic3},${vDynamic3},0,0,0,${vDynamic3}-${vDynamic3}`;
+    path += `V${y + dynamic1}`;
+  } else {
+    path += `V${y + dynamic1}`;
+  }
+
+  if (roundedCorners.includes("top-right")) {
+    path += `a${hDynamic3},${hDynamic3},0,0,0,-${hDynamic3}-${hDynamic3}`;
+  } else {
+    path += `V${y + cellSize}`;
+  }
+
+  // Close inner path
   path += `Z`;
 
   return path;
@@ -186,36 +259,6 @@ export const generateOutlineCirclePath = ({
   },${radius + y},${radius - cellSize},${radius - cellSize},0,0,0,${
     radius + x
   },${cellSize + y}`;
-  path += `Z`;
-
-  return path;
-};
-
-export const generateRoundedEyeballPath = ({
-  x,
-  y,
-  length,
-  cellSize,
-}: {
-  x: number;
-  y: number;
-  cellSize: number;
-  length: number;
-}) => {
-  const dynamic1 = length * 0.267;
-  const dynamic2 = length - dynamic1;
-  const dynamic3 = dynamic1 - cellSize;
-  let path = "";
-
-  path += `M${x + dynamic2},${y + length}`;
-  path += `H${x + dynamic1}`;
-  path += `A${dynamic1},${dynamic1},0,0,1,${x},${y + dynamic2}`;
-  path += `V${y + dynamic1}`;
-  path += `A${dynamic1},${dynamic1},0,0,1,${x + dynamic1},${y}`;
-  path += `H${x + dynamic2}`;
-  path += `A${dynamic1},${dynamic1},0,0,1,${x + length},${y + dynamic1}`;
-  path += `V${y + dynamic2}`;
-  path += `A${dynamic1},${dynamic1},0,0,1,${x + dynamic2},${y + length}`;
   path += `Z`;
 
   return path;

@@ -16,17 +16,18 @@ const ShapeImg = styled.img`
 
 export const StyledShape = styled.div<{ $active: boolean }>`
   cursor: pointer;
-  border: 2px solid ${({ $active }) => ($active ? "#03C29C" : "transparent")};
-  border-radius: 2px;
+  border: 5px solid ${({ $active }) => ($active ? "#03C29C" : "transparent")};
+  border-radius: 4px;
   padding: 4px;
-  background-color: white;
-  transition: all 0.3s ease-in-out;
+  background-color: #f2f9ff;
+  transition: all 0.1s ease-in-out;
 `;
 
 const ShapeWrapper = styled.div`
   margin-top: 10px;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   gap: 10px;
 `;
 
@@ -37,6 +38,11 @@ export const Shape = ({ setQrConfig, qrConfig }: CustomizationSectionProps) => {
       <ShapeWrapper>
         {config.body.map((item) => (
           <StyledShape
+            style={{
+              height: 80,
+              width: 80,
+              overflow: "hidden",
+            }}
             key={item[0]}
             $active={item[0] === qrConfig.shapes.body}
             onClick={() =>
@@ -49,7 +55,15 @@ export const Shape = ({ setQrConfig, qrConfig }: CustomizationSectionProps) => {
               })
             }
           >
-            <ShapeImg src={item[1]} />
+            <ShapeImg
+              src={item[1]}
+              style={{
+                height: 350,
+                width: 350,
+                marginTop: -80,
+                marginLeft: -90,
+              }}
+            />
           </StyledShape>
         ))}
       </ShapeWrapper>
