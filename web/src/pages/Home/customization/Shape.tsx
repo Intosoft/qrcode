@@ -9,9 +9,9 @@ const Title = styled.p`
 `;
 
 const ShapeImg = styled.img`
-  height: 34px;
-  width: 40px;
-  object-fit: contain;
+  object-fit: cover;
+  height: 40px;
+  width: 50px;
 `;
 
 export const StyledShape = styled.div<{ $active: boolean }>`
@@ -40,8 +40,7 @@ export const Shape = ({ setQrConfig, qrConfig }: CustomizationSectionProps) => {
           <StyledShape
             style={{
               height: 80,
-              width: 80,
-              overflow: "hidden",
+              width: 100,
             }}
             key={item[0]}
             $active={item[0] === qrConfig.shapes.body}
@@ -58,10 +57,8 @@ export const Shape = ({ setQrConfig, qrConfig }: CustomizationSectionProps) => {
             <ShapeImg
               src={item[1]}
               style={{
-                height: 350,
-                width: 350,
-                marginTop: -80,
-                marginLeft: -90,
+                height: "100%",
+                width: "100%",
               }}
             />
           </StyledShape>

@@ -25,7 +25,7 @@ export const Content = ({
 }: CustomizationSectionProps) => {
   return (
     <>
-      <Label>Enter your URL</Label>
+      <Label>Enter your text</Label>
       <Input
         value={qrConfig.value}
         onChange={({ target: { value } }) =>
