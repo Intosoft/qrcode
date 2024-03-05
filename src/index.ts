@@ -41,8 +41,8 @@ export const generateSVGString = (config: Config) => {
   }"  stroke="${
     isGradientColor(config.colors.body) ? "url(#body)" : config.colors.body
   }" /> 
-  ${generateEyeFrameSVGFromConfig(config, matrix.length)}      
-  ${generateEyeballSVGFromConfig(config, matrix.length)} 
+  ${generateEyeFrameSVGFromConfig(config, matrix.length, matrix)}      
+  ${generateEyeballSVGFromConfig(config, matrix.length, matrix)} 
     
    <use href="#logo"/>
   </svg>`;

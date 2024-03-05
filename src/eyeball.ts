@@ -1,7 +1,4 @@
-import {
-  generateRoundedCornerEyeballPath,
-  generateRoundedEyeballPath,
-} from "./path/square";
+import { generateRoundedCornerEyeballPath } from "./path/square";
 import { Config, EyeballShape } from "./config";
 import {
   GenerateEyeballSVGParams,
@@ -9,6 +6,7 @@ import {
 } from "./types";
 import { getPositionForEyes } from "./utils";
 import { isGradientColor } from "./utils/gradient";
+import { generatePath } from "./path";
 
 interface CircleEyeballParams {
   x: number;
@@ -106,14 +104,15 @@ export const roundedEyeball = ({
     },
   };
 
-  return generateRoundedEyeballPath({
+  return generateRoundedCornerEyeballPath({
     ...positions[position],
     length,
     cellSize,
+    roundedCorners: ["top-left", "bottom-left", "top-right", "bottom-right"],
   });
 };
 
-export const roundedBottomRightEyeball = ({
+export const styleAEyeball = ({
   matrixLength,
   size,
   position,
@@ -151,7 +150,7 @@ export const roundedBottomRightEyeball = ({
   });
 };
 
-export const roundedDiagonalEyeball = ({
+export const styleBEyeball = ({
   matrixLength,
   size,
   position,
@@ -182,14 +181,52 @@ export const roundedDiagonalEyeball = ({
   });
 };
 
+export const styleCEyeball = ({
+  matrixLength,
+  size,
+  position,
+}: StyledEyePathGeneratorParams) => {
+  const cellSize = size / matrixLength;
+
+  const length = cellSize * 3 + cellSize / 1.5;
+  const positions = {
+    topLeft: {
+      x: 1.7 * cellSize,
+      y: 1.7 * cellSize,
+    },
+    topRight: {
+      x: (matrixLength - 5.3) * cellSize,
+      y: 1.7 * cellSize,
+    },
+    bottomLeft: {
+      x: 1.7 * cellSize,
+      y: (matrixLength - 5.3) * cellSize,
+    },
+  };
+
+  const roundedCorners = {
+    topLeft: ["top-left"],
+    topRight: ["top-right"],
+    bottomLeft: ["bottom-left"],
+  };
+
+  return generateRoundedCornerEyeballPath({
+    ...positions[position],
+    length,
+    cellSize,
+    //@ts-ignore
+    roundedCorners: roundedCorners[position],
+  });
+};
 const eyeballFunction: {
   [key in Exclude<EyeballShape, "circle-item"> as string]: Function;
 } = {
   square: squareEyeball,
   circle: circleEyeball,
   rounded: roundedEyeball,
-  "rounded-bottom-right": roundedBottomRightEyeball,
-  "rounded-diagonal": roundedDiagonalEyeball,
+  styleA: styleAEyeball,
+  styleB: styleBEyeball,
+  styleC: styleCEyeball,
 };
 
 const generateEyeballSVG = ({
@@ -199,9 +236,36 @@ const generateEyeballSVG = ({
   matrixLength,
   position,
   pathOnly,
+  matrix,
+  config,
 }: GenerateEyeballSVGParams) => {
-  if (shape == "circle-item") {
+  if (shape === "body") {
     return "";
+  }
+  if (shape.includes("body-")) {
+    const path = generatePath({
+      matrix,
+      size: config.length,
+      config: {
+        ...config,
+        shapes: {
+          ...config.shapes,
+          //@ts-ignore
+          body: config.shapes.eyeball.replace("body-", ""),
+        },
+      },
+      eyeballOnly: true,
+    });
+    if (pathOnly) {
+      return path;
+    } else {
+      return `<path
+      fill="${isGradientColor(color) ? "url(#eyeball)" : color}"
+      d="${path}" 
+      stroke-width="0"
+     
+      />`;
+    }
   }
 
   const path = eyeballFunction[shape]({
@@ -223,6 +287,7 @@ const generateEyeballSVG = ({
 export const generateEyeballSVGFromConfig = (
   config: Config,
   matrixLength: number,
+  matrix: number[][],
   isFromBody?: boolean
 ) => {
   const shape = config.shapes.eyeball;
@@ -245,6 +310,8 @@ export const generateEyeballSVGFromConfig = (
       matrixLength,
       position: "topLeft",
       pathOnly: colors.topLeft === "body",
+      matrix,
+      config,
     });
   }
 
@@ -260,6 +327,8 @@ export const generateEyeballSVGFromConfig = (
       matrixLength,
       position: "topRight",
       pathOnly: colors.bottomLeft === "body",
+      matrix,
+      config,
     });
   }
 
@@ -276,6 +345,8 @@ export const generateEyeballSVGFromConfig = (
       matrixLength,
       position: "bottomLeft",
       pathOnly: colors.bottomLeft === "body",
+      matrix,
+      config,
     });
   }
 

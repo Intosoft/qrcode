@@ -1,4 +1,4 @@
-import { EyeFrameShape, EyeballShape } from "./config";
+import { Config, EyeFrameShape, EyeballShape } from "./config";
 
 export interface StylePathGeneratorParams {
   matrixLength: number;
@@ -13,6 +13,8 @@ export interface GenerateEyeballSVGParams {
   matrixLength: number;
   position: EyePosition;
   pathOnly: boolean;
+  matrix: number[][];
+  config: Config;
 }
 
 export interface GenerateEyeFrameSVGParams {
@@ -22,6 +24,8 @@ export interface GenerateEyeFrameSVGParams {
   matrixLength: number;
   position: EyePosition;
   pathOnly: boolean;
+  matrix: number[][];
+  config: Config;
 }
 
 export interface StyledEyePathGeneratorParams extends StylePathGeneratorParams {

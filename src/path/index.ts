@@ -3,24 +3,27 @@ import {
   getEyeFramePositions,
   getLogoPathPositions,
 } from "./../utils";
-import { generateCirclePath, generateRoundedPath } from "./circle";
 
-import {
-  generateDiamondPath,
-  generateSquarePath,
-  generateStarPath,
-} from "./square";
 import { Config } from "../config";
 import { checkNeighbors } from "../utils/path";
 import { generateEyeFrameSVGFromConfig } from "../eyeframes";
 import { generateEyeballSVGFromConfig } from "../eyeball";
+import { pathGenerator } from "./generator";
 interface GeneratePathProps {
   size: number;
   matrix: number[][];
   config: Config;
+  eyeballOnly?: boolean;
+  eyeFrameOnly?: boolean;
 }
 
-export const generatePath = ({ size, matrix, config }: GeneratePathProps) => {
+export const generatePath = ({
+  size,
+  matrix,
+  config,
+  eyeFrameOnly,
+  eyeballOnly,
+}: GeneratePathProps) => {
   const cellSize = size / matrix.length;
   const eyeBallPositions = getEyeBallPositions(matrix.length);
   const eyeFramePositions = getEyeFramePositions(matrix.length);
@@ -50,8 +53,18 @@ export const generatePath = ({ size, matrix, config }: GeneratePathProps) => {
 
         for (let pos of eyeFramePositions) {
           if (pos[0] === i && pos[1] === j) {
-            if (config.shapes.eyeFrame === "circle-item") {
-              path += generateCirclePath({ i, j, cellSize });
+            if (eyeFrameOnly) {
+              path += pathGenerator({
+                config,
+                i,
+                j,
+                isXFirst,
+                isXLast,
+                isYFirst,
+                isYLast,
+                neighbors,
+                cellSize,
+              });
             }
             if (config.shapes.eyeFrame !== "body") {
               return;
@@ -61,170 +74,72 @@ export const generatePath = ({ size, matrix, config }: GeneratePathProps) => {
 
         for (let pos of eyeBallPositions) {
           if (pos[0] === i && pos[1] === j) {
-            if (config.shapes.eyeball === "circle-item") {
-              path += generateCirclePath({ i, j, cellSize });
+            // if (
+            //   config.shapes.eyeball.includes("body-") &&
+            //   config.colors.eyeball.bottomLeft === "body"
+            // ) {
+            //   path += pathGenerator({
+            //     config: {
+            //       ...config,
+            //       shapes: {
+            //         ...config.shapes,
+            //         //@ts-ignore
+            //         body: config.shapes.eyeball.replace("body-", ""),
+            //       },
+            //     },
+            //     i,
+            //     j,
+            //     isXFirst,
+            //     isXLast,
+            //     isYFirst,
+            //     isYLast,
+            //     neighbors,
+            //     cellSize,
+            //   });
+            //   return;
+            // }
+
+            if (eyeballOnly) {
+              path += pathGenerator({
+                config,
+                i,
+                j,
+                isXFirst,
+                isXLast,
+                isYFirst,
+                isYLast,
+                neighbors,
+                cellSize,
+              });
             }
             if (config.shapes.eyeball !== "body") {
               return;
             }
           }
         }
-        if (config.shapes.body === "square") {
-          path += generateSquarePath({
-            i,
-            j,
-            height: cellSize,
-            width: cellSize,
-            cellSize,
-          });
-        } else if (config.shapes.body === "square-small") {
-          path += generateSquarePath({
-            i,
-            j,
-            height: cellSize - 0.5,
-            width: cellSize - 0.5,
-            cellSize,
-          });
-        } else if (config.shapes.body === "square-vertical") {
-          path += generateSquarePath({
-            i,
-            j,
-            height: cellSize - 0.5,
 
-            cellSize,
-          });
-        } else if (config.shapes.body === "square-horizontal") {
-          path += generateSquarePath({
-            i,
-            j,
-            width: cellSize - 0.5,
-            cellSize,
-          });
-        } else if (config.shapes.body === "diamond") {
-          path += generateDiamondPath({
-            i,
-            j,
-            height: cellSize,
-            width: cellSize,
-            cellSize,
-          });
-        } else if (config.shapes.body === "star") {
-          path += generateStarPath({
-            i,
-            j,
-            height: cellSize,
-            width: cellSize,
-            cellSize,
-          });
-        } else if (config.shapes.body === "star-small") {
-          path += generateStarPath({
-            i,
-            j,
-            height: cellSize,
-            width: cellSize,
-            cellSize,
-            points: 4,
-          });
-        } else if (config.shapes.body === "circle") {
-          path += generateCirclePath({ i, j, cellSize });
-        } else if (config.shapes.body === "circle-small") {
-          path += generateCirclePath({
-            i,
-            j,
-            cellSize,
-            diameter: cellSize - cellSize * 0.1,
-          });
-        } else if (config.shapes.body === "rounded-horizontal") {
-          if (!neighbors.left && !neighbors.right) {
-            path += generateCirclePath({
-              i,
-              j,
-              cellSize,
-              diameter: cellSize - cellSize * 0.1,
-            });
-            return;
-          }
-
-          if (neighbors.left && neighbors.right) {
-            path += generateSquarePath({
-              i,
-              j,
-              cellSize,
-              height: cellSize - cellSize * 0.1,
-              width: cellSize,
-            });
-            return;
-          }
-
-          if (!neighbors.left || (neighbors.right && isXFirst)) {
-            path += generateRoundedPath({
-              i,
-              j,
-              cellSize,
-              roundedSide: "left",
-              height: cellSize - cellSize * 0.1,
-            });
-            return;
-          }
-
-          if (!neighbors.right || (neighbors.left && isYLast)) {
-            path += generateRoundedPath({
-              i,
-              j,
-              cellSize,
-              roundedSide: "right",
-              height: cellSize - cellSize * 0.1,
-            });
-            return;
-          }
-        } else if (config.shapes.body === "rounded-vertical") {
-          if (!neighbors.top && !neighbors.bottom) {
-            path += generateCirclePath({
-              i,
-              j,
-              cellSize,
-              diameter: cellSize - cellSize * 0.1,
-            });
-            return;
-          }
-
-          if (neighbors.top && neighbors.bottom) {
-            path += generateSquarePath({
-              i,
-              j,
-              cellSize,
-              width: cellSize - cellSize * 0.1,
-            });
-            return;
-          }
-
-          if (!neighbors.top || (neighbors.bottom && isXFirst)) {
-            path += generateRoundedPath({
-              i,
-              j,
-              cellSize,
-              roundedSide: "top",
-              width: cellSize - cellSize * 0.1,
-            });
-            return;
-          }
-
-          if (!neighbors.bottom || (neighbors.top && isXLast)) {
-            path += generateRoundedPath({
-              i,
-              j,
-              cellSize,
-              roundedSide: "bottom",
-              width: cellSize - cellSize * 0.1,
-            });
-            return;
-          }
+        if (eyeballOnly || eyeFrameOnly) {
+          return;
         }
+
+        path += pathGenerator({
+          config,
+          i,
+          j,
+          isXFirst,
+          isXLast,
+          isYFirst,
+          isYLast,
+          neighbors,
+          cellSize,
+        });
       }
     });
   });
+  if (!eyeballOnly && !eyeFrameOnly) {
+    path += generateEyeFrameSVGFromConfig(config, matrix.length, matrix, true);
+    path += generateEyeballSVGFromConfig(config, matrix.length, matrix, true);
+  }
 
-  path += generateEyeFrameSVGFromConfig(config, matrix.length, true);
-  path += generateEyeballSVGFromConfig(config, matrix.length, true);
   return path;
 };

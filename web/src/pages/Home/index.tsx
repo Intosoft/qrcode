@@ -25,7 +25,7 @@ const Container = styled.div`
   align-items: center;
 `;
 const CustomizeSection = styled.div`
-  background-color: #f4f4f4;
+  background-color: white;
   border: 1px solid #d0d7df;
   border-right: 0;
   width: 100%;
@@ -36,7 +36,9 @@ const CustomizeSection = styled.div`
 const QR = styled.div`
   background-color: white;
   padding: 20px;
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   border: 1px solid #d0d7df;
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
@@ -46,14 +48,18 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 1200px;
-  max-width: 100vw;
+  width: 100%;
+  max-width: 1200px;
 `;
 
 const CustomizationWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
+
+  @media (max-width: 800px) {
+    flex-direction: column;
+  }
 `;
 const Title = styled.p`
   font-size: 16px;
@@ -191,7 +197,6 @@ export const HomePage = () => {
 
             <QR>
               <SVG svgString={svgString} />
-
               <Row
                 style={{
                   marginBottom: 4,
