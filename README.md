@@ -1,24 +1,24 @@
-# [Intosoft QR Code](https://qrcode.intosoft.com/) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Intosoft/qrcode/blob/main/LICENSE)
+# [Intosoft CustoQR](https://custoqr.com/) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Intosoft/qrcode/blob/main/LICENSE)
 
-Intosoft QR Code is a fully customizable open source QR code generator tool.
+Intosoft CustoQR is a fully customizable open source QR code generator tool.
 
 -   **Versatile and Customizable:** Fully color, style, content customization
 -   **Seamless Integration:** Integrate Intosoft QRcode seamlessly into your existing tech stack, whether you're working with React, React Native, NodeJS, Vue.js, Angular, or pure JavaScript.
 
-[Start customizing](https://qrcode.intosoft.com)
+### [Demo / Config generator tool](https://custoqr.com)
 
 ## Installation
 
 NPM
 
 ```
-npm i @intosoft/qrcode
+npm i @intosoft/custoqr
 ```
 
 Yarn
 
 ```
-yarn add @intosoft/qrcode
+yarn add @intosoft/custoqr
 ```
 
 ## Examples
@@ -26,7 +26,7 @@ yarn add @intosoft/qrcode
 React
 
 ```jsx
-import { generateSVGString } from '@intosoft/qrcode';
+import { generateSVGString } from '@intosoft/custoqr';
 
 const svgString = generateSVGString();
 
@@ -40,7 +40,7 @@ First Install [react-native-svg](https://github.com/software-mansion/react-nativ
 
 ```jsx
 import { SvgFromXml } from 'react-native-svg';
-import { generateSVGString } from '@intosoft/qrcode';
+import { generateSVGString } from '@intosoft/custoqr';
 
 const svgString = generateSVGString();
 
@@ -51,21 +51,87 @@ export const RenderQR = () => {
 
 Vanilla JS
 
-```jsx
- <!DOCTYPE html>
-<html>
-  <body>
-    <div id="svg-container"></div>
-  </body>
-  <script src="https://unpkg.com/@intosoft/qrcode@0.0.4/dist/index.js"></script>
-  <script>
-    window.addEventListener("load", function () {
-      const svgString = window.IntosoftQRCode.generateSVGString();
-      document.getElementById("svg-container").innerHTML = svgString;
-    });
-  </script>
-</html>
+```html
+<!DOCTYPE html>
+  <html>
+    <body>
+      <div id="svg-container"></div>
+    </body>
+    <script src="https://unpkg.com/@intosoft/custoqr@0.0.1/dist/index-standalone.js"></script>
+    <script>
+      window.addEventListener("load", function () {
+        const config = {}; //paste config here
+        const svgString = window.custoqr.generateSVGString(config);
+        document.getElementById("svg-container").innerHTML = svgString;
+      });
+    </script>
+  </html>
 ```
+
+VueJS
+```vue
+<script lang="ts">
+import { defineComponent, ref, onMounted } from 'vue';
+import { generateSVGString } from '@intosoft/custoqr';
+
+export default defineComponent({
+  setup() {
+    const svgString = ref<string>('');
+
+    onMounted(() => {
+      const config = {}; // Paste config here
+      svgString.value = generateSVGString(config);
+    });
+
+    return {
+      svgString
+    };
+  }
+});
+</script>
+
+<template>
+<div v-html="svgString"></div>
+</template>
+```
+
+Angular
+```ts
+import { Component,ChangeDetectorRef } from '@angular/core';
+import { DomSanitizer, SafeHtml, } from '@angular/platform-browser';
+import { RouterOutlet } from '@angular/router';
+import { generateSVGString } from '@intosoft/custoqr';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [RouterOutlet],
+  template: '<div [innerHTML]="svgString"></div>'
+})
+export class AppComponent  {
+  title = 'angular';
+  svgString: SafeHtml = "";
+  constructor(private sanitizer: DomSanitizer,private cdr: ChangeDetectorRef) {}
+  
+  ngOnInit(): void {
+    const config = {}; //paste config here
+    const svgString = generateSVGString(config);
+    this.svgString = this.sanitizer.bypassSecurityTrustHtml(svgString)
+    this.cdr.detectChanges();
+  }
+}
+  ```
+  
+  NodeJs
+  ```js
+const custoqr  = require("@intosoft/custoqr");
+
+const config = {}; // paste config here
+const svgString = custoqr.generateSVGString(config);
+  ```
+
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/sakulbudhathoki)
 
 ### License [MIT licensed](./LICENSE).
 

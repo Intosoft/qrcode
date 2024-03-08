@@ -1,6 +1,6 @@
 {
-    "name": "@intosoft/qrcode",
-    "version": "0.0.9",
+    "name": "@intosoft/custoqr",
+    "version": "0.0.1",
     "description": "",
     "module": "dist/index.esm.js",
     "main": "dist/index.js",
