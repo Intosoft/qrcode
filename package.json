@@ -1,11 +1,10 @@
 {
   "name": "@intosoft/qrcode",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
     "tsc": "tsc",
-    "fix:dist-version": "node ./scripts/fix-dist-version.js",
     "build": "esbuild ./src/index.ts --bundle --outfile=dist/index.js"
   },
   "author": "sakulbudhathoki977@gmail.com",

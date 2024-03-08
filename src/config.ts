@@ -89,12 +89,12 @@ export const defaultConfig: Config = {
   },
   shapes: {
     eyeFrame: "circle",
-    body: "rounded-horizontal",
-    eyeball: "square",
+    body: "rounded-vertical",
+    eyeball: "circle",
   },
   colors: {
     background: "white",
-    body: "linear-gradient(90deg, rgba(255,31,234,1) 4%, RGBA(225,147,129,1) 35%, rgba(0,212,255,1) 100%)",
+    body: "rgb(90, 90, 90)",
     eyeFrame: {
       topLeft: "body",
       topRight: "body",

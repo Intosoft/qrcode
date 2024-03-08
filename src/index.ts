@@ -10,6 +10,19 @@ import { generateMatrix, renderLogoFromConfig } from "./utils";
 
 const quietZone = 0;
 
+function isTransparent(color: string) {
+  if (color.startsWith("#")) {
+    return color === "#00000000" || color === "#0000";
+  } else if (color.startsWith("rgba")) {
+    const rgbaValues = color.slice(5, -1).split(",");
+    const alpha = parseFloat(rgbaValues[3]);
+    return alpha === 0;
+  } else if (color.startsWith("rgb")) {
+    return color === "rgba(0,0,0,0)" || color === "rgba(0, 0, 0, 0)";
+  }
+  return false; // Not transparent
+}
+
 export const generateSVGString = (config: Config) => {
   const matrix = generateMatrix(config.value || "https://intosoft.com", "H");
 
@@ -30,7 +43,7 @@ export const generateSVGString = (config: Config) => {
 <rect x="${-quietZone}" y="${-quietZone}" width="${
     config.length + quietZone * 2
   }" height="${config.length + quietZone * 2}" fill="${
-    config.colors.background
+    isTransparent(config.colors.background) ? "none" : config.colors.background
   }" />
   </g>
   ${renderLogoFromConfig(config)}
