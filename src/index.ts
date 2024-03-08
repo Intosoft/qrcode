@@ -73,5 +73,5 @@ export default {
 if (window) {
     // @ts-ignore
     // eslint-disable-next-line no-undef
-    window.CustoQR = { generateSVGString, generateContentString };
+    window.custoqr = { generateSVGString, generateContentString };
 }
