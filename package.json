@@ -1,13 +1,13 @@
 {
     "name": "@intosoft/qrcode",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "description": "",
     "module": "dist/index.esm.js",
     "main": "dist/index.js",
     "typings": "dist/index.d.ts",
     "scripts": {
         "build": "node esbuild.js",
-        "unused-exports": "ts-unused-exports ./tsconfig.json --excludePathsFromReport='index.ts'",
+        "unused-exports": "ts-unused-exports ./tsconfig.json --excludePathsFromReport='index.ts;/dist;/examples;src/generateContent.ts'",
         "tsc": "tsc",
         "lint": "yarn format && yarn eslint && yarn unused-exports",
         "format": "prettier --check .",

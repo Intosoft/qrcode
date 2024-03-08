@@ -10,3 +10,7 @@
 .nvmrc
 ./scripts
 esbuild.js
+.eslintignore
+.eslintrc.json
+.prettierignore
+.prettierrc.json
