@@ -9,3 +9,4 @@
 /src
 .nvmrc
 ./scripts
+esbuild.js

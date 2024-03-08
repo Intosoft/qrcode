@@ -1,0 +1,6 @@
+/dist
+/node_modules
+/.github
+/examples
+/.git
+ esbuild.js

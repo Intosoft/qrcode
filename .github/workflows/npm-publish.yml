@@ -1,25 +1,25 @@
 on:
-  push:
-    branches:
-      - main
+    push:
+        branches:
+            - main
 jobs:
-  publish:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v3
-        with:
-          cache: "yarn"
-          node-version: 18
+    publish:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+            - uses: actions/setup-node@v3
+              with:
+                  cache: 'yarn'
+                  node-version: 18
 
-      - name: Install node modules
-        run: yarn
+            - name: Install node modules
+              run: yarn
 
-      - name: Build
-        run: yarn build
+            - name: Build
+              run: yarn build
 
-      - uses: JS-DevTools/npm-publish@v3
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
+            - uses: JS-DevTools/npm-publish@v3
+              with:
+                  token: ${{ secrets.NPM_TOKEN }}
