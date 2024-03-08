@@ -1,5 +1,6 @@
+import { generateContentString, WifiEncryption } from './generateContent';
 import { generateLinearGradientByConfig, isGradientColor } from './utils/gradient';
-import { Config, defaultConfig, BodyShape, EyeFrameShape, EyeballShape } from './config';
+import { Config, BodyShape, EyeFrameShape, EyeballShape } from './config';
 import { generateEyeballSVGFromConfig } from './eyeball';
 import { generateEyeFrameSVGFromConfig } from './eyeframes';
 import { generatePath } from './path';
@@ -22,7 +23,7 @@ function isTransparent(color: string) {
     return false; // Not transparent
 }
 
-export const generateSVGString = (config: Config) => {
+const generateSVGString = (config: Config) => {
     const matrix = generateMatrix(config.value || 'https://intosoft.com', 'H');
 
     const path = generatePath({ matrix, size: config.length, config });
@@ -59,10 +60,18 @@ export const generateSVGString = (config: Config) => {
 
     return svg;
 };
+export { generateContentString, generateSVGString };
+
+export type { Config, WifiEncryption, BodyShape, EyeFrameShape, EyeballShape };
 
 export default {
     generateSVGString,
-    defaultConfig,
+    generateContentString,
 };
 
-export type { BodyShape, EyeFrameShape, EyeballShape };
+// eslint-disable-next-line no-undef
+if (window) {
+    // @ts-ignore
+    // eslint-disable-next-line no-undef
+    window.CustoQR = { generateSVGString, generateContentString };
+}
