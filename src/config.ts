@@ -1,3 +1,5 @@
+import { QRCodeErrorCorrectionLevel } from 'qrcode';
+
 export type EyeFrameShape =
     | 'body'
     | 'square'
@@ -52,6 +54,8 @@ export type BodyShape =
 
 export interface Config {
     length: number;
+    padding: number;
+    errorCorrectionLevel: QRCodeErrorCorrectionLevel;
     value: string;
     logo?: {
         url: string;

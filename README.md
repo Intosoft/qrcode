@@ -5,6 +5,7 @@ Intosoft CustoQR is a fully customizable open source QR code generator tool.
 -   **Versatile and Customizable:** Fully color, style, content customization
 -   **Seamless Integration:** Integrate Intosoft QRcode seamlessly into your existing tech stack, whether you're working with React, React Native, NodeJS, Vue.js, Angular, or pure JavaScript.
 
+![Sample image](https://custoqr.com/sample.png)
 ### [Demo / Config generator tool](https://custoqr.com)
 
 ## Installation
@@ -36,6 +37,7 @@ export const RenderQR = () => {
 ```
 
 React Native
+
 First Install [react-native-svg](https://github.com/software-mansion/react-native-svg)
 
 ```jsx
@@ -57,7 +59,7 @@ Vanilla JS
     <body>
       <div id="svg-container"></div>
     </body>
-    <script src="https://unpkg.com/@intosoft/custoqr@0.0.1/dist/index-standalone.js"></script>
+    <script src="https://unpkg.com/@intosoft/custoqr@0.0.2/dist/index-standalone.js"></script>
     <script>
       window.addEventListener("load", function () {
         const config = {}; //paste config here
