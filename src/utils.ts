@@ -142,3 +142,21 @@ export const getLogoPathPositions = (matrixLength: number, size?: number) => {
     }
     return [];
 };
+
+export const isTransparent = (color: string) => {
+    if (color === 'transparent') {
+        return true;
+    }
+    if (color.startsWith('#')) {
+        return color === '#00000000' || color === '#0000';
+    }
+    if (color.startsWith('rgba')) {
+        const rgbaValues = color.slice(5, -1).split(',');
+        const alpha = parseFloat(rgbaValues[3]);
+        return alpha === 0;
+    }
+    if (color.startsWith('rgb')) {
+        return color === 'rgba(0,0,0,0)' || color === 'rgba(0, 0, 0, 0)';
+    }
+    return false; // Not transparent
+};
