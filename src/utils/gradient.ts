@@ -4,7 +4,7 @@ export const isGradientColor = (color: string) =>
     color.includes('linear-gradient') || color.includes('radial-gradient');
 
 const parseLinearGradient = (input: string) => {
-    const matches = Array.from(input.matchAll(/((?:rgb|rgba)?a?\([^\)]+\))\s+(\d+%)/gi));
+    const matches = Array.from(input.matchAll(/((?:rgb|rgba)?a?\([^)]+\))\s+(\d+%)/gi));
 
     const angleMatch = input.match(/(\d+)deg/i);
     const angle = angleMatch ? angleMatch[1] : '0';
@@ -22,7 +22,7 @@ const parseLinearGradient = (input: string) => {
 };
 
 const parseRadialGradient = (input: string) => {
-    const matches = Array.from(input.matchAll(/((?:rgb|rgba)?a?\([^\)]+\))\s+(\d+%)/gi));
+    const matches = Array.from(input.matchAll(/((?:rgb|rgba)?a?\([^)]+\))\s+(\d+%)/gi));
 
     const stops = matches.map((match) => ({
         color: match[1],
