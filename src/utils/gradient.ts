@@ -4,38 +4,35 @@ export const isGradientColor = (color: string) =>
     color.includes('linear-gradient') || color.includes('radial-gradient');
 
 const parseLinearGradient = (input: string) => {
-    const parts = input.match(
-        /(\d+)deg|rgba?\(\d+,\s*\d+,\s*\d+,\s*[\d.]+\)|RGB\(\d+,\s*\d+,\s*\d+\)/g,
-    );
-    if (!parts) {
+    const matches = Array.from(input.matchAll(/((?:rgb|rgba)?a?\([^\)]+\))\s+(\d+%)/gi));
+
+    const angleMatch = input.match(/(\d+)deg/i);
+    const angle = angleMatch ? angleMatch[1] : '0';
+
+    const stops = matches.map((match) => ({
+        color: match[1],
+        percentage: match[2],
+    }));
+
+    if (stops.length === 0) {
         throw new Error('no parts found');
     }
-    const angle = parts[0].split('deg')[0];
-    const stops = parts.slice(1).map((part) => {
-        let color;
-        let percentage;
-        if (part.includes('rgba')) {
-            [color] = part.split(' ');
-            [, percentage] = part.split(' ');
-        } else if (part.includes('RGB')) {
-            color = part;
-            percentage = null;
-        }
-        return { color, percentage };
-    });
+
     return { angle, stops };
 };
 
 const parseRadialGradient = (input: string) => {
-    const parts = input.match(/rgba?\(\d+,\s*\d+,\s*\d+,\s*[\d.]+\)/g);
-    if (!parts) {
+    const matches = Array.from(input.matchAll(/((?:rgb|rgba)?a?\([^\)]+\))\s+(\d+%)/gi));
+
+    const stops = matches.map((match) => ({
+        color: match[1],
+        percentage: match[2],
+    }));
+
+    if (stops.length === 0) {
         throw new Error('no parts found');
     }
-    const stops = parts.map((part, index) => {
-        const percentageMatch = input.match(/(\d+)%/g);
-        const percentage = percentageMatch && percentageMatch[index];
-        return { color: part, percentage };
-    });
+
     return stops;
 };
 
