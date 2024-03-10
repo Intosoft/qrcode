@@ -1,4 +1,4 @@
-import { generateLinearGradientByConfig, isGradientColor } from './utils/gradient';
+import { generateGradientByConfig, isGradientColor } from './utils/gradient';
 import { Config } from './config';
 import { generateEyeballSVGFromConfig } from './eyeball';
 import { generateEyeFrameSVGFromConfig } from './eyeframes';
@@ -22,7 +22,7 @@ export const generateSVGString = (config: Config) => {
         config.length
     }" xmlns="http://www.w3.org/2000/svg">
     <defs>
-    ${generateLinearGradientByConfig(config)}
+    ${generateGradientByConfig(config)}
     ${renderLogoFromConfig(config, config.length / matrix.length)}
     </defs>
  
