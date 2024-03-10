@@ -1,10 +1,15 @@
 {
     "name": "@intosoft/custoqr",
-    "version": "0.0.2",
-    "description": "",
+    "version": "0.0.3",
+    "description": "The best tool for QR Code generation in JavaScript (React, React Native, Node.js, VueJS, Angular, JQuery, VanillaJS)",
     "module": "dist/index.esm.js",
     "main": "dist/index.js",
     "typings": "dist/index.d.ts",
+    "homepage": "https://github.com/Intosoft/custoqr",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Intosoft/custoqr.git"
+    },
     "scripts": {
         "build": "node esbuild.js",
         "unused-exports": "ts-unused-exports ./tsconfig.json --excludePathsFromReport='index.ts;/dist;/examples;src/generateContent.ts'",
@@ -15,7 +20,10 @@
         "lint:fix": "eslint --fix .",
         "build:standalone": "esbuild ./src/index.ts --bundle --outfile=dist/index-standalone.js"
     },
-    "author": "sakulbudhathoki977@gmail.com",
+    "author": {
+        "name": "Sakul Budhathoki",
+        "email": "sakulbudhathoki977@gmail.com"
+    },
     "license": "MIT",
     "dependencies": {
         "qrcode": "^1.5.3"
@@ -37,5 +45,27 @@
     },
     "publishConfig": {
         "access": "public"
-    }
+    },
+    "keywords": [
+        "QR code generator",
+        "QR code customization",
+        "JavaScript QR code tool",
+        "React QR code",
+        "React Native QR code",
+        "Node.js QR code",
+        "VueJS QR code",
+        "Angular QR code",
+        "VanillaJS QR code",
+        "QR code design",
+        "Custom QR code shapes",
+        "QR code with logo",
+        "QR code color customization",
+        "High-resolution QR codes",
+        "Print quality QR codes",
+        "Open-source QR code tool",
+        "QR code branding",
+        "Gradient QR codes",
+        "Error correction QR codes",
+        "QR code integration"
+    ]
 }
