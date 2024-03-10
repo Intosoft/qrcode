@@ -29,7 +29,8 @@ React
 ```jsx
 import { generateSVGString } from '@intosoft/custoqr';
 
-const svgString = generateSVGString();
+const config = {}; // Paste config here
+const svgString = generateSVGString(config);
 
 export const RenderQR = () => {
     return <div dangerouslySetInnerHTML={{ __html: svgString }} />;
@@ -44,7 +45,8 @@ First Install [react-native-svg](https://github.com/software-mansion/react-nativ
 import { SvgFromXml } from 'react-native-svg';
 import { generateSVGString } from '@intosoft/custoqr';
 
-const svgString = generateSVGString();
+const config = {}; // Paste config here
+const svgString = generateSVGString(config);
 
 export const RenderQR = () => {
     return <SvgFromXml xml={svgString} />;
