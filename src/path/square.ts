@@ -310,3 +310,46 @@ export const generateRoundedCornerEyeballPath = ({
 
     return path;
 };
+
+interface GenerateTrianglePath extends GenerateItemPathProps {
+    direction: 'top' | 'left' | 'right' | 'bottom';
+}
+
+export const generateTrianglePath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize,
+    direction,
+}: GenerateTrianglePath) => {
+    const height = _height || cellSize;
+    const width = _width || cellSize;
+    let path = '';
+
+    const x = cellSize * j + (cellSize - width) / 2;
+    const y = cellSize * i + (cellSize - height) / 2;
+
+    switch (direction) {
+        case 'top':
+            path += `M${x + width / 2},${y}`;
+            path += `l${width / 2},${height} l${-width},${0} Z`;
+            break;
+        case 'left':
+            path += `M${x},${y + height / 2}`;
+            path += `l${width},${height / 2} l${0},${-height} Z`;
+            break;
+        case 'right':
+            path += `M${x + width},${y + height / 2}`;
+            path += `l${-width},${height / 2} l${0},${-height} Z`;
+            break;
+        case 'bottom':
+            path += `M${x + width / 2},${y + height}`;
+            path += `l${width / 2},${-height} l${-width},${0} Z`;
+            break;
+        default:
+            break;
+    }
+
+    return path;
+};
