@@ -50,7 +50,9 @@ export type BodyShape =
     | 'diamond'
     | 'star'
     | 'star-small'
-    | 'circle-small';
+    | 'circle-small'
+    | 'styleA'
+    | 'styleB';
 
 export interface Config {
     length: number;

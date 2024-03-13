@@ -1,6 +1,12 @@
 import { generateCirclePath, generateRoundedPath } from './circle';
 
-import { generateDiamondPath, generateSquarePath, generateStarPath } from './square';
+import {
+    generateDiamondPath,
+    generateRoundedCornerEyeballPath,
+    generateSquarePath,
+    generateStarPath,
+    generateTrianglePath,
+} from './square';
 import { Config } from '../config';
 
 interface GeneratorPathProps {
@@ -30,157 +36,345 @@ export const pathGenerator = ({
     isXLast,
     isYLast,
 }: GeneratorPathProps) => {
-    let path = '';
-    if (config.shapes.body === 'square') {
-        path += generateSquarePath({
-            i,
-            j,
-            height: cellSize,
-            width: cellSize,
-            cellSize,
-        });
-    } else if (config.shapes.body === 'square-small') {
-        path += generateSquarePath({
-            i,
-            j,
-            height: cellSize - cellSize * 0.1,
-            width: cellSize - cellSize * 0.1,
-            cellSize,
-        });
-    } else if (config.shapes.body === 'square-vertical') {
-        path += generateSquarePath({
-            i,
-            j,
-            height: cellSize - cellSize * 0.1,
-            cellSize,
-        });
-    } else if (config.shapes.body === 'square-horizontal') {
-        path += generateSquarePath({
-            i,
-            j,
-            width: cellSize - cellSize * 0.1,
-            cellSize,
-        });
-    } else if (config.shapes.body === 'diamond') {
-        path += generateDiamondPath({
-            i,
-            j,
-            height: cellSize,
-            width: cellSize,
-            cellSize,
-        });
-    } else if (config.shapes.body === 'star') {
-        path += generateStarPath({
-            i,
-            j,
-            height: cellSize,
-            width: cellSize,
-            cellSize,
-        });
-    } else if (config.shapes.body === 'star-small') {
-        path += generateStarPath({
-            i,
-            j,
-            height: cellSize,
-            width: cellSize,
-            cellSize,
-            points: 4,
-        });
-    } else if (config.shapes.body === 'circle') {
-        path += generateCirclePath({ i, j, cellSize });
-    } else if (config.shapes.body === 'circle-small') {
-        path += generateCirclePath({
-            i,
-            j,
-            cellSize,
-            diameter: cellSize - cellSize * 0.1,
-        });
-    } else if (config.shapes.body === 'rounded-horizontal') {
-        if (!neighbors.left && !neighbors.right) {
-            path += generateCirclePath({
+    const path = '';
+    switch (config.shapes.body) {
+        case 'square': {
+            return generateSquarePath({
                 i,
                 j,
-                cellSize,
-                diameter: cellSize - cellSize * 0.1,
-            });
-            return path;
-        }
-
-        if (neighbors.left && neighbors.right) {
-            path += generateSquarePath({
-                i,
-                j,
-                cellSize,
-                height: cellSize - cellSize * 0.1,
+                height: cellSize,
                 width: cellSize,
+                cellSize,
             });
-            return path;
         }
-
-        if (!neighbors.left || (neighbors.right && isXFirst)) {
-            path += generateRoundedPath({
+        case 'square-small': {
+            return generateSquarePath({
                 i,
                 j,
-                cellSize,
-                roundedSide: 'left',
                 height: cellSize - cellSize * 0.1,
+                width: cellSize - cellSize * 0.1,
+                cellSize,
             });
-            return path;
         }
-
-        if (!neighbors.right || (neighbors.left && isYLast)) {
-            path += generateRoundedPath({
+        case 'square-vertical': {
+            return generateSquarePath({
                 i,
                 j,
-                cellSize,
-                roundedSide: 'right',
                 height: cellSize - cellSize * 0.1,
+                cellSize,
             });
-            return path;
         }
-    } else if (config.shapes.body === 'rounded-vertical') {
-        if (!neighbors.top && !neighbors.bottom) {
-            path += generateCirclePath({
+        case 'square-horizontal': {
+            return generateSquarePath({
+                i,
+                j,
+                width: cellSize - cellSize * 0.1,
+                cellSize,
+            });
+        }
+        case 'diamond': {
+            return generateDiamondPath({
+                i,
+                j,
+                height: cellSize,
+                width: cellSize,
+                cellSize,
+            });
+        }
+        case 'star': {
+            return generateStarPath({
+                i,
+                j,
+                height: cellSize,
+                width: cellSize,
+                cellSize,
+            });
+        }
+        case 'star-small': {
+            return generateStarPath({
+                i,
+                j,
+                height: cellSize,
+                width: cellSize,
+                cellSize,
+                points: 4,
+            });
+        }
+        case 'circle': {
+            return generateCirclePath({ i, j, cellSize });
+        }
+        case 'circle-small': {
+            return generateCirclePath({
                 i,
                 j,
                 cellSize,
                 diameter: cellSize - cellSize * 0.1,
             });
+        }
+        case 'rounded-horizontal': {
+            if (!neighbors.left && !neighbors.right) {
+                return generateCirclePath({
+                    i,
+                    j,
+                    cellSize,
+                    diameter: cellSize - cellSize * 0.1,
+                });
+            }
+
+            if (neighbors.left && neighbors.right) {
+                return generateSquarePath({
+                    i,
+                    j,
+                    cellSize,
+                    height: cellSize - cellSize * 0.1,
+                    width: cellSize,
+                });
+            }
+
+            if (!neighbors.left || (neighbors.right && isXFirst)) {
+                return generateRoundedPath({
+                    i,
+                    j,
+                    cellSize,
+                    roundedSide: 'left',
+                    height: cellSize - cellSize * 0.1,
+                });
+            }
+
+            if (!neighbors.right || (neighbors.left && isYLast)) {
+                return generateRoundedPath({
+                    i,
+                    j,
+                    cellSize,
+                    roundedSide: 'right',
+                    height: cellSize - cellSize * 0.1,
+                });
+            }
+            break;
+        }
+        case 'rounded-vertical': {
+            if (!neighbors.top && !neighbors.bottom) {
+                return generateCirclePath({
+                    i,
+                    j,
+                    cellSize,
+                    diameter: cellSize - cellSize * 0.1,
+                });
+            }
+
+            if (neighbors.top && neighbors.bottom) {
+                return generateSquarePath({
+                    i,
+                    j,
+                    cellSize,
+                    width: cellSize - cellSize * 0.1,
+                });
+            }
+
+            if (!neighbors.top || (neighbors.bottom && isXFirst)) {
+                return generateRoundedPath({
+                    i,
+                    j,
+                    cellSize,
+                    roundedSide: 'top',
+                    width: cellSize - cellSize * 0.1,
+                });
+            }
+
+            if (!neighbors.bottom || (neighbors.top && isXLast)) {
+                return generateRoundedPath({
+                    i,
+                    j,
+                    cellSize,
+                    roundedSide: 'bottom',
+                    width: cellSize - cellSize * 0.1,
+                });
+            }
             return path;
         }
 
-        if (neighbors.top && neighbors.bottom) {
-            path += generateSquarePath({
-                i,
-                j,
-                cellSize,
-                width: cellSize - cellSize * 0.1,
-            });
-            return path;
-        }
+        case 'styleA': {
+            const x = j * cellSize;
+            const y = i * cellSize;
+            if (!neighbors.top && !neighbors.bottom && !neighbors.left && !neighbors.right) {
+                return generateRoundedCornerEyeballPath({
+                    x,
+                    y,
+                    cellSize,
+                    length: cellSize,
+                    roundedCorners: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
+                });
+            }
 
-        if (!neighbors.top || (neighbors.bottom && isXFirst)) {
-            path += generateRoundedPath({
-                i,
-                j,
-                cellSize,
-                roundedSide: 'top',
-                width: cellSize - cellSize * 0.1,
-            });
-            return path;
-        }
+            if (!neighbors.top && !neighbors.bottom && !neighbors.left) {
+                return generateTrianglePath({
+                    i,
+                    j,
+                    cellSize,
+                    direction: 'left',
+                });
+            }
+            if (!neighbors.top && !neighbors.bottom && !neighbors.right) {
+                return generateTrianglePath({
+                    i,
+                    j,
+                    cellSize,
+                    direction: 'right',
+                });
+            }
+            if (!neighbors.top && !neighbors.left && !neighbors.right) {
+                return generateTrianglePath({
+                    i,
+                    j,
+                    cellSize,
+                    direction: 'top',
+                });
+            }
+            if (!neighbors.bottom && !neighbors.left && !neighbors.right) {
+                return generateTrianglePath({
+                    i,
+                    j,
+                    cellSize,
+                    direction: 'bottom',
+                });
+            }
+            if (!neighbors.top && !neighbors.left) {
+                return generateRoundedCornerEyeballPath({
+                    x,
+                    y,
+                    cellSize,
+                    length: cellSize,
+                    roundedCorners: ['top-left'],
+                });
+            }
+            if (!neighbors.top && !neighbors.right) {
+                return generateRoundedCornerEyeballPath({
+                    x,
+                    y,
+                    cellSize,
+                    length: cellSize,
+                    roundedCorners: ['top-right'],
+                });
+            }
+            if (!neighbors.bottom && !neighbors.left) {
+                return generateRoundedCornerEyeballPath({
+                    x,
+                    y,
+                    cellSize,
+                    length: cellSize,
+                    roundedCorners: ['bottom-left'],
+                });
+            }
+            if (!neighbors.bottom && !neighbors.right) {
+                return generateRoundedCornerEyeballPath({
+                    x,
+                    y,
+                    cellSize,
+                    length: cellSize,
+                    roundedCorners: ['bottom-right'],
+                });
+            }
 
-        if (!neighbors.bottom || (neighbors.top && isXLast)) {
-            path += generateRoundedPath({
+            return generateSquarePath({
                 i,
                 j,
                 cellSize,
-                roundedSide: 'bottom',
-                width: cellSize - cellSize * 0.1,
             });
-            return path;
         }
+        case 'styleB': {
+            const x = j * cellSize;
+            const y = i * cellSize;
+            if (!neighbors.top && !neighbors.bottom && !neighbors.left && !neighbors.right) {
+                return generateRoundedCornerEyeballPath({
+                    x,
+                    y,
+                    cellSize,
+                    length: cellSize,
+                    roundedCorners: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
+                });
+            }
+
+            if (!neighbors.top && !neighbors.bottom && !neighbors.left) {
+                return generateRoundedCornerEyeballPath({
+                    x,
+                    y,
+                    cellSize,
+                    length: cellSize,
+                    roundedCorners: ['top-left', 'bottom-left'],
+                });
+            }
+            if (!neighbors.top && !neighbors.bottom && !neighbors.right) {
+                return generateRoundedCornerEyeballPath({
+                    x,
+                    y,
+                    cellSize,
+                    length: cellSize,
+                    roundedCorners: ['top-right', 'bottom-right'],
+                });
+            }
+            if (!neighbors.top && !neighbors.left && !neighbors.right) {
+                return generateRoundedCornerEyeballPath({
+                    x,
+                    y,
+                    cellSize,
+                    length: cellSize,
+                    roundedCorners: ['top-left', 'top-right'],
+                });
+            }
+            if (!neighbors.bottom && !neighbors.left && !neighbors.right) {
+                return generateRoundedCornerEyeballPath({
+                    x,
+                    y,
+                    cellSize,
+                    length: cellSize,
+                    roundedCorners: ['bottom-left', 'bottom-right'],
+                });
+            }
+            if (!neighbors.top && !neighbors.left) {
+                return generateRoundedCornerEyeballPath({
+                    x,
+                    y,
+                    cellSize,
+                    length: cellSize,
+                    roundedCorners: ['top-left'],
+                });
+            }
+            if (!neighbors.top && !neighbors.right) {
+                return generateRoundedCornerEyeballPath({
+                    x,
+                    y,
+                    cellSize,
+                    length: cellSize,
+                    roundedCorners: ['top-right'],
+                });
+            }
+            if (!neighbors.bottom && !neighbors.left) {
+                return generateRoundedCornerEyeballPath({
+                    x,
+                    y,
+                    cellSize,
+                    length: cellSize,
+                    roundedCorners: ['bottom-left'],
+                });
+            }
+            if (!neighbors.bottom && !neighbors.right) {
+                return generateRoundedCornerEyeballPath({
+                    x,
+                    y,
+                    cellSize,
+                    length: cellSize,
+                    roundedCorners: ['bottom-right'],
+                });
+            }
+
+            return generateSquarePath({
+                i,
+                j,
+                cellSize,
+            });
+        }
+        default:
+            return path;
     }
-
     return path;
 };
