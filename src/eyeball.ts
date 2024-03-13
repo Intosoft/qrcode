@@ -5,6 +5,21 @@ import { getPositionForEyes } from './utils';
 import { isGradientColor } from './utils/gradient';
 import { generatePath } from './path';
 
+const generateRoundedEyeballPos = (cellSize: number, matrixLength: number) => ({
+    topLeft: {
+        x: 2 * cellSize,
+        y: 2 * cellSize,
+    },
+    topRight: {
+        x: (matrixLength - 4.95) * cellSize,
+        y: 2 * cellSize,
+    },
+    bottomLeft: {
+        x: 2 * cellSize,
+        y: (matrixLength - 4.95) * cellSize,
+    },
+});
+
 interface CircleEyeballParams {
     x: number;
     y: number;
@@ -59,7 +74,7 @@ const squareEyeballPath = ({ length, x, y, cellSize }: SquareEyeballParams) => {
 const squareEyeball = ({ matrixLength, size, position }: StyledEyePathGeneratorParams) => {
     const cellSize = size / matrixLength;
 
-    const length = cellSize * 3 - cellSize / 2;
+    const length = cellSize * 2;
     const positions = getPositionForEyes({ matrixLength, cellSize });
 
     return squareEyeballPath({
@@ -72,22 +87,8 @@ const squareEyeball = ({ matrixLength, size, position }: StyledEyePathGeneratorP
 const roundedEyeball = ({ matrixLength, size, position }: StyledEyePathGeneratorParams) => {
     const cellSize = size / matrixLength;
 
-    const length = cellSize * 3 + cellSize / 1.5;
-    const positions = {
-        topLeft: {
-            x: 1.7 * cellSize,
-            y: 1.7 * cellSize,
-        },
-        topRight: {
-            x: (matrixLength - 5.3) * cellSize,
-            y: 1.7 * cellSize,
-        },
-        bottomLeft: {
-            x: 1.7 * cellSize,
-            y: (matrixLength - 5.3) * cellSize,
-        },
-    };
-
+    const length = cellSize * 3;
+    const positions = generateRoundedEyeballPos(cellSize, matrixLength);
     return generateRoundedCornerEyeballPath({
         ...positions[position],
         length,
@@ -99,21 +100,8 @@ const roundedEyeball = ({ matrixLength, size, position }: StyledEyePathGenerator
 const styleAEyeball = ({ matrixLength, size, position }: StyledEyePathGeneratorParams) => {
     const cellSize = size / matrixLength;
 
-    const length = cellSize * 3 + cellSize / 1.5;
-    const positions = {
-        topLeft: {
-            x: 1.7 * cellSize,
-            y: 1.7 * cellSize,
-        },
-        topRight: {
-            x: (matrixLength - 5.3) * cellSize,
-            y: 1.7 * cellSize,
-        },
-        bottomLeft: {
-            x: 1.7 * cellSize,
-            y: (matrixLength - 5.3) * cellSize,
-        },
-    };
+    const length = cellSize * 3;
+    const positions = generateRoundedEyeballPos(cellSize, matrixLength);
 
     const roundedCorners = {
         topLeft: ['top-left', 'top-right', 'bottom-left'],
@@ -133,21 +121,8 @@ const styleAEyeball = ({ matrixLength, size, position }: StyledEyePathGeneratorP
 const styleBEyeball = ({ matrixLength, size, position }: StyledEyePathGeneratorParams) => {
     const cellSize = size / matrixLength;
 
-    const length = cellSize * 3 + cellSize / 1.5;
-    const positions = {
-        topLeft: {
-            x: 1.7 * cellSize,
-            y: 1.7 * cellSize,
-        },
-        topRight: {
-            x: (matrixLength - 5.3) * cellSize,
-            y: 1.7 * cellSize,
-        },
-        bottomLeft: {
-            x: 1.7 * cellSize,
-            y: (matrixLength - 5.3) * cellSize,
-        },
-    };
+    const length = cellSize * 3;
+    const positions = generateRoundedEyeballPos(cellSize, matrixLength);
 
     return generateRoundedCornerEyeballPath({
         ...positions[position],
@@ -160,21 +135,8 @@ const styleBEyeball = ({ matrixLength, size, position }: StyledEyePathGeneratorP
 const styleCEyeball = ({ matrixLength, size, position }: StyledEyePathGeneratorParams) => {
     const cellSize = size / matrixLength;
 
-    const length = cellSize * 3 + cellSize / 1.5;
-    const positions = {
-        topLeft: {
-            x: 1.7 * cellSize,
-            y: 1.7 * cellSize,
-        },
-        topRight: {
-            x: (matrixLength - 5.3) * cellSize,
-            y: 1.7 * cellSize,
-        },
-        bottomLeft: {
-            x: 1.7 * cellSize,
-            y: (matrixLength - 5.3) * cellSize,
-        },
-    };
+    const length = cellSize * 3;
+    const positions = generateRoundedEyeballPos(cellSize, matrixLength);
 
     const roundedCorners = {
         topLeft: ['top-left'],
