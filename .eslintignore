@@ -3,4 +3,4 @@
 /.github
 /examples
 /.git
- esbuild.js
+ tsup.config.ts
