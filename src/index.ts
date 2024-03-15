@@ -1,10 +1,8 @@
-import { generateContentString, WifiEncryption } from './generateContent';
-import { Config, BodyShape, EyeFrameShape, EyeballShape } from './config';
+import { generateContentString } from './generateContent';
+
 import { generateSVGString } from './generateSVGString';
 
 export { generateContentString, generateSVGString };
-
-export type { Config, WifiEncryption, BodyShape, EyeFrameShape, EyeballShape };
 
 export default {
     generateSVGString,
