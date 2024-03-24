@@ -10,7 +10,7 @@ export default {
 };
 
 // eslint-disable-next-line no-undef
-if (window) {
+if (typeof window !== 'undefined') {
     // @ts-ignore
     // eslint-disable-next-line no-undef
     window.custoqr = { generateSVGString, generateContentString };

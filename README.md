@@ -61,7 +61,7 @@ Vanilla JS
     <body>
       <div id="svg-container"></div>
     </body>
-    <script src="https://unpkg.com/@intosoft/custoqr@0.0.7/dist/iife/index.js"></script>
+    <script src="https://unpkg.com/@intosoft/custoqr@0.0.8/dist/iife/index.js"></script>
     <script>
       window.addEventListener("load", function () {
         const config = {}; //paste config here
