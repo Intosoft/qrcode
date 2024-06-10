@@ -1,14 +1,14 @@
 {
-    "name": "@intosoft/custoqr",
-    "version": "0.0.9",
+    "name": "@intosoft/qrcode",
+    "version": "0.0.1",
     "description": "The best tool for QR Code generation in JavaScript (React, React Native, Node.js, VueJS, Angular, JQuery, VanillaJS)",
     "main": "./dist/index.js",
     "module": "./dist/esm/index.js",
     "types": "./dist/index.d.ts",
-    "homepage": "https://github.com/Intosoft/custoqr",
+    "homepage": "https://github.com/Intosoft/qrcode",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Intosoft/custoqr.git"
+        "url": "git+https://github.com/Intosoft/qrcode.git"
     },
     "scripts": {
         "build": "rimraf ./dist && tsup",
