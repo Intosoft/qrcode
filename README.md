@@ -1,3 +1,6 @@
+# Deprecated by `npm i @intosoft/qrcode`
+# Depreacted by https://github.com/Intosoft/qrcode
+
 # [Intosoft CustoQR](https://custoqr.com/) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Intosoft/qrcode/blob/main/LICENSE)
 
 Intosoft CustoQR is a fully customizable open source QR code generator tool.
