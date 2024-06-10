@@ -1,9 +1,6 @@
-# Deprecated by `npm i @intosoft/qrcode`
-# Depreacted by https://github.com/Intosoft/qrcode
+ # [Intosoft QRCode](https://custoqr.com/) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Intosoft/qrcode/blob/main/LICENSE)
 
-# [Intosoft CustoQR](https://custoqr.com/) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Intosoft/qrcode/blob/main/LICENSE)
-
-Intosoft CustoQR is a fully customizable open source QR code generator tool.
+Intosoft QRCode is a fully customizable open source QR code generator tool.
 
 -   **Versatile and Customizable:** Fully color, style, content customization
 -   **Seamless Integration:** Integrate Intosoft QRcode seamlessly into your existing tech stack, whether you're working with React, React Native, NodeJS, Vue.js, Angular, or pure JavaScript.
@@ -16,13 +13,13 @@ Intosoft CustoQR is a fully customizable open source QR code generator tool.
 NPM
 
 ```
-npm i @intosoft/custoqr
+npm i @intosoft/qrcode
 ```
 
 Yarn
 
 ```
-yarn add @intosoft/custoqr
+yarn add @intosoft/qrcode
 ```
 
 ## Examples
@@ -30,7 +27,7 @@ yarn add @intosoft/custoqr
 React
 
 ```jsx
-import { generateSVGString } from '@intosoft/custoqr';
+import { generateSVGString } from '@intosoft/qrcode';
 
 const config = {}; // Paste config here
 const svgString = generateSVGString(config);
@@ -46,7 +43,7 @@ First Install [react-native-svg](https://github.com/software-mansion/react-nativ
 
 ```jsx
 import { SvgFromXml } from 'react-native-svg';
-import { generateSVGString } from '@intosoft/custoqr';
+import { generateSVGString } from '@intosoft/qrcode';
 
 const config = {}; // Paste config here
 const svgString = generateSVGString(config);
@@ -64,7 +61,7 @@ Vanilla JS
     <body>
       <div id="svg-container"></div>
     </body>
-    <script src="https://unpkg.com/@intosoft/custoqr@0.0.8/dist/iife/index.js"></script>
+    <script src="https://unpkg.com/@intosoft/qrcode@0.0.8/dist/iife/index.js"></script>
     <script>
       window.addEventListener("load", function () {
         const config = {}; //paste config here
@@ -79,7 +76,7 @@ VueJS
 ```vue
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
-import { generateSVGString } from '@intosoft/custoqr';
+import { generateSVGString } from '@intosoft/qrcode';
 
 export default defineComponent({
   setup() {
@@ -107,7 +104,7 @@ Angular
 import { Component,ChangeDetectorRef } from '@angular/core';
 import { DomSanitizer, SafeHtml, } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
-import { generateSVGString } from '@intosoft/custoqr';
+import { generateSVGString } from '@intosoft/qrcode';
 
 @Component({
   selector: 'app-root',
@@ -131,10 +128,10 @@ export class AppComponent  {
   
   NodeJs
   ```js
-const custoqr  = require("@intosoft/custoqr");
+const qrcode  = require("@intosoft/qrcode");
 
 const config = {}; // paste config here
-const svgString = custoqr.generateSVGString(config);
+const svgString = qrcode.generateSVGString(config);
   ```
 
 
