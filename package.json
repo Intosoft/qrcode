@@ -1,6 +1,6 @@
 {
     "name": "@intosoft/custoqr",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "description": "The best tool for QR Code generation in JavaScript (React, React Native, Node.js, VueJS, Angular, JQuery, VanillaJS)",
     "main": "./dist/index.js",
     "module": "./dist/esm/index.js",
