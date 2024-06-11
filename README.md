@@ -61,11 +61,11 @@ Vanilla JS
     <body>
       <div id="svg-container"></div>
     </body>
-    <script src="https://unpkg.com/@intosoft/qrcode@0.0.8/dist/iife/index.js"></script>
+    <script src="https://unpkg.com/@intosoft/qrcode@0.1.0/dist/iife/index.js"></script>
     <script>
       window.addEventListener("load", function () {
         const config = {}; //paste config here
-        const svgString = window.custoqr.generateSVGString(config);
+        const svgString = window.qrcode.generateSVGString(config);
         document.getElementById("svg-container").innerHTML = svgString;
       });
     </script>
