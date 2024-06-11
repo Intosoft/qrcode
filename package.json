@@ -1,6 +1,6 @@
 {
     "name": "@intosoft/qrcode",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "The best tool for QR Code generation in JavaScript (React, React Native, Node.js, VueJS, Angular, JQuery, VanillaJS)",
     "main": "./dist/index.js",
     "module": "./dist/esm/index.js",
@@ -25,7 +25,7 @@
     },
     "license": "MIT",
     "dependencies": {
-        "qrcode": "^1.5.3"
+        "qrcode": "github:sakul-budhathoki/node-qrcode#feat/cleanup"
     },
     "devDependencies": {
         "@types/qrcode": "^1.5.5",
