@@ -83,4 +83,5 @@ export interface Config {
             bottomLeft: string;
         };
     };
+    isReactNative?: boolean;
 }

@@ -11,6 +11,7 @@ export const generateSVGString = (config: Config) => {
         config.errorCorrectionLevel || 'H',
     );
 
+    const cellSize = config.length / matrix.length;
     const path = generatePath({ matrix, size: config.length, config });
 
     const svg = `<svg viewBox="${[
@@ -23,7 +24,7 @@ export const generateSVGString = (config: Config) => {
     }" xmlns="http://www.w3.org/2000/svg">
     <defs>
     ${generateGradientByConfig(config)}
-    ${renderLogoFromConfig(config, config.length / matrix.length)}
+    ${renderLogoFromConfig(config, cellSize)}
     </defs>
  
 <rect x="${-config.padding}" y="${-config.padding}" width="${
@@ -44,6 +45,13 @@ export const generateSVGString = (config: Config) => {
 
   <use href="#logo"/>
   </svg>`;
+
+    if (config.isReactNative) {
+        return {
+            svgString: svg,
+            cellSize,
+        };
+    }
 
     return svg;
 };
