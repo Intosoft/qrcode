@@ -108,20 +108,20 @@ export const getPositionForEyes = ({ matrixLength, cellSize }: GetEyesPositionPr
 });
 
 export const renderLogoFromConfig = (config: Config, cellSize: number) => {
-    if (config.logo?.url) {
-        const height = config.logo.size * cellSize;
-        const width = config.logo.size * cellSize;
+    if (!config.logo?.url || config.isReactNative) {
+        return '';
+    }
 
-        const centerX = (config.length - width) / 2;
-        const centerY = (config.length - height) / 2;
-        return `<image 
+    const height = config.logo.size * cellSize;
+    const width = config.logo.size * cellSize;
+
+    const centerX = (config.length - width) / 2;
+    const centerY = (config.length - height) / 2;
+    return `<image 
     id="logo" 
     href="${config.logo.url}" 
     height="${height}"
     width="${width}" x="${centerX}" y="${centerY}" />`;
-    }
-
-    return '';
 };
 
 export const getLogoPathPositions = (matrixLength: number, size?: number) => {

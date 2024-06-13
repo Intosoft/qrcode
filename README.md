@@ -40,16 +40,17 @@ export const RenderQR = () => {
 React Native
 
 First Install [react-native-svg](https://github.com/software-mansion/react-native-svg)
+`npm i react-native-svg`
 
 ```jsx
-import { SvgFromXml } from 'react-native-svg';
-import { generateSVGString } from '@intosoft/qrcode';
+import { QRCode } from "@qrcode/native";
 
 const config = {}; // Paste config here
-const svgString = generateSVGString(config);
+// you can use locally imported image, url for the logo
+// It support .svg too
 
 export const RenderQR = () => {
-    return <SvgFromXml xml={svgString} />;
+    return <QRCode config={config} />;
 };
 ```
 
@@ -61,7 +62,7 @@ Vanilla JS
     <body>
       <div id="svg-container"></div>
     </body>
-    <script src="https://unpkg.com/@intosoft/qrcode@0.1.1/dist/iife/index.js"></script>
+    <script src="https://unpkg.com/@intosoft/qrcode@0.1.2/dist/iife/index.js"></script>
     <script>
       window.addEventListener("load", function () {
         const config = {}; //paste config here
