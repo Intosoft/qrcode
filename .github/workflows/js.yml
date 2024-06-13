@@ -18,13 +18,10 @@ jobs:
           node-version: 18
 
       - name: Install node modules
-        run: yarn
-
-      - name: TSC
-        run: yarn tsc
+        run: yarn && cd ./native && yarn
 
       - name: yarn lint
         run: yarn lint
 
       - name: Build
-        run: yarn build
+        run: yarn build && cd ./native && yarn build

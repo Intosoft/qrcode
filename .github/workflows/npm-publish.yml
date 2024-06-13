@@ -15,16 +15,10 @@ jobs:
           node-version: 18
 
       - name: Install node modules
-        run: yarn
-
-      - name: tsc
-        run: yarn tsc
+        run: yarn && cd ./native && yarn
 
       - name: Build
-        run: yarn build
-
-      - name: Build for native
-        run: cd ./native && yarn && yarn build
+        run: yarn build && cd ./native && yarn build
 
       - uses: JS-DevTools/npm-publish@v3
         with:
