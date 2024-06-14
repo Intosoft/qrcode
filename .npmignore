@@ -14,3 +14,8 @@ esbuild.js
 .eslintrc.json
 .prettierignore
 .prettierrc.json
+
+/native/node_modules
+/native/tsconfig.json
+/native/Image.tsx
+/native/index.tsx

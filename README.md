@@ -43,7 +43,7 @@ First Install [react-native-svg](https://github.com/software-mansion/react-nativ
 `npm i react-native-svg`
 
 ```jsx
-import { QRCode } from "@qrcode/native";
+import { QRCode } from "@intosoft/qrcode/native";
 
 const config = {}; // Paste config here
 // you can use locally imported image, url for the logo
