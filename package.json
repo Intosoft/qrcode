@@ -11,7 +11,7 @@
         "url": "git+https://github.com/Intosoft/qrcode.git"
     },
     "scripts": {
-        "build": "rimraf ./dist && tsup && cd ./native && npm run build",
+        "build": "rimraf ./dist && tsup && cd ./packages/react-native && yarn && yarn build",
         "unused-exports": "ts-unused-exports ./tsconfig.json --excludePathsFromReport='index.ts;/dist;/examples;src/generateContent.ts;src/config.ts;tsup.config.ts'",
         "tsc": "tsc --noEmit",
         "lint": "yarn format && yarn eslint && yarn unused-exports",
