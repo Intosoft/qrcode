@@ -18,10 +18,10 @@ jobs:
           node-version: 18
 
       - name: Install node modules
-        run: yarn && cd ./native && yarn
+        run: yarn && cd ./packages/react-native && yarn
 
       - name: yarn lint
         run: yarn lint
 
       - name: Build
-        run: yarn build && cd ./native && yarn build
+        run: yarn build && cd ./packages/react-native && yarn build

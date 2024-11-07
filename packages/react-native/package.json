@@ -1,16 +1,16 @@
 {
     "name": "@intosoft/qrcode",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "The best tool for QR Code generation in JavaScript (React, React Native, Node.js, VueJS, Angular, JQuery, VanillaJS)",
-    "main": "../dist/native/index.js",
-    "types": "../dist/native/index.d.ts",
+    "main": "./index.js",
+    "types": "./index.d.ts",
     "homepage": "https://github.com/Intosoft/qrcode",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/Intosoft/qrcode.git"
     },
     "scripts": {
-        "build": "tsc"
+        "build": "tsc && rm -rf ../../dist/native &&  mkdir ../../dist/native && cp ./package.json ../../dist/native/package.json && cp -r ../dist/packages/react-native ../../dist/native"
     },
     "author": {
         "name": "Sakul Budhathoki",
@@ -18,6 +18,11 @@
     },
     "license": "MIT",
     "dependencies": {},
+    "peerDependencies": {
+        "react-native": "*",
+        "react": "*",
+        "react-native-svg": "*"
+    },
     "devDependencies": {
         "@types/qrcode": "^1.5.5",
         "@types/react": "^18.3.3",
