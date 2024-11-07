@@ -2,8 +2,8 @@
 import React from 'react';
 import { SvgFromXml } from 'react-native-svg';
 import { ViewStyle, View } from 'react-native';
-import { Config } from '../src/config';
-import { generateSVGString } from '../src/generateSVGString';
+import { Config } from '../../src/config';
+import { generateSVGString } from '../../src/generateSVGString';
 import { ImageRN } from './Image';
 
 interface QRCodeProps {
