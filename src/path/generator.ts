@@ -193,7 +193,7 @@ export const pathGenerator = ({
             return path;
         }
 
-        case 'styleA': {
+        case 'dots': {
             const x = j * cellSize;
             const y = i * cellSize;
             if (!neighbors.top && !neighbors.bottom && !neighbors.left && !neighbors.right) {
@@ -281,7 +281,7 @@ export const pathGenerator = ({
                 cellSize,
             });
         }
-        case 'styleB': {
+        case 'classy': {
             const x = j * cellSize;
             const y = i * cellSize;
             if (!neighbors.top && !neighbors.bottom && !neighbors.left && !neighbors.right) {
@@ -372,6 +372,136 @@ export const pathGenerator = ({
                 j,
                 cellSize,
             });
+        }
+        case 'mosaic': {
+            const x = j * cellSize;
+            const y = i * cellSize;
+            const hasLeftNeighbor = neighbors.left;
+            const hasTopNeighbor = neighbors.top;
+            const hasRightNeighbor = neighbors.right;
+            const hasBottomNeighbor = neighbors.bottom;
+
+            const cornerRadius = cellSize * 0.3;
+            
+            const corners: ('top-left' | 'top-right' | 'bottom-left' | 'bottom-right')[] = [];
+            if (!hasTopNeighbor && !hasLeftNeighbor) corners.push('top-left');
+            if (!hasTopNeighbor && !hasRightNeighbor) corners.push('top-right');
+            if (!hasBottomNeighbor && !hasLeftNeighbor) corners.push('bottom-left');
+            if (!hasBottomNeighbor && !hasRightNeighbor) corners.push('bottom-right');
+
+            if (corners.length > 0) {
+                return generateRoundedCornerEyeballPath({
+                    x,
+                    y,
+                    cellSize,
+                    length: cellSize,
+                    roundedCorners: corners,
+                });
+            }
+
+            return generateSquarePath({ i, j, cellSize });
+        }
+        case 'fluid': {
+            const x = j * cellSize;
+            const y = i * cellSize;
+            
+            if (!neighbors.top && !neighbors.bottom && !neighbors.left && !neighbors.right) {
+                return generateCirclePath({ i, j, cellSize, diameter: cellSize });
+            }
+
+            const corners: ('top-left' | 'top-right' | 'bottom-left' | 'bottom-right')[] = [];
+            if (!neighbors.top || !neighbors.left) corners.push('top-left');
+            if (!neighbors.top || !neighbors.right) corners.push('top-right');
+            if (!neighbors.bottom || !neighbors.left) corners.push('bottom-left');
+            if (!neighbors.bottom || !neighbors.right) corners.push('bottom-right');
+
+            if (corners.length > 0) {
+                return generateRoundedCornerEyeballPath({
+                    x,
+                    y,
+                    cellSize,
+                    length: cellSize,
+                    roundedCorners: corners,
+                });
+            }
+
+            return generateSquarePath({ i, j, cellSize });
+        }
+        case 'edge-cut': {
+            const x = j * cellSize;
+            const y = i * cellSize;
+            
+            if (!neighbors.top && !neighbors.left) {
+                return generateRoundedCornerEyeballPath({
+                    x,
+                    y,
+                    cellSize,
+                    length: cellSize,
+                    roundedCorners: [],
+                });
+            }
+            if (!neighbors.top && !neighbors.right) {
+                return generateRoundedCornerEyeballPath({
+                    x,
+                    y,
+                    cellSize,
+                    length: cellSize,
+                    roundedCorners: [],
+                });
+            }
+            if (!neighbors.bottom && !neighbors.left) {
+                return generateRoundedCornerEyeballPath({
+                    x,
+                    y,
+                    cellSize,
+                    length: cellSize,
+                    roundedCorners: [],
+                });
+            }
+            if (!neighbors.bottom && !neighbors.right) {
+                return generateRoundedCornerEyeballPath({
+                    x,
+                    y,
+                    cellSize,
+                    length: cellSize,
+                    roundedCorners: [],
+                });
+            }
+
+            return generateSquarePath({ i, j, cellSize });
+        }
+        case 'japanese': {
+            const x = j * cellSize;
+            const y = i * cellSize;
+            const shrink = cellSize * 0.15;
+            
+            if (!neighbors.top && !neighbors.bottom && !neighbors.left && !neighbors.right) {
+                return generateCirclePath({ i, j, cellSize, diameter: cellSize - shrink });
+            }
+
+            const hasNeighbors = [neighbors.top, neighbors.bottom, neighbors.left, neighbors.right].filter(Boolean).length;
+            
+            if (hasNeighbors === 1) {
+                if (neighbors.top || neighbors.bottom) {
+                    return generateSquarePath({
+                        i,
+                        j,
+                        height: cellSize,
+                        width: cellSize - shrink,
+                        cellSize,
+                    });
+                } else {
+                    return generateSquarePath({
+                        i,
+                        j,
+                        height: cellSize - shrink,
+                        width: cellSize,
+                        cellSize,
+                    });
+                }
+            }
+
+            return generateSquarePath({ i, j, cellSize });
         }
         default:
             return path;

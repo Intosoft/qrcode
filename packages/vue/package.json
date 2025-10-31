@@ -1,0 +1,52 @@
+{
+    "name": "@intosoft/qrcode-vue",
+    "version": "0.1.4",
+    "description": "Vue 3 components and composables for @intosoft/qrcode",
+    "main": "./dist/index.js",
+    "module": "./dist/esm/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/esm/index.js",
+            "require": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        }
+    },
+    "scripts": {
+        "build": "tsup",
+        "dev": "tsup --watch",
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "tsc": "tsc --noEmit"
+    },
+    "peerDependencies": {
+        "vue": ">=3.0.0"
+    },
+    "dependencies": {
+        "@intosoft/qrcode": "workspace:*"
+    },
+    "devDependencies": {
+        "vue": "^3.0.0",
+        "tsup": "^8.0.2",
+        "typescript": "^5.3.3"
+    },
+    "keywords": [
+        "qr-code",
+        "vue",
+        "vue3",
+        "component",
+        "composable",
+        "svg",
+        "customizable"
+    ],
+    "author": {
+        "name": "Sakul Budhathoki",
+        "email": "sakulbudhathoki977@gmail.com"
+    },
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Intosoft/qrcode.git",
+        "directory": "packages/vue"
+    }
+}

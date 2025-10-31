@@ -1,0 +1,34 @@
+{
+    "name": "@intosoft/qrcode-vanilla",
+    "version": "1.0.0",
+    "description": "Vanilla JavaScript helper for @intosoft/qrcode",
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist",
+        "README.md"
+    ],
+    "scripts": {
+        "build": "tsup",
+        "dev": "tsup --watch",
+        "type-check": "tsc --noEmit"
+    },
+    "keywords": [
+        "qrcode",
+        "vanilla",
+        "javascript",
+        "svg",
+        "generator"
+    ],
+    "author": "IntoSoft",
+    "license": "MIT",
+    "peerDependencies": {
+        "@intosoft/qrcode": "workspace:*"
+    },
+    "devDependencies": {
+        "@intosoft/qrcode": "workspace:*",
+        "tsup": "^8.0.0",
+        "typescript": "^5.0.0"
+    }
+}

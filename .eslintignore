@@ -3,4 +3,5 @@
 /.github
 /examples
 /.git
- tsup.config.ts
+/packages/dist
+tsup.config.ts

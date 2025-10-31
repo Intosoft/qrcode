@@ -1,0 +1,55 @@
+{
+    "name": "@intosoft/qrcode-react",
+    "version": "0.1.4",
+    "description": "React components and hooks for @intosoft/qrcode",
+    "main": "./dist/index.js",
+    "module": "./dist/esm/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/esm/index.js",
+            "require": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        }
+    },
+    "scripts": {
+        "build": "tsup",
+        "dev": "tsup --watch",
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "tsc": "tsc --noEmit"
+    },
+    "peerDependencies": {
+        "react": ">=16.8.0",
+        "react-dom": ">=16.8.0"
+    },
+    "dependencies": {
+        "@intosoft/qrcode": "workspace:*"
+    },
+    "devDependencies": {
+        "@types/react": "^18.0.0",
+        "@types/react-dom": "^18.0.0",
+        "react": "^18.0.0",
+        "react-dom": "^18.0.0",
+        "tsup": "^8.0.2",
+        "typescript": "^5.3.3"
+    },
+    "keywords": [
+        "qr-code",
+        "react",
+        "component",
+        "hook",
+        "svg",
+        "customizable"
+    ],
+    "author": {
+        "name": "Sakul Budhathoki",
+        "email": "sakulbudhathoki977@gmail.com"
+    },
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Intosoft/qrcode.git",
+        "directory": "packages/react"
+    }
+}

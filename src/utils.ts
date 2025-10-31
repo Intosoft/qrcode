@@ -1,5 +1,6 @@
 import QRCode, { QRCodeErrorCorrectionLevel } from 'qrcode';
 import { Config } from './config';
+import { validateURL, formatNumber } from './utils/svg';
 
 interface GetPositions {
     matrixLength: number;
@@ -13,27 +14,18 @@ const getPositions = ({ matrixLength, offset, count }: GetPositions) => {
     const countPosition = count - 1;
 
     return [
-        // top-left
-        // horizontal
         ...emptyArray.map((_, index) => [index + offset, 0 + offset]),
         ...emptyArray.map((_, index) => [index + offset, countPosition + offset]),
-        // vertical
         ...emptyArray.map((_, index) => [0 + offset, index + offset]),
         ...emptyArray.map((_, index) => [countPosition + offset, index + offset]),
 
-        // top-right
-        // horizontal
         ...emptyArray.map((_, index) => [lastPosition - index - offset, 0 + offset]),
         ...emptyArray.map((_, index) => [lastPosition - index - offset, countPosition + offset]),
-        // vertical
         ...emptyArray.map((_, index) => [lastPosition - offset, index + offset]),
         ...emptyArray.map((_, index) => [lastPosition - countPosition - offset, index + offset]),
 
-        // bottom-left
-        // horizontal
         ...emptyArray.map((_, index) => [index + offset, lastPosition - offset]),
         ...emptyArray.map((_, index) => [index + offset, lastPosition - countPosition - offset]),
-        // vertical
         ...emptyArray.map((_, index) => [0 + offset, lastPosition - index - offset]),
         ...emptyArray.map((_, index) => [countPosition + offset, lastPosition - index - offset]),
     ];
@@ -61,11 +53,8 @@ export const getEyeBallPositions = (matrixLength: number) => {
     const offset = 2;
 
     const innerItems = [
-        // top-left
         [3, 3],
-        // top-right
         [matrixLength - 1 - 3, 3],
-        // bottom-left
         [3, matrixLength - 1 - 3],
     ];
     return [...getPositions({ matrixLength, count, offset }), ...innerItems];
@@ -107,21 +96,65 @@ export const getPositionForEyes = ({ matrixLength, cellSize }: GetEyesPositionPr
     },
 });
 
-export const renderLogoFromConfig = (config: Config, cellSize: number) => {
-    if (!config.logo?.url || config.isReactNative) {
+export const renderLogoFromConfig = (
+    config: Config,
+    cellSize: number,
+    forReactNative?: boolean,
+) => {
+    if (!config.logo?.url || forReactNative) {
         return '';
     }
 
-    const height = config.logo.size * cellSize;
-    const width = config.logo.size * cellSize;
+    const safeUrl = validateURL(config.logo.url);
+    if (!safeUrl) {
+        console.warn('Invalid or unsafe logo URL provided');
+        return '';
+    }
 
-    const centerX = (config.length - width) / 2;
-    const centerY = (config.length - height) / 2;
-    return `<image 
+    const logoSize = config.logo.size * cellSize;
+    const padding = (config.logo.padding ?? 0) * cellSize;
+    const totalSize = logoSize + (padding * 2);
+    
+    const height = logoSize;
+    const width = logoSize;
+
+    const centerX = (config.length - totalSize) / 2;
+    const centerY = (config.length - totalSize) / 2;
+    
+    const imageX = centerX + padding;
+    const imageY = centerY + padding;
+    
+    const opacity = config.logo.opacity ?? 1;
+    const borderRadius = config.logo.borderRadius ?? 0;
+
+    const defs = borderRadius > 0 ? `
+    <defs>
+        <clipPath id="logo-clip">
+            <rect x="${formatNumber(imageX)}" y="${formatNumber(imageY)}" 
+                  width="${formatNumber(width)}" height="${formatNumber(height)}" 
+                  rx="${formatNumber(borderRadius)}" ry="${formatNumber(borderRadius)}"/>
+        </clipPath>
+    </defs>` : '';
+
+    const clipPathAttr = borderRadius > 0 ? ` clip-path="url(#logo-clip)"` : '';
+    const opacityAttr = opacity < 1 ? ` opacity="${formatNumber(opacity)}"` : '';
+
+    const backgroundRect = padding > 0 ? `
+    <rect x="${formatNumber(centerX)}" y="${formatNumber(centerY)}" 
+          width="${formatNumber(totalSize)}" height="${formatNumber(totalSize)}" 
+          fill="${config.colors.background}" 
+          rx="${formatNumber(borderRadius + padding)}"
+          ry="${formatNumber(borderRadius + padding)}"/>` : '';
+
+    return `${defs}
+    ${backgroundRect}
+    <image 
     id="logo" 
-    href="${config.logo.url}" 
-    height="${height}"
-    width="${width}" x="${centerX}" y="${centerY}" />`;
+    href="${safeUrl}" 
+    height="${formatNumber(height)}"
+    width="${formatNumber(width)}" 
+    x="${formatNumber(imageX)}" 
+    y="${formatNumber(imageY)}"${clipPathAttr}${opacityAttr}/>`;
 };
 
 export const getLogoPathPositions = (matrixLength: number, size?: number) => {
@@ -158,5 +191,5 @@ export const isTransparent = (color: string) => {
     if (color.startsWith('rgb')) {
         return color === 'rgba(0,0,0,0)' || color === 'rgba(0, 0, 0, 0)';
     }
-    return false; // Not transparent
+    return false;
 };

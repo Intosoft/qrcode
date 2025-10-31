@@ -1,67 +1,46 @@
 {
-    "name": "@intosoft/qrcode",
-    "version": "0.1.2",
-    "description": "The best tool for QR Code generation in JavaScript (React, React Native, Node.js, VueJS, Angular, JQuery, VanillaJS)",
-    "main": "./index.js",
-    "types": "./index.d.ts",
-    "homepage": "https://github.com/Intosoft/qrcode",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/Intosoft/qrcode.git"
-    },
+    "name": "@intosoft/qrcode-react-native",
+    "version": "1.0.0",
+    "description": "React Native helper for @intosoft/qrcode with SVG rendering and native integration",
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "react-native": "index.tsx",
+    "files": [
+        "dist",
+        "index.tsx",
+        "Image.tsx",
+        "README.md"
+    ],
     "scripts": {
-        "build": "tsc && rm -rf ../../dist/native &&  mkdir ../../dist/native && cp ./package.json ../../dist/native/package.json && cp -r ../dist/packages/react-native ../../dist/native"
-    },
-    "author": {
-        "name": "Sakul Budhathoki",
-        "email": "sakulbudhathoki977@gmail.com"
-    },
-    "license": "MIT",
-    "dependencies": {},
-    "peerDependencies": {
-        "react-native": "*",
-        "react": "*",
-        "react-native-svg": "*"
-    },
-    "devDependencies": {
-        "@types/qrcode": "^1.5.5",
-        "@types/react": "^18.3.3",
-        "@typescript-eslint/eslint-plugin": "^7.1.1",
-        "@typescript-eslint/parser": "^7.1.1",
-        "eslint": "^8.57.0",
-        "eslint-config-airbnb-base": "^15.0.0",
-        "eslint-config-prettier": "^9.1.0",
-        "eslint-plugin-import": "^2.29.1",
-        "eslint-plugin-prettier": "^5.1.3",
-        "prettier": "^3.2.5",
-        "react": "^18.3.1",
-        "react-native": "^0.73.0",
-        "react-native-svg": "^15.3.0",
-        "typescript": "^5.3.3"
-    },
-    "publishConfig": {
-        "access": "public"
+        "build": "tsup",
+        "dev": "tsup --watch",
+        "type-check": "tsc --noEmit"
     },
     "keywords": [
-        "QR code generator",
-        "QR code customization",
-        "JavaScript QR code tool",
-        "React QR code",
-        "React Native QR code",
-        "Node.js QR code",
-        "VueJS QR code",
-        "Angular QR code",
-        "VanillaJS QR code",
-        "QR code design",
-        "Custom QR code shapes",
-        "QR code with logo",
-        "QR code color customization",
-        "High-resolution QR codes",
-        "Print quality QR codes",
-        "Open-source QR code tool",
-        "QR code branding",
-        "Gradient QR codes",
-        "Error correction QR codes",
-        "QR code integration"
-    ]
+        "qrcode",
+        "react-native",
+        "svg",
+        "mobile",
+        "ios",
+        "android"
+    ],
+    "author": "IntoSoft",
+    "license": "MIT",
+    "peerDependencies": {
+        "@intosoft/qrcode": "workspace:*",
+        "react": ">=16.8.0",
+        "react-native": ">=0.60.0",
+        "react-native-svg": ">=12.0.0"
+    },
+    "devDependencies": {
+        "@intosoft/qrcode": "workspace:*",
+        "@types/react": "^18.0.0",
+        "@types/react-native": "^0.72.0",
+        "react": "^18.0.0",
+        "react-native": "^0.72.0",
+        "react-native-svg": "^13.0.0",
+        "tsup": "^8.0.0",
+        "typescript": "^5.0.0"
+    }
 }

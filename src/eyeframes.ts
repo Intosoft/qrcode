@@ -1,7 +1,7 @@
 import { isGradientColor } from './utils/gradient';
 import { GenerateEyeFrameSVGParams, StyledEyePathGeneratorParams } from './types';
 import { getPositionForEyes } from './utils';
-import { Config } from './config';
+import { Config, BodyShape } from './config';
 
 import {
     generateOutlineCirclePath,
@@ -64,7 +64,9 @@ const styleAEyeFrame = ({ matrixLength, size, position }: StyledEyePathGenerator
 
     const length = cellSize * 7;
     const positions = getPositionForEyes({ matrixLength, cellSize });
-    const roundedCorners = {
+    const roundedCorners: {
+        [key: string]: ('top-left' | 'top-right' | 'bottom-left' | 'bottom-right')[];
+    } = {
         topLeft: ['top-left', 'top-right', 'bottom-left'],
         topRight: ['top-left', 'top-right', 'bottom-right'],
         bottomLeft: ['top-left', 'bottom-right', 'bottom-left'],
@@ -73,7 +75,6 @@ const styleAEyeFrame = ({ matrixLength, size, position }: StyledEyePathGenerator
         ...positions.eyeFrame[position],
         cellSize,
         length,
-        // @ts-ignore
         roundedCorners: roundedCorners[position],
     });
 };
@@ -84,7 +85,9 @@ const styleBEyeFrame = ({ matrixLength, size, position }: StyledEyePathGenerator
     const length = cellSize * 7;
     const positions = getPositionForEyes({ matrixLength, cellSize });
 
-    const roundedCorners = {
+    const roundedCorners: {
+        [key: string]: ('top-left' | 'top-right' | 'bottom-left' | 'bottom-right')[];
+    } = {
         topLeft: ['top-left'],
         topRight: ['top-right'],
         bottomLeft: ['bottom-left'],
@@ -94,7 +97,6 @@ const styleBEyeFrame = ({ matrixLength, size, position }: StyledEyePathGenerator
         ...positions.eyeFrame[position],
         cellSize,
         length,
-        // @ts-ignore
         roundedCorners: roundedCorners[position],
     });
 };
@@ -105,8 +107,8 @@ const eyeFrameFunction: {
     square: squareEyeFrame,
     circle: circleEyeFrame,
     rounded: roundedEyeFrame,
-    styleA: styleAEyeFrame,
-    styleB: styleBEyeFrame,
+    leaf: styleAEyeFrame,
+    pointed: styleBEyeFrame,
 };
 
 const generateEyeFrameSVG = ({
@@ -123,6 +125,7 @@ const generateEyeFrameSVG = ({
         return '';
     }
     if (shape.includes('body-')) {
+        const bodyShape = config.shapes.eyeFrame.replace('body-', '') as BodyShape;
         const path = generatePath({
             matrix,
             size: config.length,
@@ -130,8 +133,7 @@ const generateEyeFrameSVG = ({
                 ...config,
                 shapes: {
                     ...config.shapes,
-                    // @ts-ignore
-                    body: config.shapes.eyeFrame.replace('body-', ''),
+                    body: bodyShape,
                 },
             },
             eyeFrameOnly: true,
@@ -139,11 +141,7 @@ const generateEyeFrameSVG = ({
         if (pathOnly) {
             return path;
         }
-        return `<path
-      d="${path}" 
-      fill="${isGradientColor(color) ? 'url(#eyeFrame)' : color}"
-     
-      />`;
+        return `<path fill="${isGradientColor(color) ? 'url(#eyeFrame)' : color}" d="${path}"/>`;
     }
     const path = eyeFrameFunction[shape]({
         matrixLength,
@@ -153,11 +151,7 @@ const generateEyeFrameSVG = ({
     if (pathOnly) {
         return path;
     }
-    return `<path
-  d="${path}" 
-  fill="${isGradientColor(color) ? 'url(#eyeFrame)' : color}"
- 
-  />`;
+    return `<path fill="${isGradientColor(color) ? 'url(#eyeFrame)' : color}" d="${path}"/>`;
 };
 
 export const generateEyeFrameSVGFromConfig = (
@@ -175,7 +169,6 @@ export const generateEyeFrameSVGFromConfig = (
         return '';
     }
 
-    // top-left
     if ((colors.topLeft === 'body' && isFromBody) || (colors.topLeft !== 'body' && !isFromBody)) {
         svgString += generateEyeFrameSVG({
             shape,
@@ -189,7 +182,6 @@ export const generateEyeFrameSVGFromConfig = (
         });
     }
 
-    // top-right
     if ((colors.topRight === 'body' && isFromBody) || (colors.topRight !== 'body' && !isFromBody)) {
         svgString += generateEyeFrameSVG({
             shape,
@@ -203,7 +195,6 @@ export const generateEyeFrameSVGFromConfig = (
         });
     }
 
-    // bottom-left
     if (
         (colors.bottomLeft === 'body' && isFromBody) ||
         (colors.bottomLeft !== 'body' && !isFromBody)

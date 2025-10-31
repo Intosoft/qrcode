@@ -1,0 +1,55 @@
+{
+    "name": "@intosoft/qrcode-angular",
+    "version": "0.1.4",
+    "description": "Angular components and services for @intosoft/qrcode",
+    "main": "./dist/index.js",
+    "module": "./dist/esm/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/esm/index.js",
+            "require": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        }
+    },
+    "scripts": {
+        "build": "tsup",
+        "dev": "tsup --watch",
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "tsc": "tsc --noEmit"
+    },
+    "peerDependencies": {
+        "@angular/core": ">=12.0.0",
+        "@angular/common": ">=12.0.0",
+        "rxjs": ">=6.0.0"
+    },
+    "dependencies": {
+        "@intosoft/qrcode": "workspace:*"
+    },
+    "devDependencies": {
+        "@angular/core": "^17.0.0",
+        "@angular/common": "^17.0.0",
+        "rxjs": "^7.0.0",
+        "tsup": "^8.0.2",
+        "typescript": "^5.3.3"
+    },
+    "keywords": [
+        "qr-code",
+        "angular",
+        "component",
+        "service",
+        "svg",
+        "customizable"
+    ],
+    "author": {
+        "name": "Sakul Budhathoki",
+        "email": "sakulbudhathoki977@gmail.com"
+    },
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Intosoft/qrcode.git",
+        "directory": "packages/angular"
+    }
+}

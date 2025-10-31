@@ -1,5 +1,5 @@
 import { generateRoundedCornerEyeballPath } from './path/square';
-import { Config } from './config';
+import { Config, BodyShape } from './config';
 import { GenerateEyeballSVGParams, StyledEyePathGeneratorParams } from './types';
 import { getPositionForEyes } from './utils';
 import { isGradientColor } from './utils/gradient';
@@ -103,7 +103,9 @@ const styleAEyeball = ({ matrixLength, size, position }: StyledEyePathGeneratorP
     const length = cellSize * 3;
     const positions = generateRoundedEyeballPos(cellSize, matrixLength);
 
-    const roundedCorners = {
+    const roundedCorners: {
+        [key: string]: ('top-left' | 'top-right' | 'bottom-left' | 'bottom-right')[];
+    } = {
         topLeft: ['top-left', 'top-right', 'bottom-left'],
         topRight: ['top-left', 'top-right', 'bottom-right'],
         bottomLeft: ['top-left', 'bottom-right', 'bottom-left'],
@@ -113,7 +115,6 @@ const styleAEyeball = ({ matrixLength, size, position }: StyledEyePathGeneratorP
         ...positions[position],
         length,
         cellSize,
-        // @ts-expect-error
         roundedCorners: roundedCorners[position],
     });
 };
@@ -138,7 +139,9 @@ const styleCEyeball = ({ matrixLength, size, position }: StyledEyePathGeneratorP
     const length = cellSize * 3;
     const positions = generateRoundedEyeballPos(cellSize, matrixLength);
 
-    const roundedCorners = {
+    const roundedCorners: {
+        [key: string]: ('top-left' | 'top-right' | 'bottom-left' | 'bottom-right')[];
+    } = {
         topLeft: ['top-left'],
         topRight: ['top-right'],
         bottomLeft: ['bottom-left'],
@@ -148,7 +151,6 @@ const styleCEyeball = ({ matrixLength, size, position }: StyledEyePathGeneratorP
         ...positions[position],
         length,
         cellSize,
-        // @ts-expect-error
         roundedCorners: roundedCorners[position],
     });
 };
@@ -158,9 +160,9 @@ const eyeballFunction: {
     square: squareEyeball,
     circle: circleEyeball,
     rounded: roundedEyeball,
-    styleA: styleAEyeball,
-    styleB: styleBEyeball,
-    styleC: styleCEyeball,
+    leaf: styleAEyeball,
+    pointed: styleBEyeball,
+    'extra-rounded': styleCEyeball,
 };
 
 const generateEyeballSVG = ({
@@ -177,6 +179,7 @@ const generateEyeballSVG = ({
         return '';
     }
     if (shape.includes('body-')) {
+        const bodyShape = config.shapes.eyeball.replace('body-', '') as BodyShape;
         const path = generatePath({
             matrix,
             size: config.length,
@@ -184,8 +187,7 @@ const generateEyeballSVG = ({
                 ...config,
                 shapes: {
                     ...config.shapes,
-                    // @ts-ignore
-                    body: config.shapes.eyeball.replace('body-', ''),
+                    body: bodyShape,
                 },
             },
             eyeballOnly: true,
@@ -193,12 +195,7 @@ const generateEyeballSVG = ({
         if (pathOnly) {
             return path;
         }
-        return `<path
-      fill="${isGradientColor(color) ? 'url(#eyeball)' : color}"
-      d="${path}" 
-      stroke-width="0"
-     
-      />`;
+        return `<path fill="${isGradientColor(color) ? 'url(#eyeball)' : color}" d="${path}"/>`;
     }
 
     const path = eyeballFunction[shape]({
@@ -209,12 +206,7 @@ const generateEyeballSVG = ({
     if (pathOnly) {
         return path;
     }
-    return `<path
-  fill="${isGradientColor(color) ? 'url(#eyeball)' : color}"
-  d="${path}" 
-  stroke-width="0"
- 
-  />`;
+    return `<path fill="${isGradientColor(color) ? 'url(#eyeball)' : color}" d="${path}"/>`;
 };
 
 export const generateEyeballSVGFromConfig = (
@@ -230,7 +222,6 @@ export const generateEyeballSVGFromConfig = (
     if (shape === 'body') {
         return '';
     }
-    // top-left
 
     if ((colors.topLeft === 'body' && isFromBody) || (colors.topLeft !== 'body' && !isFromBody)) {
         svgString += generateEyeballSVG({
@@ -245,7 +236,6 @@ export const generateEyeballSVGFromConfig = (
         });
     }
 
-    // top-right
     if ((colors.topRight === 'body' && isFromBody) || (colors.topRight !== 'body' && !isFromBody)) {
         svgString += generateEyeballSVG({
             shape,
@@ -259,7 +249,6 @@ export const generateEyeballSVGFromConfig = (
         });
     }
 
-    // bottom-left
     if (
         (colors.bottomLeft === 'body' && isFromBody) ||
         (colors.bottomLeft !== 'body' && !isFromBody)

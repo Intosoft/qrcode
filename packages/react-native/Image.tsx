@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
 import { Platform, Image, ImageProps, View } from 'react-native';
 import { SvgFromUri, SvgProps } from 'react-native-svg';

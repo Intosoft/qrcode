@@ -11,13 +11,25 @@
         "url": "git+https://github.com/Intosoft/qrcode.git"
     },
     "scripts": {
-        "build": "rimraf ./dist && tsup && cd ./packages/react-native && yarn && yarn build",
+        "build": "rimraf ./dist && tsup && yarn build:packages",
+        "build:web": "rimraf ./dist && tsup",
+        "build:packages": "yarn workspaces foreach --parallel run build",
+        "build:native": "./scripts/build-native.sh",
+        "build:rn": "cd ./packages/react-native && yarn && yarn build",
+        "release": "./scripts/release.sh",
+        "verify": "./scripts/verify-native.sh",
+        "test": "yarn tsc && yarn lint",
+        "test:packages": "yarn workspaces foreach run type-check",
         "unused-exports": "ts-unused-exports ./tsconfig.json --excludePathsFromReport='index.ts;/dist;/examples;src/generateContent.ts;src/config.ts;tsup.config.ts'",
         "tsc": "tsc --noEmit",
         "lint": "yarn format && yarn eslint && yarn unused-exports",
         "format": "prettier --check .",
+        "format:fix": "prettier --write .",
         "eslint": "eslint .",
-        "lint:fix": "eslint --fix ."
+        "lint:fix": "yarn format:fix && yarn eslint --fix",
+        "audit:fix": "yarn audit --fix",
+        "prepare": "yarn build",
+        "prepublishOnly": "yarn test && yarn test:packages"
     },
     "author": {
         "name": "Sakul Budhathoki",
@@ -29,6 +41,8 @@
     },
     "devDependencies": {
         "@types/qrcode": "^1.5.5",
+        "@types/react": "^19.1.8",
+        "@types/react-native": "^0.73.0",
         "@typescript-eslint/eslint-plugin": "^7.1.1",
         "@typescript-eslint/parser": "^7.1.1",
         "eslint": "^8.57.0",
@@ -56,6 +70,9 @@
         "VueJS QR code",
         "Angular QR code",
         "VanillaJS QR code",
+        "iOS Swift QR code",
+        "Android Kotlin QR code",
+        "Native QR code",
         "QR code design",
         "Custom QR code shapes",
         "QR code with logo",
@@ -67,5 +84,9 @@
         "Gradient QR codes",
         "Error correction QR codes",
         "QR code integration"
-    ]
+    ],
+    "workspaces": [
+        "packages/*"
+    ],
+    "private": true
 }

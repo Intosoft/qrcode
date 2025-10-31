@@ -14,4 +14,11 @@ esbuild.js
 .eslintrc.json
 .prettierignore
 .prettierrc.json
-/packages
+/packages/ios-swift
+/packages/android-kotlin
+/packages/react-native
+/packages/angular
+/packages/nodejs
+/packages/react
+/packages/vanilla
+/packages/vue

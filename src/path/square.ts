@@ -135,10 +135,8 @@ export const generateOutlineRoundedSquarePath = ({
 
     let path = '';
 
-    // Outer path
     path += `M${x},${y + length}`;
 
-    // Draw top-left corner
     if (roundedCorners.includes('bottom-left')) {
         path += `H${x + dynamic1}`;
         path += `A${dynamic1},${dynamic1},0,0,1,${x},${y + dynamic2}`;
@@ -146,7 +144,6 @@ export const generateOutlineRoundedSquarePath = ({
         path += `H${x}`;
     }
 
-    // Draw top-right corner
     if (roundedCorners.includes('top-left')) {
         path += `V${y + dynamic1}`;
         path += `A${dynamic1},${dynamic1},0,0,1,${x + dynamic1},${y}`;
@@ -154,7 +151,6 @@ export const generateOutlineRoundedSquarePath = ({
         path += `V${y}`;
     }
 
-    // Draw bottom-right corner
     if (roundedCorners.includes('top-right')) {
         path += `H${x + dynamic2}`;
         path += `A${dynamic1},${dynamic1},0,0,1,${x + length},${y + dynamic1}`;
@@ -162,7 +158,6 @@ export const generateOutlineRoundedSquarePath = ({
         path += `H${x + length}`;
     }
 
-    // Draw bottom-left corner
     if (roundedCorners.includes('bottom-right')) {
         path += `V${y + dynamic2}`;
         path += `A${dynamic1},${dynamic1},0,0,1,${x + dynamic2},${y + length}`;
@@ -170,10 +165,7 @@ export const generateOutlineRoundedSquarePath = ({
         path += `V${y + length}`;
     }
 
-    // Close outer path
     path += `Z`;
-
-    // Inner path
 
     let pathFixMX = x + dynamic1;
     const pathFixMY = y + cellSize;
@@ -223,7 +215,6 @@ export const generateOutlineRoundedSquarePath = ({
         path += `V${y + cellSize}`;
     }
 
-    // Close inner path
     path += `Z`;
 
     return path;

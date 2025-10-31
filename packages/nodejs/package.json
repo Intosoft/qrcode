@@ -1,0 +1,39 @@
+{
+    "name": "@intosoft/qrcode-nodejs",
+    "version": "1.0.0",
+    "description": "Node.js helper for @intosoft/qrcode with file system integration",
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist",
+        "README.md"
+    ],
+    "scripts": {
+        "build": "tsup",
+        "dev": "tsup --watch",
+        "type-check": "tsc --noEmit"
+    },
+    "keywords": [
+        "qrcode",
+        "nodejs",
+        "server",
+        "svg",
+        "png",
+        "filesystem"
+    ],
+    "author": "IntoSoft",
+    "license": "MIT",
+    "peerDependencies": {
+        "@intosoft/qrcode": "workspace:*"
+    },
+    "dependencies": {
+        "sharp": "^0.32.0"
+    },
+    "devDependencies": {
+        "@intosoft/qrcode": "workspace:*",
+        "@types/node": "^20.0.0",
+        "tsup": "^8.0.0",
+        "typescript": "^5.0.0"
+    }
+}

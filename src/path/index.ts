@@ -1,6 +1,4 @@
-/* eslint-disable no-restricted-syntax */
 import { getEyeBallPositions, getEyeFramePositions, getLogoPathPositions } from '../utils';
-
 import { Config } from '../config';
 import { checkNeighbors } from '../utils/path';
 import { generateEyeFrameSVGFromConfig } from '../eyeframes';
@@ -29,7 +27,7 @@ export const generatePath = ({
     const logoPathPositions = getLogoPathPositions(matrix.length, config.logo?.size);
     let path = '';
 
-    if (config.logo?.removeBg) {
+    if (config.logo?.removeBackground) {
         matrix.forEach((row, i) => {
             row.forEach((_, j) => {
                 for (const pos of logoPathPositions) {
