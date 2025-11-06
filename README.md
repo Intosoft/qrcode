@@ -6,16 +6,16 @@ Intosoft QRCode is a fully customizable, production-ready QR code generator with
 
 ## ✨ Key Features
 
--   **🎨 17 Body Shapes:** Including new artistic designs - mosaic, fluid, edge-cut, japanese styles
+-   **🎨 19 Body Shapes:** Classic, geometric, artistic designs - dots, classy, mosaic, fluid, edge-cut, japanese, hexagon, wave
 -   **👁️ 18 Eye Customizations:** Complete control over eye frames and eyeballs with matching options
 -   **🖼️ Advanced Logo Integration:** Padding, opacity, border radius, and multi-format support (PNG, JPEG, SVG, WebP)
 -   **📱 8 Platform Support:** Web, React, React Native, Vue, Angular, Node.js, iOS (Swift), Android (Kotlin)
 -   **🎯 Production-Quality SVGs:** Perfect output for web browsers AND design tools (Illustrator, Figma, Inkscape)
 -   **⚡ TypeScript First:** Full type safety with comprehensive TypeScript definitions
--   **🔒 Secure & Validated:** Built-in input validation, XSS protection, and image format detection
+-   **🔒 Secure & Validated:** Built-in input validation, XSS protection, capacity checks, and image format detection
 -   **📦 Multiple Formats:** Generate SVG, PNG, JPEG, WebP, and AVIF formats
--   **🚀 Zero Dependencies:** Core library has no runtime dependencies
--   **🌈 Unlimited Colors:** Gradients, RGB, RGBA, hex colors with full transparency support
+-   **🚀 Optimized Performance:** Set-based lookups, memoization, and enhanced path compression
+-   **🌈 Enhanced Gradients:** Support for hex, HSL, HSLA colors with auto-calculated stops
 -   **🍎 Native iOS Support:** Swift package using JavaScriptCore (zero external dependencies)
 -   **🤖 Native Android Support:** Kotlin library with J2V8 JavaScript engine
 
@@ -35,13 +35,13 @@ Unlike other QR code generators, we guarantee:
 
 ### [🎨 Live Demo / Config Generator](https://custoqr.com)
 
-### [🖼️ Design Showcase - See All Features](./examples/design-showcase.html)
-
-**New in v0.2.0:**
-- ✨ 4 New Body Shapes: Mosaic, Fluid, Edge-Cut, Japanese
+**Latest Updates:**
+- ✨ 2 New Body Shapes: Hexagon, Wave (total: 19 shapes)
+- 🚀 Performance Optimizations: Set-based lookups, enhanced path compression
+- 🎨 Enhanced Gradients: Hex, HSL, HSLA support with auto-stops
+- 🔒 Better Validation: QR capacity limits, size limits, helpful errors
 - 🖼️ Advanced Logo Options: Padding, Opacity, Border Radius
-- 📸 All Image Formats: PNG, JPEG, SVG, WebP, GIF, BMP
-- 🎨 Feature-Rich Customization
+- 📸 All Image Formats: PNG, JPEG, SVG, WebP, GIF, BMP, ICO
 
 ## Installation
 
@@ -168,7 +168,7 @@ export const RenderQR = () => {
 
 ## 🎨 Feature-Rich Customization
 
-### 17 Body Shapes
+### 19 Body Shapes
 
 Choose from a wide variety of body patterns:
 
@@ -176,9 +176,9 @@ Choose from a wide variety of body patterns:
 
 **Rounded:** `rounded-horizontal`, `rounded-vertical`
 
-**Geometric:** `diamond`, `star`, `star-small`
+**Geometric:** `diamond`, `star`, `star-small`, **`hexagon`** ✨, **`wave`** ✨
 
-**Premium:** `dots`, `classy`, **`mosaic`** ✨, **`fluid`** ✨, **`edge-cut`** ✨, **`japanese`** ✨
+**Premium:** `dots`, `classy`, **`mosaic`**, **`fluid`**, **`edge-cut`**, **`japanese`**
 
 ### Advanced Logo Integration
 

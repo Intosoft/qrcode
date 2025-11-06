@@ -6,6 +6,8 @@ import {
     generateSquarePath,
     generateStarPath,
     generateTrianglePath,
+    generateHexagonPath,
+    generateWavePath,
 } from './square';
 import { Config } from '../config';
 
@@ -502,6 +504,24 @@ export const pathGenerator = ({
             }
 
             return generateSquarePath({ i, j, cellSize });
+        }
+        case 'hexagon': {
+            return generateHexagonPath({
+                i,
+                j,
+                height: cellSize,
+                width: cellSize,
+                cellSize,
+            });
+        }
+        case 'wave': {
+            return generateWavePath({
+                i,
+                j,
+                height: cellSize,
+                width: cellSize,
+                cellSize,
+            });
         }
         default:
             return path;

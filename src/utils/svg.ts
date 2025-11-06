@@ -153,6 +153,9 @@ export function optimizePath(path: string): string {
     return path
         .replace(/M\s*([\d.]+)\s+([\d.]+)\s+M\s*\1\s+\2/g, 'M$1 $2')
         .replace(/[Ll]\s*0\s+0/g, '')
-        .replace(/([a-zA-Z])\s+/g, '$1')
+        .replace(/\s+/g, ' ')
+        .replace(/([ML])\s+/g, '$1')
+        .replace(/([HV])\s+/g, '$1')
+        .replace(/\s([ZML])/g, '$1')
         .trim();
 }

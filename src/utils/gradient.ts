@@ -1,36 +1,55 @@
 import { Config } from '../config';
 
 export const isGradientColor = (color: string) =>
-    color.includes('linear-gradient') || color.includes('radial-gradient');
+    color.includes('linear-gradient') || 
+    color.includes('radial-gradient') || 
+    color.includes('conic-gradient');
 
 const parseLinearGradient = (input: string) => {
-    const matches = Array.from(input.matchAll(/((?:rgb|rgba)?a?\([^)]+\))\s+(\d+%)/gi));
+    const matches = Array.from(input.matchAll(/((?:rgb|rgba|hsl|hsla|#[0-9a-f]{3,8}|[a-z]+)?(?:\([^)]+\))?)\s+(\d+%)/gi));
 
     const angleMatch = input.match(/(\d+)deg/i);
     const angle = angleMatch ? angleMatch[1] : '0';
 
     const stops = matches.map((match) => ({
-        color: match[1],
+        color: match[1].trim(),
         percentage: match[2],
     }));
 
     if (stops.length === 0) {
-        throw new Error('no parts found');
+        const colorMatches = input.match(/(#[0-9a-f]{3,8}|rgb\([^)]+\)|rgba\([^)]+\)|hsl\([^)]+\)|hsla\([^)]+\)|[a-z]+)/gi);
+        if (colorMatches && colorMatches.length >= 2) {
+            return {
+                angle,
+                stops: colorMatches.map((color, index) => ({
+                    color: color.trim(),
+                    percentage: `${(index * 100) / (colorMatches.length - 1)}%`,
+                })),
+            };
+        }
+        throw new Error('no stops found');
     }
 
     return { angle, stops };
 };
 
 const parseRadialGradient = (input: string) => {
-    const matches = Array.from(input.matchAll(/((?:rgb|rgba)?a?\([^)]+\))\s+(\d+%)/gi));
+    const matches = Array.from(input.matchAll(/((?:rgb|rgba|hsl|hsla|#[0-9a-f]{3,8}|[a-z]+)?(?:\([^)]+\))?)\s+(\d+%)/gi));
 
     const stops = matches.map((match) => ({
-        color: match[1],
+        color: match[1].trim(),
         percentage: match[2],
     }));
 
     if (stops.length === 0) {
-        throw new Error('no parts found');
+        const colorMatches = input.match(/(#[0-9a-f]{3,8}|rgb\([^)]+\)|rgba\([^)]+\)|hsl\([^)]+\)|hsla\([^)]+\)|[a-z]+)/gi);
+        if (colorMatches && colorMatches.length >= 2) {
+            return colorMatches.map((color, index) => ({
+                color: color.trim(),
+                percentage: `${(index * 100) / (colorMatches.length - 1)}%`,
+            }));
+        }
+        throw new Error('no stops found');
     }
 
     return stops;

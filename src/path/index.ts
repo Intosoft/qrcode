@@ -22,91 +22,86 @@ export const generatePath = ({
 }: GeneratePathProps) => {
     const matrix = paramMatrix;
     const cellSize = size / matrix.length;
-    const eyeBallPositions = getEyeBallPositions(matrix.length);
-    const eyeFramePositions = getEyeFramePositions(matrix.length);
-    const logoPathPositions = getLogoPathPositions(matrix.length, config.logo?.size);
+    const matrixLength = matrix.length;
+    const eyeBallPositions = getEyeBallPositions(matrixLength);
+    const eyeFramePositions = getEyeFramePositions(matrixLength);
+    const logoPathPositions = getLogoPathPositions(matrixLength, config.logo?.size);
+    
+    const eyeBallSet = new Set(eyeBallPositions.map(([i, j]) => `${i},${j}`));
+    const eyeFrameSet = new Set(eyeFramePositions.map(([i, j]) => `${i},${j}`));
+    const logoSet = new Set(logoPathPositions.map(([i, j]) => `${i},${j}`));
+    
     let path = '';
 
     if (config.logo?.removeBackground) {
-        matrix.forEach((row, i) => {
-            row.forEach((_, j) => {
-                for (const pos of logoPathPositions) {
-                    if (pos[0] === i && pos[1] === j) {
-                        matrix[i][j] = 0;
-                    }
+        for (let i = 0; i < matrixLength; i++) {
+            for (let j = 0; j < matrixLength; j++) {
+                if (logoSet.has(`${i},${j}`)) {
+                    matrix[i][j] = 0;
                 }
-            });
-        });
+            }
+        }
     }
 
     matrix.forEach((row, i) => {
         row.forEach((column, j) => {
             if (column) {
-                const neighbors = checkNeighbors({ matrix, i, j });
-
-                const isXLast = j === matrix.length - 1;
-                const isXFirst = j === 0;
-
-                const isYLast = i === matrix.length - 1;
-                const isYFirst = i === 0;
-
-                for (const pos of eyeFramePositions) {
-                    if (pos[0] === i && pos[1] === j) {
-                        if (eyeFrameOnly) {
-                            path += pathGenerator({
-                                config,
-                                i,
-                                j,
-                                isXFirst,
-                                isXLast,
-                                isYFirst,
-                                isYLast,
-                                neighbors,
-                                cellSize,
-                            });
-                        }
-                        if (config.shapes.eyeFrame !== 'body') {
-                            return;
-                        }
+                const posKey = `${i},${j}`;
+                
+                if (eyeFrameSet.has(posKey)) {
+                    if (eyeFrameOnly) {
+                        const neighbors = checkNeighbors({ matrix, i, j });
+                        path += pathGenerator({
+                            config,
+                            i,
+                            j,
+                            isXFirst: j === 0,
+                            isXLast: j === matrixLength - 1,
+                            isYFirst: i === 0,
+                            isYLast: i === matrixLength - 1,
+                            neighbors,
+                            cellSize,
+                        });
+                    }
+                    if (config.shapes.eyeFrame !== 'body') {
+                        return;
                     }
                 }
 
-                for (const pos of eyeBallPositions) {
-                    if (pos[0] === i && pos[1] === j) {
-                        if (eyeballOnly) {
-                            path += pathGenerator({
-                                config,
-                                i,
-                                j,
-                                isXFirst,
-                                isXLast,
-                                isYFirst,
-                                isYLast,
-                                neighbors,
-                                cellSize,
-                            });
-                        }
-                        if (config.shapes.eyeball !== 'body') {
-                            return;
-                        }
+                if (eyeBallSet.has(posKey)) {
+                    if (eyeballOnly) {
+                        const neighbors = checkNeighbors({ matrix, i, j });
+                        path += pathGenerator({
+                            config,
+                            i,
+                            j,
+                            isXFirst: j === 0,
+                            isXLast: j === matrixLength - 1,
+                            isYFirst: i === 0,
+                            isYLast: i === matrixLength - 1,
+                            neighbors,
+                            cellSize,
+                        });
+                    }
+                    if (config.shapes.eyeball !== 'body') {
+                        return;
                     }
                 }
 
-                if (eyeballOnly || eyeFrameOnly) {
-                    return;
+                if (!eyeballOnly && !eyeFrameOnly) {
+                    const neighbors = checkNeighbors({ matrix, i, j });
+                    path += pathGenerator({
+                        config,
+                        i,
+                        j,
+                        isXFirst: j === 0,
+                        isXLast: j === matrixLength - 1,
+                        isYFirst: i === 0,
+                        isYLast: i === matrixLength - 1,
+                        neighbors,
+                        cellSize,
+                    });
                 }
-
-                path += pathGenerator({
-                    config,
-                    i,
-                    j,
-                    isXFirst,
-                    isXLast,
-                    isYFirst,
-                    isYLast,
-                    neighbors,
-                    cellSize,
-                });
             }
         });
     });

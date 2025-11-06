@@ -56,7 +56,9 @@ export type BodyShape =
     | 'mosaic'
     | 'fluid'
     | 'edge-cut'
-    | 'japanese';
+    | 'japanese'
+    | 'hexagon'
+    | 'wave';
 
 export interface LogoConfig {
     url: string;

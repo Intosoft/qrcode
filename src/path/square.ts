@@ -302,6 +302,88 @@ export const generateRoundedCornerEyeballPath = ({
     return path;
 };
 
+export const generateHexagonPath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize,
+}: GenerateItemPathProps) => {
+    const height = _height || cellSize;
+    const width = _width || cellSize;
+    const halfWidth = width / 2;
+    const halfHeight = height / 2;
+    const cx = cellSize * j + halfWidth;
+    const cy = cellSize * i + halfHeight;
+    const radius = Math.min(halfWidth, halfHeight);
+
+    let path = '';
+
+    for (let i = 0; i < 6; i++) {
+        const angle = (Math.PI / 3) * i - Math.PI / 2;
+        const x = cx + radius * Math.cos(angle);
+        const y = cy + radius * Math.sin(angle);
+
+        if (i === 0) {
+            path += `M${x},${y} `;
+        } else {
+            path += `L${x},${y} `;
+        }
+    }
+
+    path += 'Z';
+
+    return path;
+};
+
+export const generateWavePath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize,
+}: GenerateItemPathProps) => {
+    const height = _height || cellSize;
+    const width = _width || cellSize;
+    let path = '';
+
+    const x = cellSize * j + (cellSize - width) / 2;
+    const y = cellSize * i + (cellSize - height) / 2;
+    
+    const amplitude = width * 0.15;
+    const frequency = 2;
+
+    path += `M${x},${y + amplitude}`;
+    
+    for (let i = 0; i <= frequency; i++) {
+        const px = x + (width / frequency) * i;
+        const py = y + amplitude * (1 - Math.cos((Math.PI * 2 * i) / frequency));
+        const cpx = px + width / (frequency * 2);
+        const cpy = py + amplitude * Math.sin((Math.PI * (2 * i + 1)) / frequency);
+        
+        if (i < frequency) {
+            path += `Q${cpx},${cpy},${px + width / frequency},${y + amplitude * (1 - Math.cos((Math.PI * 2 * (i + 1)) / frequency))}`;
+        }
+    }
+    
+    path += `L${x + width},${y + height - amplitude}`;
+    
+    for (let i = frequency; i >= 0; i--) {
+        const px = x + (width / frequency) * i;
+        const py = y + height - amplitude * (1 - Math.cos((Math.PI * 2 * i) / frequency));
+        const cpx = px - width / (frequency * 2);
+        const cpy = py - amplitude * Math.sin((Math.PI * (2 * i - 1)) / frequency);
+        
+        if (i > 0) {
+            path += `Q${cpx},${cpy},${px - width / frequency},${y + height - amplitude * (1 - Math.cos((Math.PI * 2 * (i - 1)) / frequency))}`;
+        }
+    }
+    
+    path += `L${x},${y + amplitude}Z`;
+
+    return path;
+};
+
 interface GenerateTrianglePath extends GenerateItemPathProps {
     direction: 'top' | 'left' | 'right' | 'bottom';
 }

@@ -25,6 +25,14 @@ const validateConfigInput = (input: unknown): input is ConfigInput => {
     if (!configInput.value || typeof configInput.value !== 'string') {
         throw new Error('Config value is required and must be a string');
     }
+    
+    if (configInput.value.length === 0) {
+        throw new Error('Config value cannot be an empty string');
+    }
+    
+    if (configInput.value.length > 7089) {
+        throw new Error('Config value exceeds maximum QR code capacity (7089 characters)');
+    }
 
     if (
         configInput.length !== undefined &&
@@ -32,12 +40,20 @@ const validateConfigInput = (input: unknown): input is ConfigInput => {
     ) {
         throw new Error('Config length must be a positive number');
     }
+    
+    if (configInput.length !== undefined && configInput.length > 10000) {
+        throw new Error('Config length is too large (maximum: 10000px)');
+    }
 
     if (
         configInput.padding !== undefined &&
         (typeof configInput.padding !== 'number' || configInput.padding < 0)
     ) {
         throw new Error('Config padding must be a non-negative number');
+    }
+    
+    if (configInput.padding !== undefined && configInput.padding > 500) {
+        throw new Error('Config padding is too large (maximum: 500px)');
     }
 
     return true;
@@ -56,23 +72,24 @@ export function generateSVGString(
         validateConfigInput(configInput);
 
         const config = createConfig(configInput);
-
         const matrix = generateMatrix(config.value, config.errorCorrectionLevel);
-
-        const cellSize = config.length / matrix.length;
+        const matrixLength = matrix.length;
+        const cellSize = config.length / matrixLength;
+        
         const path = cleanSVGPath(generatePath({ matrix, size: config.length, config }));
 
-        const defsContent = [
-            generateGradientByConfig(config),
-            renderLogoFromConfig(config, cellSize, options?.forReactNative),
-        ]
+        const gradientDef = generateGradientByConfig(config);
+        const logoDef = renderLogoFromConfig(config, cellSize, options?.forReactNative);
+        
+        const defsContent = [gradientDef, logoDef]
             .filter(Boolean)
             .join('\n    ');
 
-        const viewBoxMinX = formatNumber(-config.padding);
-        const viewBoxMinY = formatNumber(-config.padding);
-        const viewBoxWidth = formatNumber(config.length + config.padding * 2);
-        const viewBoxHeight = formatNumber(config.length + config.padding * 2);
+        const padding = config.padding;
+        const viewBoxMinX = formatNumber(-padding);
+        const viewBoxMinY = formatNumber(-padding);
+        const viewBoxWidth = formatNumber(config.length + padding * 2);
+        const viewBoxHeight = formatNumber(config.length + padding * 2);
 
         const backgroundColor = validateColor(
             isTransparent(config.colors.background) ? 'none' : config.colors.background,
