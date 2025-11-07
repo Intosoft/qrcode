@@ -8,6 +8,18 @@ import {
     generateTrianglePath,
     generateHexagonPath,
     generateWavePath,
+    generateLeafPath,
+    generatePetalPath,
+    generateOctagonPath,
+    generateCrossPath,
+    generatePillPath,
+    generateCrystalPath,
+    generateBubblePath,
+    generateTribalPath,
+    generateZigzagPath,
+    generateSpiralPath,
+    generateNeonPath,
+    generateTechPath,
 } from './square';
 import { Config } from '../config';
 
@@ -516,6 +528,117 @@ export const pathGenerator = ({
         }
         case 'wave': {
             return generateWavePath({
+                i,
+                j,
+                height: cellSize,
+                width: cellSize,
+                cellSize,
+            });
+        }
+        // NEW GEOMETRIC SHAPES (v2.0)
+        case 'leaf': {
+            return generateLeafPath({
+                i,
+                j,
+                height: cellSize,
+                width: cellSize,
+                cellSize,
+            });
+        }
+        case 'petal': {
+            return generatePetalPath({
+                i,
+                j,
+                height: cellSize,
+                width: cellSize,
+                cellSize,
+            });
+        }
+        case 'octagon': {
+            return generateOctagonPath({
+                i,
+                j,
+                height: cellSize,
+                width: cellSize,
+                cellSize,
+            });
+        }
+        case 'cross': {
+            return generateCrossPath({
+                i,
+                j,
+                height: cellSize,
+                width: cellSize,
+                cellSize,
+            });
+        }
+        case 'pill': {
+            return generatePillPath({
+                i,
+                j,
+                height: cellSize,
+                width: cellSize,
+                cellSize,
+            });
+        }
+        // NEW ARTISTIC SHAPES (v2.0)
+        case 'crystal': {
+            return generateCrystalPath({
+                i,
+                j,
+                height: cellSize,
+                width: cellSize,
+                cellSize,
+            });
+        }
+        case 'bubble': {
+            return generateBubblePath({
+                i,
+                j,
+                height: cellSize,
+                width: cellSize,
+                cellSize,
+            });
+        }
+        case 'tribal': {
+            return generateTribalPath({
+                i,
+                j,
+                height: cellSize,
+                width: cellSize,
+                cellSize,
+            });
+        }
+        case 'zigzag': {
+            return generateZigzagPath({
+                i,
+                j,
+                height: cellSize,
+                width: cellSize,
+                cellSize,
+            });
+        }
+        case 'spiral': {
+            return generateSpiralPath({
+                i,
+                j,
+                height: cellSize,
+                width: cellSize,
+                cellSize,
+            });
+        }
+        // NEW ADVANCED SHAPES (v2.0)
+        case 'neon': {
+            return generateNeonPath({
+                i,
+                j,
+                height: cellSize,
+                width: cellSize,
+                cellSize,
+            });
+        }
+        case 'tech': {
+            return generateTechPath({
                 i,
                 j,
                 height: cellSize,

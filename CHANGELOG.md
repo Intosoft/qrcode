@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### ✨ Added - 12 New Body Shapes (v2.0.0-beta)
+
+Massively expanded shape library with **31+ total body shapes**:
+
+**Geometric Shapes (5 new):**
+- **Leaf** - Organic teardrop/leaf shape with smooth curves
+- **Petal** - Flower petal design using quadratic curves
+- **Octagon** - 8-sided polygon for geometric variety
+- **Cross** - Plus/cross symbol with adjustable bar widths
+- **Pill** - Rounded rectangle capsule shape
+
+**Artistic Shapes (5 new):**
+- **Crystal** - Sharp angular crystal/gem design
+- **Bubble** - Soft circular bubble pattern
+- **Tribal** - Sharp tribal/tattoo-inspired aesthetic
+- **Zigzag** - Lightning bolt/zigzag pattern
+- **Spiral** - Curved spiral design
+
+**Advanced Shapes (2 new):**
+- **Neon** - Rounded bars with neon tube aesthetic
+- **Tech** - Circuit board/technology design with corner notches
+
+Total body shapes: **31** (up from 19)
+
 ### ✨ Added - New Body Shapes (v0.2.1)
 
 Two additional geometric body shapes:

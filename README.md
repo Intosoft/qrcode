@@ -6,7 +6,7 @@ Intosoft QRCode is a fully customizable, production-ready QR code generator with
 
 ## ✨ Key Features
 
--   **🎨 19 Body Shapes:** Classic, geometric, artistic designs - dots, classy, mosaic, fluid, edge-cut, japanese, hexagon, wave
+-   **🎨 31+ Body Shapes:** Classic, geometric, artistic designs - from dots and classy to crystal, tribal, and neon
 -   **👁️ 18 Eye Customizations:** Complete control over eye frames and eyeballs with matching options
 -   **🖼️ Advanced Logo Integration:** Padding, opacity, border radius, and multi-format support (PNG, JPEG, SVG, WebP)
 -   **📱 8 Platform Support:** Web, React, React Native, Vue, Angular, Node.js, iOS (Swift), Android (Kotlin)
@@ -36,7 +36,8 @@ Unlike other QR code generators, we guarantee:
 ### [🎨 Live Demo / Config Generator](https://custoqr.com)
 
 **Latest Updates:**
-- ✨ 2 New Body Shapes: Hexagon, Wave (total: 19 shapes)
+- ✨ **12 New Body Shapes**: leaf, petal, octagon, cross, pill, crystal, bubble, tribal, zigzag, spiral, neon, tech (total: **31+ shapes**)
+- ✨ 2 New Body Shapes: Hexagon, Wave (total: 19 shapes → now 31)
 - 🚀 Performance Optimizations: Set-based lookups, enhanced path compression
 - 🎨 Enhanced Gradients: Hex, HSL, HSLA support with auto-stops
 - 🔒 Better Validation: QR capacity limits, size limits, helpful errors
@@ -168,17 +169,19 @@ export const RenderQR = () => {
 
 ## 🎨 Feature-Rich Customization
 
-### 19 Body Shapes
+### 31+ Body Shapes
 
-Choose from a wide variety of body patterns:
+Choose from an extensive variety of body patterns:
 
-**Classic:** `square`, `square-small`, `square-horizontal`, `square-vertical`, `circle`, `circle-small`
+**Classic (6):** `square`, `square-small`, `square-horizontal`, `square-vertical`, `circle`, `circle-small`
 
-**Rounded:** `rounded-horizontal`, `rounded-vertical`
+**Rounded (2):** `rounded-horizontal`, `rounded-vertical`
 
-**Geometric:** `diamond`, `star`, `star-small`, **`hexagon`** ✨, **`wave`** ✨
+**Geometric (7):** `diamond`, `star`, `star-small`, `hexagon`, `octagon`, `leaf`, `petal`
 
-**Premium:** `dots`, `classy`, **`mosaic`**, **`fluid`**, **`edge-cut`**, **`japanese`**
+**Artistic (8):** `dots`, `classy`, `crystal`, `bubble`, `tribal`, `zigzag`, `cross`, `pill`
+
+**Premium (8):** `mosaic`, `fluid`, `edge-cut`, `japanese`, `wave`, `spiral`, `neon`, `tech`
 
 ### Advanced Logo Integration
 

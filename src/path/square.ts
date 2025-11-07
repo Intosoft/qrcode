@@ -384,6 +384,347 @@ export const generateWavePath = ({
     return path;
 };
 
+// ====== NEW SHAPES (v2.0) ======
+
+export const generateLeafPath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize,
+}: GenerateItemPathProps) => {
+    const height = _height || cellSize;
+    const width = _width || cellSize;
+    const x = cellSize * j + (cellSize - width) / 2;
+    const y = cellSize * i + (cellSize - height) / 2;
+
+    let path = '';
+    const cx = x + width / 2;
+    const cy = y + height / 2;
+    
+    // Teardrop/leaf shape using bezier curves
+    path += `M${cx},${y}`;
+    path += `C${x + width},${y + height * 0.3},${x + width},${y + height * 0.7},${cx},${y + height}`;
+    path += `C${x},${y + height * 0.7},${x},${y + height * 0.3},${cx},${y}Z`;
+
+    return path;
+};
+
+export const generatePetalPath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize,
+}: GenerateItemPathProps) => {
+    const height = _height || cellSize;
+    const width = _width || cellSize;
+    const x = cellSize * j + (cellSize - width) / 2;
+    const y = cellSize * i + (cellSize - height) / 2;
+
+    let path = '';
+    const cx = x + width / 2;
+    const cy = y + height / 2;
+    const radius = Math.min(width, height) / 2;
+    
+    // Flower petal using quadratic curves
+    path += `M${cx},${cy}`;
+    path += `Q${x + width},${y},${cx + radius},${cy}`;
+    path += `Q${x + width},${y + height},${cx},${cy}`;
+    path += `Q${x},${y + height},${cx - radius},${cy}`;
+    path += `Q${x},${y},${cx},${cy}Z`;
+
+    return path;
+};
+
+export const generateOctagonPath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize,
+}: GenerateItemPathProps) => {
+    const height = _height || cellSize;
+    const width = _width || cellSize;
+    const halfWidth = width / 2;
+    const halfHeight = height / 2;
+    const cx = cellSize * j + halfWidth;
+    const cy = cellSize * i + halfHeight;
+    const radius = Math.min(halfWidth, halfHeight);
+
+    let path = '';
+
+    for (let i = 0; i < 8; i++) {
+        const angle = (Math.PI / 4) * i - Math.PI / 2;
+        const x = cx + radius * Math.cos(angle);
+        const y = cy + radius * Math.sin(angle);
+
+        if (i === 0) {
+            path += `M${x},${y} `;
+        } else {
+            path += `L${x},${y} `;
+        }
+    }
+
+    path += 'Z';
+
+    return path;
+};
+
+export const generateCrossPath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize,
+}: GenerateItemPathProps) => {
+    const height = _height || cellSize;
+    const width = _width || cellSize;
+    const x = cellSize * j + (cellSize - width) / 2;
+    const y = cellSize * i + (cellSize - height) / 2;
+
+    let path = '';
+    const barWidth = width * 0.3;
+    const barHeight = height * 0.3;
+    const cx = x + width / 2;
+    const cy = y + height / 2;
+    
+    // Vertical bar
+    path += `M${cx - barWidth / 2},${y}`;
+    path += `L${cx + barWidth / 2},${y}`;
+    path += `L${cx + barWidth / 2},${y + height}`;
+    path += `L${cx - barWidth / 2},${y + height}Z`;
+    
+    // Horizontal bar
+    path += `M${x},${cy - barHeight / 2}`;
+    path += `L${x + width},${cy - barHeight / 2}`;
+    path += `L${x + width},${cy + barHeight / 2}`;
+    path += `L${x},${cy + barHeight / 2}Z`;
+
+    return path;
+};
+
+export const generatePillPath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize,
+}: GenerateItemPathProps) => {
+    const height = _height || cellSize * 0.9;
+    const width = _width || cellSize * 0.9;
+    const x = cellSize * j + (cellSize - width) / 2;
+    const y = cellSize * i + (cellSize - height) / 2;
+
+    let path = '';
+    const radius = Math.min(width, height) / 2;
+    
+    // Rounded rectangle (pill shape)
+    path += `M${x + radius},${y}`;
+    path += `L${x + width - radius},${y}`;
+    path += `A${radius},${radius},0,0,1,${x + width - radius},${y + height}`;
+    path += `L${x + radius},${y + height}`;
+    path += `A${radius},${radius},0,0,1,${x + radius},${y}Z`;
+
+    return path;
+};
+
+export const generateCrystalPath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize,
+}: GenerateItemPathProps) => {
+    const height = _height || cellSize;
+    const width = _width || cellSize;
+    const x = cellSize * j + (cellSize - width) / 2;
+    const y = cellSize * i + (cellSize - height) / 2;
+
+    let path = '';
+    const cx = x + width / 2;
+    const cy = y + height / 2;
+    
+    // Sharp crystal/gem shape
+    path += `M${cx},${y}`;
+    path += `L${x + width * 0.75},${y + height * 0.25}`;
+    path += `L${x + width},${cy}`;
+    path += `L${x + width * 0.75},${y + height * 0.75}`;
+    path += `L${cx},${y + height}`;
+    path += `L${x + width * 0.25},${y + height * 0.75}`;
+    path += `L${x},${cy}`;
+    path += `L${x + width * 0.25},${y + height * 0.25}Z`;
+
+    return path;
+};
+
+export const generateBubblePath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize,
+}: GenerateItemPathProps) => {
+    const height = _height || cellSize;
+    const width = _width || cellSize;
+    const x = cellSize * j + (cellSize - width) / 2;
+    const y = cellSize * i + (cellSize - height) / 2;
+
+    let path = '';
+    const mainRadius = Math.min(width, height) * 0.35;
+    const cx = x + width / 2;
+    const cy = y + height / 2;
+    
+    // Main bubble circle
+    path += `M${cx + mainRadius},${cy}`;
+    path += `A${mainRadius},${mainRadius},0,1,1,${cx - mainRadius},${cy}`;
+    path += `A${mainRadius},${mainRadius},0,0,1,${cx + mainRadius},${cy}Z`;
+
+    return path;
+};
+
+export const generateTribalPath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize,
+}: GenerateItemPathProps) => {
+    const height = _height || cellSize;
+    const width = _width || cellSize;
+    const x = cellSize * j + (cellSize - width) / 2;
+    const y = cellSize * i + (cellSize - height) / 2;
+
+    let path = '';
+    const cx = x + width / 2;
+    
+    // Sharp tribal-inspired triangular pattern
+    path += `M${cx},${y}`;
+    path += `L${x + width * 0.8},${y + height * 0.4}`;
+    path += `L${x + width},${y + height * 0.6}`;
+    path += `L${cx},${y + height}`;
+    path += `L${x},${y + height * 0.6}`;
+    path += `L${x + width * 0.2},${y + height * 0.4}Z`;
+
+    return path;
+};
+
+export const generateZigzagPath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize,
+}: GenerateItemPathProps) => {
+    const height = _height || cellSize;
+    const width = _width || cellSize;
+    const x = cellSize * j + (cellSize - width) / 2;
+    const y = cellSize * i + (cellSize - height) / 2;
+
+    let path = '';
+    
+    // Lightning/zigzag shape
+    path += `M${x + width * 0.6},${y}`;
+    path += `L${x + width * 0.3},${y + height * 0.4}`;
+    path += `L${x + width * 0.7},${y + height * 0.4}`;
+    path += `L${x + width * 0.4},${y + height}`;
+    path += `L${x + width},${y + height * 0.5}`;
+    path += `L${x + width * 0.5},${y + height * 0.5}`;
+    path += `L${x + width},${y}Z`;
+
+    return path;
+};
+
+export const generateSpiralPath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize,
+}: GenerateItemPathProps) => {
+    const height = _height || cellSize;
+    const width = _width || cellSize;
+    const x = cellSize * j + (cellSize - width) / 2;
+    const y = cellSize * i + (cellSize - height) / 2;
+
+    let path = '';
+    const cx = x + width / 2;
+    const cy = y + height / 2;
+    const maxRadius = Math.min(width, height) / 2;
+    
+    // Simple spiral approximation using arcs
+    const turns = 2;
+    const segments = 8;
+    
+    for (let i = 0; i <= segments; i++) {
+        const angle = (Math.PI * 2 * turns * i) / segments;
+        const radius = (maxRadius * i) / segments;
+        const px = cx + radius * Math.cos(angle);
+        const py = cy + radius * Math.sin(angle);
+        
+        if (i === 0) {
+            path += `M${px},${py}`;
+        } else {
+            path += `L${px},${py}`;
+        }
+    }
+
+    return path;
+};
+
+export const generateNeonPath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize,
+}: GenerateItemPathProps) => {
+    const height = _height || cellSize * 0.9;
+    const width = _width || cellSize * 0.9;
+    const x = cellSize * j + (cellSize - width) / 2;
+    const y = cellSize * i + (cellSize - height) / 2;
+
+    let path = '';
+    const radius = height / 4;
+    
+    // Rounded bar (neon tube style)
+    path += `M${x + radius},${y}`;
+    path += `L${x + width - radius},${y}`;
+    path += `A${radius},${radius},0,0,1,${x + width - radius},${y + height}`;
+    path += `L${x + radius},${y + height}`;
+    path += `A${radius},${radius},0,0,1,${x + radius},${y}Z`;
+
+    return path;
+};
+
+export const generateTechPath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize,
+}: GenerateItemPathProps) => {
+    const height = _height || cellSize;
+    const width = _width || cellSize;
+    const x = cellSize * j + (cellSize - width) / 2;
+    const y = cellSize * i + (cellSize - height) / 2;
+
+    let path = '';
+    const notchSize = width * 0.15;
+    
+    // Circuit board / tech aesthetic with corner notches
+    path += `M${x + notchSize},${y}`;
+    path += `L${x + width - notchSize},${y}`;
+    path += `L${x + width},${y + notchSize}`;
+    path += `L${x + width},${y + height - notchSize}`;
+    path += `L${x + width - notchSize},${y + height}`;
+    path += `L${x + notchSize},${y + height}`;
+    path += `L${x},${y + height - notchSize}`;
+    path += `L${x},${y + notchSize}Z`;
+
+    return path;
+};
+
 interface GenerateTrianglePath extends GenerateItemPathProps {
     direction: 'top' | 'left' | 'right' | 'bottom';
 }

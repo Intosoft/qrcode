@@ -58,7 +58,22 @@ export type BodyShape =
     | 'edge-cut'
     | 'japanese'
     | 'hexagon'
-    | 'wave';
+    | 'wave'
+    // NEW: Geometric shapes (v2.0)
+    | 'leaf'
+    | 'petal'
+    | 'octagon'
+    | 'cross'
+    | 'pill'
+    // NEW: Artistic shapes (v2.0)
+    | 'crystal'
+    | 'bubble'
+    | 'tribal'
+    | 'zigzag'
+    | 'spiral'
+    // NEW: Advanced shapes (v2.0)
+    | 'neon'
+    | 'tech';
 
 export interface LogoConfig {
     url: string;
