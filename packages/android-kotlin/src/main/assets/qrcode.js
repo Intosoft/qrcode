@@ -1993,28 +1993,45 @@
   };
 
   // src/utils/gradient.ts
-  var isGradientColor = (color) => color.includes("linear-gradient") || color.includes("radial-gradient");
+  var isGradientColor = (color) => color.includes("linear-gradient") || color.includes("radial-gradient") || color.includes("conic-gradient");
   var parseLinearGradient = (input) => {
-    const matches = Array.from(input.matchAll(/((?:rgb|rgba)?a?\([^)]+\))\s+(\d+%)/gi));
+    const matches = Array.from(input.matchAll(/((?:rgb|rgba|hsl|hsla|#[0-9a-f]{3,8}|[a-z]+)?(?:\([^)]+\))?)\s+(\d+%)/gi));
     const angleMatch = input.match(/(\d+)deg/i);
     const angle = angleMatch ? angleMatch[1] : "0";
     const stops = matches.map((match) => ({
-      color: match[1],
+      color: match[1].trim(),
       percentage: match[2]
     }));
     if (stops.length === 0) {
-      throw new Error("no parts found");
+      const colorMatches = input.match(/(#[0-9a-f]{3,8}|rgb\([^)]+\)|rgba\([^)]+\)|hsl\([^)]+\)|hsla\([^)]+\)|[a-z]+)/gi);
+      if (colorMatches && colorMatches.length >= 2) {
+        return {
+          angle,
+          stops: colorMatches.map((color, index) => ({
+            color: color.trim(),
+            percentage: `${index * 100 / (colorMatches.length - 1)}%`
+          }))
+        };
+      }
+      throw new Error("no stops found");
     }
     return { angle, stops };
   };
   var parseRadialGradient = (input) => {
-    const matches = Array.from(input.matchAll(/((?:rgb|rgba)?a?\([^)]+\))\s+(\d+%)/gi));
+    const matches = Array.from(input.matchAll(/((?:rgb|rgba|hsl|hsla|#[0-9a-f]{3,8}|[a-z]+)?(?:\([^)]+\))?)\s+(\d+%)/gi));
     const stops = matches.map((match) => ({
-      color: match[1],
+      color: match[1].trim(),
       percentage: match[2]
     }));
     if (stops.length === 0) {
-      throw new Error("no parts found");
+      const colorMatches = input.match(/(#[0-9a-f]{3,8}|rgb\([^)]+\)|rgba\([^)]+\)|hsl\([^)]+\)|hsla\([^)]+\)|[a-z]+)/gi);
+      if (colorMatches && colorMatches.length >= 2) {
+        return colorMatches.map((color, index) => ({
+          color: color.trim(),
+          percentage: `${index * 100 / (colorMatches.length - 1)}%`
+        }));
+      }
+      throw new Error("no stops found");
     }
     return stops;
   };
@@ -2108,7 +2125,7 @@
     }
   };
   var createConfig = (input) => {
-    var _a, _b, _c, _d;
+    var _a, _b, _c, _d, _e, _f, _g, _h;
     return __spreadProps(__spreadValues(__spreadValues({}, DEFAULT_CONFIG), input), {
       shapes: __spreadValues(__spreadValues({}, DEFAULT_CONFIG.shapes), input.shapes),
       colors: __spreadProps(__spreadValues(__spreadValues({}, DEFAULT_CONFIG.colors), input.colors), {
@@ -2118,7 +2135,11 @@
       logo: input.logo ? {
         url: input.logo.url,
         size: (_c = input.logo.size) != null ? _c : 40,
-        removeBackground: (_d = input.logo.removeBackground) != null ? _d : false
+        removeBackground: (_d = input.logo.removeBackground) != null ? _d : false,
+        padding: (_e = input.logo.padding) != null ? _e : 0,
+        opacity: (_f = input.logo.opacity) != null ? _f : 1,
+        borderRadius: (_g = input.logo.borderRadius) != null ? _g : 0,
+        excavate: (_h = input.logo.excavate) != null ? _h : true
       } : void 0
     });
   };
@@ -2344,6 +2365,345 @@
     path += `Z`;
     return path;
   };
+  var generateHexagonPath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize
+  }) => {
+    const height = _height || cellSize;
+    const width = _width || cellSize;
+    const halfWidth = width / 2;
+    const halfHeight = height / 2;
+    const cx = cellSize * j + halfWidth;
+    const cy = cellSize * i + halfHeight;
+    const radius = Math.min(halfWidth, halfHeight);
+    let path = "";
+    for (let i2 = 0; i2 < 6; i2++) {
+      const angle = Math.PI / 3 * i2 - Math.PI / 2;
+      const x = cx + radius * Math.cos(angle);
+      const y = cy + radius * Math.sin(angle);
+      if (i2 === 0) {
+        path += `M${x},${y} `;
+      } else {
+        path += `L${x},${y} `;
+      }
+    }
+    path += "Z";
+    return path;
+  };
+  var generateWavePath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize
+  }) => {
+    const height = _height || cellSize;
+    const width = _width || cellSize;
+    let path = "";
+    const x = cellSize * j + (cellSize - width) / 2;
+    const y = cellSize * i + (cellSize - height) / 2;
+    const amplitude = width * 0.15;
+    const frequency = 2;
+    path += `M${x},${y + amplitude}`;
+    for (let i2 = 0; i2 <= frequency; i2++) {
+      const px = x + width / frequency * i2;
+      const py = y + amplitude * (1 - Math.cos(Math.PI * 2 * i2 / frequency));
+      const cpx = px + width / (frequency * 2);
+      const cpy = py + amplitude * Math.sin(Math.PI * (2 * i2 + 1) / frequency);
+      if (i2 < frequency) {
+        path += `Q${cpx},${cpy},${px + width / frequency},${y + amplitude * (1 - Math.cos(Math.PI * 2 * (i2 + 1) / frequency))}`;
+      }
+    }
+    path += `L${x + width},${y + height - amplitude}`;
+    for (let i2 = frequency; i2 >= 0; i2--) {
+      const px = x + width / frequency * i2;
+      const py = y + height - amplitude * (1 - Math.cos(Math.PI * 2 * i2 / frequency));
+      const cpx = px - width / (frequency * 2);
+      const cpy = py - amplitude * Math.sin(Math.PI * (2 * i2 - 1) / frequency);
+      if (i2 > 0) {
+        path += `Q${cpx},${cpy},${px - width / frequency},${y + height - amplitude * (1 - Math.cos(Math.PI * 2 * (i2 - 1) / frequency))}`;
+      }
+    }
+    path += `L${x},${y + amplitude}Z`;
+    return path;
+  };
+  var generateLeafPath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize
+  }) => {
+    const height = _height || cellSize;
+    const width = _width || cellSize;
+    const x = cellSize * j + (cellSize - width) / 2;
+    const y = cellSize * i + (cellSize - height) / 2;
+    let path = "";
+    const cx = x + width / 2;
+    const cy = y + height / 2;
+    path += `M${cx},${y}`;
+    path += `C${x + width},${y + height * 0.3},${x + width},${y + height * 0.7},${cx},${y + height}`;
+    path += `C${x},${y + height * 0.7},${x},${y + height * 0.3},${cx},${y}Z`;
+    return path;
+  };
+  var generatePetalPath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize
+  }) => {
+    const height = _height || cellSize;
+    const width = _width || cellSize;
+    const x = cellSize * j + (cellSize - width) / 2;
+    const y = cellSize * i + (cellSize - height) / 2;
+    let path = "";
+    const cx = x + width / 2;
+    const cy = y + height / 2;
+    const radius = Math.min(width, height) / 2;
+    path += `M${cx},${cy}`;
+    path += `Q${x + width},${y},${cx + radius},${cy}`;
+    path += `Q${x + width},${y + height},${cx},${cy}`;
+    path += `Q${x},${y + height},${cx - radius},${cy}`;
+    path += `Q${x},${y},${cx},${cy}Z`;
+    return path;
+  };
+  var generateOctagonPath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize
+  }) => {
+    const height = _height || cellSize;
+    const width = _width || cellSize;
+    const halfWidth = width / 2;
+    const halfHeight = height / 2;
+    const cx = cellSize * j + halfWidth;
+    const cy = cellSize * i + halfHeight;
+    const radius = Math.min(halfWidth, halfHeight);
+    let path = "";
+    for (let i2 = 0; i2 < 8; i2++) {
+      const angle = Math.PI / 4 * i2 - Math.PI / 2;
+      const x = cx + radius * Math.cos(angle);
+      const y = cy + radius * Math.sin(angle);
+      if (i2 === 0) {
+        path += `M${x},${y} `;
+      } else {
+        path += `L${x},${y} `;
+      }
+    }
+    path += "Z";
+    return path;
+  };
+  var generateCrossPath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize
+  }) => {
+    const height = _height || cellSize;
+    const width = _width || cellSize;
+    const x = cellSize * j + (cellSize - width) / 2;
+    const y = cellSize * i + (cellSize - height) / 2;
+    let path = "";
+    const barWidth = width * 0.3;
+    const barHeight = height * 0.3;
+    const cx = x + width / 2;
+    const cy = y + height / 2;
+    path += `M${cx - barWidth / 2},${y}`;
+    path += `L${cx + barWidth / 2},${y}`;
+    path += `L${cx + barWidth / 2},${y + height}`;
+    path += `L${cx - barWidth / 2},${y + height}Z`;
+    path += `M${x},${cy - barHeight / 2}`;
+    path += `L${x + width},${cy - barHeight / 2}`;
+    path += `L${x + width},${cy + barHeight / 2}`;
+    path += `L${x},${cy + barHeight / 2}Z`;
+    return path;
+  };
+  var generatePillPath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize
+  }) => {
+    const height = _height || cellSize * 0.9;
+    const width = _width || cellSize * 0.9;
+    const x = cellSize * j + (cellSize - width) / 2;
+    const y = cellSize * i + (cellSize - height) / 2;
+    let path = "";
+    const radius = Math.min(width, height) / 2;
+    path += `M${x + radius},${y}`;
+    path += `L${x + width - radius},${y}`;
+    path += `A${radius},${radius},0,0,1,${x + width - radius},${y + height}`;
+    path += `L${x + radius},${y + height}`;
+    path += `A${radius},${radius},0,0,1,${x + radius},${y}Z`;
+    return path;
+  };
+  var generateCrystalPath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize
+  }) => {
+    const height = _height || cellSize;
+    const width = _width || cellSize;
+    const x = cellSize * j + (cellSize - width) / 2;
+    const y = cellSize * i + (cellSize - height) / 2;
+    let path = "";
+    const cx = x + width / 2;
+    const cy = y + height / 2;
+    path += `M${cx},${y}`;
+    path += `L${x + width * 0.75},${y + height * 0.25}`;
+    path += `L${x + width},${cy}`;
+    path += `L${x + width * 0.75},${y + height * 0.75}`;
+    path += `L${cx},${y + height}`;
+    path += `L${x + width * 0.25},${y + height * 0.75}`;
+    path += `L${x},${cy}`;
+    path += `L${x + width * 0.25},${y + height * 0.25}Z`;
+    return path;
+  };
+  var generateBubblePath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize
+  }) => {
+    const height = _height || cellSize;
+    const width = _width || cellSize;
+    const x = cellSize * j + (cellSize - width) / 2;
+    const y = cellSize * i + (cellSize - height) / 2;
+    let path = "";
+    const mainRadius = Math.min(width, height) * 0.35;
+    const cx = x + width / 2;
+    const cy = y + height / 2;
+    path += `M${cx + mainRadius},${cy}`;
+    path += `A${mainRadius},${mainRadius},0,1,1,${cx - mainRadius},${cy}`;
+    path += `A${mainRadius},${mainRadius},0,0,1,${cx + mainRadius},${cy}Z`;
+    return path;
+  };
+  var generateTribalPath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize
+  }) => {
+    const height = _height || cellSize;
+    const width = _width || cellSize;
+    const x = cellSize * j + (cellSize - width) / 2;
+    const y = cellSize * i + (cellSize - height) / 2;
+    let path = "";
+    const cx = x + width / 2;
+    path += `M${cx},${y}`;
+    path += `L${x + width * 0.8},${y + height * 0.4}`;
+    path += `L${x + width},${y + height * 0.6}`;
+    path += `L${cx},${y + height}`;
+    path += `L${x},${y + height * 0.6}`;
+    path += `L${x + width * 0.2},${y + height * 0.4}Z`;
+    return path;
+  };
+  var generateZigzagPath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize
+  }) => {
+    const height = _height || cellSize;
+    const width = _width || cellSize;
+    const x = cellSize * j + (cellSize - width) / 2;
+    const y = cellSize * i + (cellSize - height) / 2;
+    let path = "";
+    path += `M${x + width * 0.6},${y}`;
+    path += `L${x + width * 0.3},${y + height * 0.4}`;
+    path += `L${x + width * 0.7},${y + height * 0.4}`;
+    path += `L${x + width * 0.4},${y + height}`;
+    path += `L${x + width},${y + height * 0.5}`;
+    path += `L${x + width * 0.5},${y + height * 0.5}`;
+    path += `L${x + width},${y}Z`;
+    return path;
+  };
+  var generateSpiralPath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize
+  }) => {
+    const height = _height || cellSize;
+    const width = _width || cellSize;
+    const x = cellSize * j + (cellSize - width) / 2;
+    const y = cellSize * i + (cellSize - height) / 2;
+    let path = "";
+    const cx = x + width / 2;
+    const cy = y + height / 2;
+    const maxRadius = Math.min(width, height) / 2;
+    const turns = 2;
+    const segments = 8;
+    for (let i2 = 0; i2 <= segments; i2++) {
+      const angle = Math.PI * 2 * turns * i2 / segments;
+      const radius = maxRadius * i2 / segments;
+      const px = cx + radius * Math.cos(angle);
+      const py = cy + radius * Math.sin(angle);
+      if (i2 === 0) {
+        path += `M${px},${py}`;
+      } else {
+        path += `L${px},${py}`;
+      }
+    }
+    return path;
+  };
+  var generateNeonPath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize
+  }) => {
+    const height = _height || cellSize * 0.9;
+    const width = _width || cellSize * 0.9;
+    const x = cellSize * j + (cellSize - width) / 2;
+    const y = cellSize * i + (cellSize - height) / 2;
+    let path = "";
+    const radius = height / 4;
+    path += `M${x + radius},${y}`;
+    path += `L${x + width - radius},${y}`;
+    path += `A${radius},${radius},0,0,1,${x + width - radius},${y + height}`;
+    path += `L${x + radius},${y + height}`;
+    path += `A${radius},${radius},0,0,1,${x + radius},${y}Z`;
+    return path;
+  };
+  var generateTechPath = ({
+    i,
+    j,
+    width: _width,
+    height: _height,
+    cellSize
+  }) => {
+    const height = _height || cellSize;
+    const width = _width || cellSize;
+    const x = cellSize * j + (cellSize - width) / 2;
+    const y = cellSize * i + (cellSize - height) / 2;
+    let path = "";
+    const notchSize = width * 0.15;
+    path += `M${x + notchSize},${y}`;
+    path += `L${x + width - notchSize},${y}`;
+    path += `L${x + width},${y + notchSize}`;
+    path += `L${x + width},${y + height - notchSize}`;
+    path += `L${x + width - notchSize},${y + height}`;
+    path += `L${x + notchSize},${y + height}`;
+    path += `L${x},${y + height - notchSize}`;
+    path += `L${x},${y + notchSize}Z`;
+    return path;
+  };
   var generateTrianglePath = ({
     i,
     j,
@@ -2409,14 +2769,40 @@
     const rounded = Number(num.toFixed(precision));
     return rounded.toString().replace(/\.?0+$/, "");
   }
+  function getImageMimeType(url) {
+    var _a;
+    if (url.startsWith("data:image/")) {
+      const match = url.match(/^data:image\/([a-z+]+);/i);
+      return match ? match[1] : null;
+    }
+    const extension = (_a = url.split(".").pop()) == null ? void 0 : _a.toLowerCase();
+    const mimeMap = {
+      "png": "png",
+      "jpg": "jpeg",
+      "jpeg": "jpeg",
+      "gif": "gif",
+      "webp": "webp",
+      "svg": "svg+xml",
+      "bmp": "bmp",
+      "ico": "x-icon"
+    };
+    return mimeMap[extension || ""] || null;
+  }
   function validateURL(url) {
     if (url.startsWith("data:image/")) {
+      const mimeType = getImageMimeType(url);
+      const supportedTypes = ["png", "jpeg", "jpg", "gif", "webp", "svg+xml", "bmp"];
+      if (mimeType && !supportedTypes.includes(mimeType)) {
+        console.warn(`Unsupported image format in data URI: ${mimeType}. Supported formats: PNG, JPEG, GIF, WebP, SVG, BMP`);
+      }
       return url;
     }
-    if (url.startsWith("https://")) {
-      return url;
-    }
-    if (url.startsWith("http://")) {
+    if (url.startsWith("https://") || url.startsWith("http://")) {
+      const mimeType = getImageMimeType(url);
+      const supportedTypes = ["png", "jpeg", "gif", "webp", "svg+xml", "bmp", "x-icon"];
+      if (mimeType && !supportedTypes.includes(mimeType)) {
+        console.warn(`Image URL appears to have unsupported format: ${mimeType}. Supported formats: PNG, JPEG, GIF, WebP, SVG, BMP, ICO. The image may not render correctly.`);
+      }
       return url;
     }
     if (!url.includes(":")) {
@@ -2527,7 +2913,7 @@
     }
   });
   var renderLogoFromConfig = (config, cellSize, forReactNative) => {
-    var _a;
+    var _a, _b, _c, _d;
     if (!((_a = config.logo) == null ? void 0 : _a.url) || forReactNative) {
       return "";
     }
@@ -2536,17 +2922,42 @@
       console.warn("Invalid or unsafe logo URL provided");
       return "";
     }
-    const height = config.logo.size * cellSize;
-    const width = config.logo.size * cellSize;
-    const centerX = (config.length - width) / 2;
-    const centerY = (config.length - height) / 2;
-    return `<image 
+    const logoSize = config.logo.size * cellSize;
+    const padding = ((_b = config.logo.padding) != null ? _b : 0) * cellSize;
+    const totalSize = logoSize + padding * 2;
+    const height = logoSize;
+    const width = logoSize;
+    const centerX = (config.length - totalSize) / 2;
+    const centerY = (config.length - totalSize) / 2;
+    const imageX = centerX + padding;
+    const imageY = centerY + padding;
+    const opacity = (_c = config.logo.opacity) != null ? _c : 1;
+    const borderRadius = (_d = config.logo.borderRadius) != null ? _d : 0;
+    const defs = borderRadius > 0 ? `
+    <defs>
+        <clipPath id="logo-clip">
+            <rect x="${formatNumber(imageX)}" y="${formatNumber(imageY)}" 
+                  width="${formatNumber(width)}" height="${formatNumber(height)}" 
+                  rx="${formatNumber(borderRadius)}" ry="${formatNumber(borderRadius)}"/>
+        </clipPath>
+    </defs>` : "";
+    const clipPathAttr = borderRadius > 0 ? ` clip-path="url(#logo-clip)"` : "";
+    const opacityAttr = opacity < 1 ? ` opacity="${formatNumber(opacity)}"` : "";
+    const backgroundRect = padding > 0 ? `
+    <rect x="${formatNumber(centerX)}" y="${formatNumber(centerY)}" 
+          width="${formatNumber(totalSize)}" height="${formatNumber(totalSize)}" 
+          fill="${config.colors.background}" 
+          rx="${formatNumber(borderRadius + padding)}"
+          ry="${formatNumber(borderRadius + padding)}"/>` : "";
+    return `${defs}
+    ${backgroundRect}
+    <image 
     id="logo" 
     href="${safeUrl}" 
     height="${formatNumber(height)}"
     width="${formatNumber(width)}" 
-    x="${formatNumber(centerX)}" 
-    y="${formatNumber(centerY)}"/>`;
+    x="${formatNumber(imageX)}" 
+    y="${formatNumber(imageY)}"${clipPathAttr}${opacityAttr}/>`;
   };
   var getLogoPathPositions = (matrixLength, size) => {
     if (size) {
@@ -3173,6 +3584,256 @@
           cellSize
         });
       }
+      case "mosaic": {
+        const x = j * cellSize;
+        const y = i * cellSize;
+        const hasLeftNeighbor = neighbors.left;
+        const hasTopNeighbor = neighbors.top;
+        const hasRightNeighbor = neighbors.right;
+        const hasBottomNeighbor = neighbors.bottom;
+        const cornerRadius = cellSize * 0.3;
+        const corners = [];
+        if (!hasTopNeighbor && !hasLeftNeighbor)
+          corners.push("top-left");
+        if (!hasTopNeighbor && !hasRightNeighbor)
+          corners.push("top-right");
+        if (!hasBottomNeighbor && !hasLeftNeighbor)
+          corners.push("bottom-left");
+        if (!hasBottomNeighbor && !hasRightNeighbor)
+          corners.push("bottom-right");
+        if (corners.length > 0) {
+          return generateRoundedCornerEyeballPath({
+            x,
+            y,
+            cellSize,
+            length: cellSize,
+            roundedCorners: corners
+          });
+        }
+        return generateSquarePath({ i, j, cellSize });
+      }
+      case "fluid": {
+        const x = j * cellSize;
+        const y = i * cellSize;
+        if (!neighbors.top && !neighbors.bottom && !neighbors.left && !neighbors.right) {
+          return generateCirclePath({ i, j, cellSize, diameter: cellSize });
+        }
+        const corners = [];
+        if (!neighbors.top || !neighbors.left)
+          corners.push("top-left");
+        if (!neighbors.top || !neighbors.right)
+          corners.push("top-right");
+        if (!neighbors.bottom || !neighbors.left)
+          corners.push("bottom-left");
+        if (!neighbors.bottom || !neighbors.right)
+          corners.push("bottom-right");
+        if (corners.length > 0) {
+          return generateRoundedCornerEyeballPath({
+            x,
+            y,
+            cellSize,
+            length: cellSize,
+            roundedCorners: corners
+          });
+        }
+        return generateSquarePath({ i, j, cellSize });
+      }
+      case "edge-cut": {
+        const x = j * cellSize;
+        const y = i * cellSize;
+        if (!neighbors.top && !neighbors.left) {
+          return generateRoundedCornerEyeballPath({
+            x,
+            y,
+            cellSize,
+            length: cellSize,
+            roundedCorners: []
+          });
+        }
+        if (!neighbors.top && !neighbors.right) {
+          return generateRoundedCornerEyeballPath({
+            x,
+            y,
+            cellSize,
+            length: cellSize,
+            roundedCorners: []
+          });
+        }
+        if (!neighbors.bottom && !neighbors.left) {
+          return generateRoundedCornerEyeballPath({
+            x,
+            y,
+            cellSize,
+            length: cellSize,
+            roundedCorners: []
+          });
+        }
+        if (!neighbors.bottom && !neighbors.right) {
+          return generateRoundedCornerEyeballPath({
+            x,
+            y,
+            cellSize,
+            length: cellSize,
+            roundedCorners: []
+          });
+        }
+        return generateSquarePath({ i, j, cellSize });
+      }
+      case "japanese": {
+        const x = j * cellSize;
+        const y = i * cellSize;
+        const shrink = cellSize * 0.15;
+        if (!neighbors.top && !neighbors.bottom && !neighbors.left && !neighbors.right) {
+          return generateCirclePath({ i, j, cellSize, diameter: cellSize - shrink });
+        }
+        const hasNeighbors = [neighbors.top, neighbors.bottom, neighbors.left, neighbors.right].filter(Boolean).length;
+        if (hasNeighbors === 1) {
+          if (neighbors.top || neighbors.bottom) {
+            return generateSquarePath({
+              i,
+              j,
+              height: cellSize,
+              width: cellSize - shrink,
+              cellSize
+            });
+          } else {
+            return generateSquarePath({
+              i,
+              j,
+              height: cellSize - shrink,
+              width: cellSize,
+              cellSize
+            });
+          }
+        }
+        return generateSquarePath({ i, j, cellSize });
+      }
+      case "hexagon": {
+        return generateHexagonPath({
+          i,
+          j,
+          height: cellSize,
+          width: cellSize,
+          cellSize
+        });
+      }
+      case "wave": {
+        return generateWavePath({
+          i,
+          j,
+          height: cellSize,
+          width: cellSize,
+          cellSize
+        });
+      }
+      case "leaf": {
+        return generateLeafPath({
+          i,
+          j,
+          height: cellSize,
+          width: cellSize,
+          cellSize
+        });
+      }
+      case "petal": {
+        return generatePetalPath({
+          i,
+          j,
+          height: cellSize,
+          width: cellSize,
+          cellSize
+        });
+      }
+      case "octagon": {
+        return generateOctagonPath({
+          i,
+          j,
+          height: cellSize,
+          width: cellSize,
+          cellSize
+        });
+      }
+      case "cross": {
+        return generateCrossPath({
+          i,
+          j,
+          height: cellSize,
+          width: cellSize,
+          cellSize
+        });
+      }
+      case "pill": {
+        return generatePillPath({
+          i,
+          j,
+          height: cellSize,
+          width: cellSize,
+          cellSize
+        });
+      }
+      case "crystal": {
+        return generateCrystalPath({
+          i,
+          j,
+          height: cellSize,
+          width: cellSize,
+          cellSize
+        });
+      }
+      case "bubble": {
+        return generateBubblePath({
+          i,
+          j,
+          height: cellSize,
+          width: cellSize,
+          cellSize
+        });
+      }
+      case "tribal": {
+        return generateTribalPath({
+          i,
+          j,
+          height: cellSize,
+          width: cellSize,
+          cellSize
+        });
+      }
+      case "zigzag": {
+        return generateZigzagPath({
+          i,
+          j,
+          height: cellSize,
+          width: cellSize,
+          cellSize
+        });
+      }
+      case "spiral": {
+        return generateSpiralPath({
+          i,
+          j,
+          height: cellSize,
+          width: cellSize,
+          cellSize
+        });
+      }
+      case "neon": {
+        return generateNeonPath({
+          i,
+          j,
+          height: cellSize,
+          width: cellSize,
+          cellSize
+        });
+      }
+      case "tech": {
+        return generateTechPath({
+          i,
+          j,
+          height: cellSize,
+          width: cellSize,
+          cellSize
+        });
+      }
       default:
         return path;
     }
@@ -3190,83 +3851,79 @@
     var _a, _b;
     const matrix = paramMatrix;
     const cellSize = size / matrix.length;
-    const eyeBallPositions = getEyeBallPositions(matrix.length);
-    const eyeFramePositions = getEyeFramePositions(matrix.length);
-    const logoPathPositions = getLogoPathPositions(matrix.length, (_a = config.logo) == null ? void 0 : _a.size);
+    const matrixLength = matrix.length;
+    const eyeBallPositions = getEyeBallPositions(matrixLength);
+    const eyeFramePositions = getEyeFramePositions(matrixLength);
+    const logoPathPositions = getLogoPathPositions(matrixLength, (_a = config.logo) == null ? void 0 : _a.size);
+    const eyeBallSet = new Set(eyeBallPositions.map(([i, j]) => `${i},${j}`));
+    const eyeFrameSet = new Set(eyeFramePositions.map(([i, j]) => `${i},${j}`));
+    const logoSet = new Set(logoPathPositions.map(([i, j]) => `${i},${j}`));
     let path = "";
     if ((_b = config.logo) == null ? void 0 : _b.removeBackground) {
-      matrix.forEach((row, i) => {
-        row.forEach((_, j) => {
-          for (const pos of logoPathPositions) {
-            if (pos[0] === i && pos[1] === j) {
-              matrix[i][j] = 0;
-            }
+      for (let i = 0; i < matrixLength; i++) {
+        for (let j = 0; j < matrixLength; j++) {
+          if (logoSet.has(`${i},${j}`)) {
+            matrix[i][j] = 0;
           }
-        });
-      });
+        }
+      }
     }
     matrix.forEach((row, i) => {
       row.forEach((column, j) => {
         if (column) {
-          const neighbors = checkNeighbors({ matrix, i, j });
-          const isXLast = j === matrix.length - 1;
-          const isXFirst = j === 0;
-          const isYLast = i === matrix.length - 1;
-          const isYFirst = i === 0;
-          for (const pos of eyeFramePositions) {
-            if (pos[0] === i && pos[1] === j) {
-              if (eyeFrameOnly) {
-                path += pathGenerator({
-                  config,
-                  i,
-                  j,
-                  isXFirst,
-                  isXLast,
-                  isYFirst,
-                  isYLast,
-                  neighbors,
-                  cellSize
-                });
-              }
-              if (config.shapes.eyeFrame !== "body") {
-                return;
-              }
+          const posKey = `${i},${j}`;
+          if (eyeFrameSet.has(posKey)) {
+            if (eyeFrameOnly) {
+              const neighbors = checkNeighbors({ matrix, i, j });
+              path += pathGenerator({
+                config,
+                i,
+                j,
+                isXFirst: j === 0,
+                isXLast: j === matrixLength - 1,
+                isYFirst: i === 0,
+                isYLast: i === matrixLength - 1,
+                neighbors,
+                cellSize
+              });
+            }
+            if (config.shapes.eyeFrame !== "body") {
+              return;
             }
           }
-          for (const pos of eyeBallPositions) {
-            if (pos[0] === i && pos[1] === j) {
-              if (eyeballOnly) {
-                path += pathGenerator({
-                  config,
-                  i,
-                  j,
-                  isXFirst,
-                  isXLast,
-                  isYFirst,
-                  isYLast,
-                  neighbors,
-                  cellSize
-                });
-              }
-              if (config.shapes.eyeball !== "body") {
-                return;
-              }
+          if (eyeBallSet.has(posKey)) {
+            if (eyeballOnly) {
+              const neighbors = checkNeighbors({ matrix, i, j });
+              path += pathGenerator({
+                config,
+                i,
+                j,
+                isXFirst: j === 0,
+                isXLast: j === matrixLength - 1,
+                isYFirst: i === 0,
+                isYLast: i === matrixLength - 1,
+                neighbors,
+                cellSize
+              });
+            }
+            if (config.shapes.eyeball !== "body") {
+              return;
             }
           }
-          if (eyeballOnly || eyeFrameOnly) {
-            return;
+          if (!eyeballOnly && !eyeFrameOnly) {
+            const neighbors = checkNeighbors({ matrix, i, j });
+            path += pathGenerator({
+              config,
+              i,
+              j,
+              isXFirst: j === 0,
+              isXLast: j === matrixLength - 1,
+              isYFirst: i === 0,
+              isYLast: i === matrixLength - 1,
+              neighbors,
+              cellSize
+            });
           }
-          path += pathGenerator({
-            config,
-            i,
-            j,
-            isXFirst,
-            isXLast,
-            isYFirst,
-            isYLast,
-            neighbors,
-            cellSize
-          });
         }
       });
     });
@@ -3480,11 +4137,23 @@
     if (!configInput.value || typeof configInput.value !== "string") {
       throw new Error("Config value is required and must be a string");
     }
+    if (configInput.value.length === 0) {
+      throw new Error("Config value cannot be an empty string");
+    }
+    if (configInput.value.length > 7089) {
+      throw new Error("Config value exceeds maximum QR code capacity (7089 characters)");
+    }
     if (configInput.length !== void 0 && (typeof configInput.length !== "number" || configInput.length <= 0)) {
       throw new Error("Config length must be a positive number");
     }
+    if (configInput.length !== void 0 && configInput.length > 1e4) {
+      throw new Error("Config length is too large (maximum: 10000px)");
+    }
     if (configInput.padding !== void 0 && (typeof configInput.padding !== "number" || configInput.padding < 0)) {
       throw new Error("Config padding must be a non-negative number");
+    }
+    if (configInput.padding !== void 0 && configInput.padding > 500) {
+      throw new Error("Config padding is too large (maximum: 500px)");
     }
     return true;
   };
@@ -3494,16 +4163,17 @@
       validateConfigInput(configInput);
       const config = createConfig(configInput);
       const matrix = generateMatrix(config.value, config.errorCorrectionLevel);
-      const cellSize = config.length / matrix.length;
+      const matrixLength = matrix.length;
+      const cellSize = config.length / matrixLength;
       const path = cleanSVGPath(generatePath({ matrix, size: config.length, config }));
-      const defsContent = [
-        generateGradientByConfig(config),
-        renderLogoFromConfig(config, cellSize, options == null ? void 0 : options.forReactNative)
-      ].filter(Boolean).join("\n    ");
-      const viewBoxMinX = formatNumber(-config.padding);
-      const viewBoxMinY = formatNumber(-config.padding);
-      const viewBoxWidth = formatNumber(config.length + config.padding * 2);
-      const viewBoxHeight = formatNumber(config.length + config.padding * 2);
+      const gradientDef = generateGradientByConfig(config);
+      const logoDef = renderLogoFromConfig(config, cellSize, options == null ? void 0 : options.forReactNative);
+      const defsContent = [gradientDef, logoDef].filter(Boolean).join("\n    ");
+      const padding = config.padding;
+      const viewBoxMinX = formatNumber(-padding);
+      const viewBoxMinY = formatNumber(-padding);
+      const viewBoxWidth = formatNumber(config.length + padding * 2);
+      const viewBoxHeight = formatNumber(config.length + padding * 2);
       const backgroundColor = validateColor(
         isTransparent(config.colors.background) ? "none" : config.colors.background
       );

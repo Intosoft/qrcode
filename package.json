@@ -11,7 +11,8 @@
         "url": "git+https://github.com/Intosoft/qrcode.git"
     },
     "scripts": {
-        "build": "rimraf ./dist && tsup && yarn build:packages",
+        "build": "rimraf ./dist && tsup",
+        "build:full": "rimraf ./dist && tsup && yarn build:packages",
         "build:web": "rimraf ./dist && tsup",
         "build:packages": "yarn workspaces foreach --parallel run build",
         "build:native": "./scripts/build-native.sh",

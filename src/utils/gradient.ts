@@ -1,12 +1,43 @@
-import { Config } from '../config';
+import { Config, ColorValue, GradientConfig } from '../config';
 
-export const isGradientColor = (color: string) =>
-    color.includes('linear-gradient') || 
-    color.includes('radial-gradient') || 
-    color.includes('conic-gradient');
+// Check if a color value is a gradient
+export const isGradientColor = (color: ColorValue): boolean => {
+    if (typeof color === 'string') {
+        return (
+            color.includes('linear-gradient') ||
+            color.includes('radial-gradient') ||
+            color.includes('conic-gradient')
+        );
+    }
+    // Check if it's a GradientConfig object
+    return typeof color === 'object' && color !== null && 'type' in color && 'stops' in color;
+};
+
+// Convert GradientConfig to CSS gradient string
+const gradientConfigToString = (gradient: GradientConfig): string => {
+    const { type, angle, stops } = gradient;
+    const sortedStops = [...stops].sort((a, b) => a.offset - b.offset);
+    const colorString = sortedStops.map((stop) => `${stop.color} ${stop.offset}%`).join(', ');
+
+    if (type === 'linear') {
+        return `linear-gradient(${angle || 90}deg, ${colorString})`;
+    } else {
+        return `radial-gradient(circle, ${colorString})`;
+    }
+};
+
+// Normalize color value to string
+export const normalizeColorValue = (color: ColorValue): string => {
+    if (typeof color === 'string') {
+        return color;
+    }
+    return gradientConfigToString(color);
+};
 
 const parseLinearGradient = (input: string) => {
-    const matches = Array.from(input.matchAll(/((?:rgb|rgba|hsl|hsla|#[0-9a-f]{3,8}|[a-z]+)?(?:\([^)]+\))?)\s+(\d+%)/gi));
+    const matches = Array.from(
+        input.matchAll(/((?:rgb|rgba|hsl|hsla|#[0-9a-f]{3,8}|[a-z]+)?(?:\([^)]+\))?)\s+(\d+%)/gi),
+    );
 
     const angleMatch = input.match(/(\d+)deg/i);
     const angle = angleMatch ? angleMatch[1] : '0';
@@ -17,7 +48,9 @@ const parseLinearGradient = (input: string) => {
     }));
 
     if (stops.length === 0) {
-        const colorMatches = input.match(/(#[0-9a-f]{3,8}|rgb\([^)]+\)|rgba\([^)]+\)|hsl\([^)]+\)|hsla\([^)]+\)|[a-z]+)/gi);
+        const colorMatches = input.match(
+            /(#[0-9a-f]{3,8}|rgb\([^)]+\)|rgba\([^)]+\)|hsl\([^)]+\)|hsla\([^)]+\)|[a-z]+)/gi,
+        );
         if (colorMatches && colorMatches.length >= 2) {
             return {
                 angle,
@@ -34,7 +67,9 @@ const parseLinearGradient = (input: string) => {
 };
 
 const parseRadialGradient = (input: string) => {
-    const matches = Array.from(input.matchAll(/((?:rgb|rgba|hsl|hsla|#[0-9a-f]{3,8}|[a-z]+)?(?:\([^)]+\))?)\s+(\d+%)/gi));
+    const matches = Array.from(
+        input.matchAll(/((?:rgb|rgba|hsl|hsla|#[0-9a-f]{3,8}|[a-z]+)?(?:\([^)]+\))?)\s+(\d+%)/gi),
+    );
 
     const stops = matches.map((match) => ({
         color: match[1].trim(),
@@ -42,7 +77,9 @@ const parseRadialGradient = (input: string) => {
     }));
 
     if (stops.length === 0) {
-        const colorMatches = input.match(/(#[0-9a-f]{3,8}|rgb\([^)]+\)|rgba\([^)]+\)|hsl\([^)]+\)|hsla\([^)]+\)|[a-z]+)/gi);
+        const colorMatches = input.match(
+            /(#[0-9a-f]{3,8}|rgb\([^)]+\)|rgba\([^)]+\)|hsl\([^)]+\)|hsla\([^)]+\)|[a-z]+)/gi,
+        );
         if (colorMatches && colorMatches.length >= 2) {
             return colorMatches.map((color, index) => ({
                 color: color.trim(),
@@ -109,14 +146,22 @@ const generateSVGGradient = (color: string, id: string) => {
 export const generateGradientByConfig = (config: Config) => {
     let svgString = '';
 
+    if (isGradientColor(config.colors.background)) {
+        const backgroundColor = normalizeColorValue(config.colors.background);
+        svgString += generateSVGGradient(backgroundColor, 'background');
+    }
+
     if (isGradientColor(config.colors.body)) {
-        svgString += generateSVGGradient(config.colors.body, 'body');
+        const bodyColor = normalizeColorValue(config.colors.body);
+        svgString += generateSVGGradient(bodyColor, 'body');
     }
     if (isGradientColor(config.colors.eyeFrame.topLeft)) {
-        svgString += generateSVGGradient(config.colors.eyeFrame.topLeft, 'eyeFrame');
+        const eyeFrameColor = normalizeColorValue(config.colors.eyeFrame.topLeft);
+        svgString += generateSVGGradient(eyeFrameColor, 'eyeFrame');
     }
     if (isGradientColor(config.colors.eyeball.topLeft)) {
-        svgString += generateSVGGradient(config.colors.eyeball.topLeft, 'eyeball');
+        const eyeballColor = normalizeColorValue(config.colors.eyeball.topLeft);
+        svgString += generateSVGGradient(eyeballColor, 'eyeball');
     }
 
     return svgString;

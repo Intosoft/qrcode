@@ -1,5 +1,19 @@
 import { QRCodeErrorCorrectionLevel } from 'qrcode';
 
+// Gradient support
+export interface GradientStop {
+    color: string;
+    offset: number;
+}
+
+export interface GradientConfig {
+    type: 'linear' | 'radial';
+    angle?: number;
+    stops: GradientStop[];
+}
+
+export type ColorValue = string | GradientConfig;
+
 export type EyeFrameShape =
     | 'body'
     | 'square'
@@ -97,17 +111,17 @@ export interface Config {
         eyeball: EyeballShape;
     };
     colors: {
-        background: string;
-        body: string;
+        background: ColorValue;
+        body: ColorValue;
         eyeFrame: {
-            topLeft: string;
-            topRight: string;
-            bottomLeft: string;
+            topLeft: ColorValue;
+            topRight: ColorValue;
+            bottomLeft: ColorValue;
         };
         eyeball: {
-            topLeft: string;
-            topRight: string;
-            bottomLeft: string;
+            topLeft: ColorValue;
+            topRight: ColorValue;
+            bottomLeft: ColorValue;
         };
     };
 }
@@ -132,17 +146,17 @@ export interface ConfigInput {
         eyeball?: EyeballShape;
     };
     colors?: {
-        background?: string;
-        body?: string;
+        background?: ColorValue;
+        body?: ColorValue;
         eyeFrame?: {
-            topLeft?: string;
-            topRight?: string;
-            bottomLeft?: string;
+            topLeft?: ColorValue;
+            topRight?: ColorValue;
+            bottomLeft?: ColorValue;
         };
         eyeball?: {
-            topLeft?: string;
-            topRight?: string;
-            bottomLeft?: string;
+            topLeft?: ColorValue;
+            topRight?: ColorValue;
+            bottomLeft?: ColorValue;
         };
     };
 }

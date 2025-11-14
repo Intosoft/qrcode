@@ -1,4 +1,4 @@
-import { Config, EyeFrameShape, EyeballShape } from './config';
+import { Config, EyeFrameShape, EyeballShape, ColorValue } from './config';
 
 interface StylePathGeneratorParams {
     matrixLength: number;
@@ -8,7 +8,7 @@ type EyePosition = 'topLeft' | 'topRight' | 'bottomLeft';
 
 export interface GenerateEyeballSVGParams {
     shape: EyeballShape;
-    color: string;
+    color: ColorValue;
     size: number;
     matrixLength: number;
     position: EyePosition;
@@ -19,7 +19,7 @@ export interface GenerateEyeballSVGParams {
 
 export interface GenerateEyeFrameSVGParams {
     shape: EyeFrameShape;
-    color: string;
+    color: ColorValue;
     size: number;
     matrixLength: number;
     position: EyePosition;

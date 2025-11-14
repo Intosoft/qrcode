@@ -1,10 +1,23 @@
-import { generateGradientByConfig, isGradientColor } from './utils/gradient';
-import { ConfigInput, createConfig } from './config';
+import { generateGradientByConfig, isGradientColor, normalizeColorValue } from './utils/gradient';
+import { ConfigInput, createConfig, ColorValue } from './config';
 import { generateEyeballSVGFromConfig } from './eyeball';
 import { generateEyeFrameSVGFromConfig } from './eyeframes';
 import { generatePath } from './path';
-import { generateMatrix, renderLogoFromConfig, isTransparent } from './utils';
+import { generateMatrix, renderLogoFromConfig } from './utils';
 import { cleanSVGPath, validateColor, formatNumber, validateSVG } from './utils/svg';
+
+// Check if color is transparent
+function isTransparent(color: ColorValue): boolean {
+    if (typeof color === 'string') {
+        const normalized = color.toLowerCase();
+        return (
+            normalized === 'transparent' ||
+            normalized === 'none' ||
+            (normalized.includes('rgba(') && normalized.includes(',0)'))
+        );
+    }
+    return false;
+}
 
 export interface ReactNativeQRResult {
     svgString: string;
@@ -25,11 +38,11 @@ const validateConfigInput = (input: unknown): input is ConfigInput => {
     if (!configInput.value || typeof configInput.value !== 'string') {
         throw new Error('Config value is required and must be a string');
     }
-    
+
     if (configInput.value.length === 0) {
         throw new Error('Config value cannot be an empty string');
     }
-    
+
     if (configInput.value.length > 7089) {
         throw new Error('Config value exceeds maximum QR code capacity (7089 characters)');
     }
@@ -40,7 +53,7 @@ const validateConfigInput = (input: unknown): input is ConfigInput => {
     ) {
         throw new Error('Config length must be a positive number');
     }
-    
+
     if (configInput.length !== undefined && configInput.length > 10000) {
         throw new Error('Config length is too large (maximum: 10000px)');
     }
@@ -51,7 +64,7 @@ const validateConfigInput = (input: unknown): input is ConfigInput => {
     ) {
         throw new Error('Config padding must be a non-negative number');
     }
-    
+
     if (configInput.padding !== undefined && configInput.padding > 500) {
         throw new Error('Config padding is too large (maximum: 500px)');
     }
@@ -75,15 +88,13 @@ export function generateSVGString(
         const matrix = generateMatrix(config.value, config.errorCorrectionLevel);
         const matrixLength = matrix.length;
         const cellSize = config.length / matrixLength;
-        
+
         const path = cleanSVGPath(generatePath({ matrix, size: config.length, config }));
 
         const gradientDef = generateGradientByConfig(config);
         const logoDef = renderLogoFromConfig(config, cellSize, options?.forReactNative);
-        
-        const defsContent = [gradientDef, logoDef]
-            .filter(Boolean)
-            .join('\n    ');
+
+        const defsContent = [gradientDef, logoDef].filter(Boolean).join('\n    ');
 
         const padding = config.padding;
         const viewBoxMinX = formatNumber(-padding);
@@ -91,12 +102,18 @@ export function generateSVGString(
         const viewBoxWidth = formatNumber(config.length + padding * 2);
         const viewBoxHeight = formatNumber(config.length + padding * 2);
 
-        const backgroundColor = validateColor(
-            isTransparent(config.colors.background) ? 'none' : config.colors.background,
-        );
-        const bodyFill = validateColor(
-            isGradientColor(config.colors.body) ? 'url(#body)' : config.colors.body,
-        );
+        const backgroundIsGradient = isGradientColor(config.colors.background);
+        const bgColorStr = isTransparent(config.colors.background)
+            ? 'none'
+            : backgroundIsGradient
+              ? 'url(#background)'
+              : normalizeColorValue(config.colors.background);
+        const backgroundColor = validateColor(bgColorStr);
+
+        const bodyColorStr = isGradientColor(config.colors.body)
+            ? 'url(#body)'
+            : normalizeColorValue(config.colors.body);
+        const bodyFill = validateColor(bodyColorStr);
 
         const svgParts = [
             `<svg`,

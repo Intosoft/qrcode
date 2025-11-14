@@ -32,8 +32,15 @@ export function validateColor(color: string): string {
 
 export function formatNumber(num: number, precision: number = 3): string {
     const rounded = Number(num.toFixed(precision));
-
-    return rounded.toString().replace(/\.?0+$/, '');
+    const str = rounded.toString();
+    
+    // Only remove trailing zeros after a decimal point
+    // Don't remove zeros that are part of the integer (like 500, 300, etc.)
+    if (str.includes('.')) {
+        return str.replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '');
+    }
+    
+    return str;
 }
 
 export function formatViewBox(minX: number, minY: number, width: number, height: number): string {
