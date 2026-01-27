@@ -189,7 +189,7 @@ export const generateEyeFrameSVGFromConfig = (
             size: config.length,
             matrixLength,
             position: 'topRight',
-            pathOnly: colors.topLeft === 'body',
+            pathOnly: colors.topRight === 'body',
             config,
             matrix,
         });
@@ -205,7 +205,7 @@ export const generateEyeFrameSVGFromConfig = (
             size: config.length,
             matrixLength,
             position: 'bottomLeft',
-            pathOnly: colors.topLeft === 'body',
+            pathOnly: colors.bottomLeft === 'body',
             config,
             matrix,
         });

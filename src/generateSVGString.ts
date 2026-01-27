@@ -143,13 +143,6 @@ export function generateSVGString(
 
         const svg = svgParts;
 
-        if (process.env.NODE_ENV === 'development') {
-            const validation = validateSVG(svg);
-            if (!validation.valid) {
-                console.warn('SVG validation warnings:', validation.errors);
-            }
-        }
-
         if (options?.forReactNative) {
             return {
                 svgString: svg,
@@ -159,9 +152,7 @@ export function generateSVGString(
 
         return svg;
     } catch (error) {
-        console.error('Error generating SVG string:', error);
-        throw new Error(
-            `Failed to generate QR code: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        );
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        throw new Error(`Failed to generate QR code: ${message}`);
     }
 }

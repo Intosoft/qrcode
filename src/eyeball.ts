@@ -243,7 +243,7 @@ export const generateEyeballSVGFromConfig = (
             size: config.length,
             matrixLength,
             position: 'topRight',
-            pathOnly: colors.bottomLeft === 'body',
+            pathOnly: colors.topRight === 'body',
             matrix,
             config,
         });

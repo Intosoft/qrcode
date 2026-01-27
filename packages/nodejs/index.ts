@@ -1,53 +1,44 @@
 import { promises as fs } from 'fs';
-import { join, extname, dirname } from 'path';
+import { extname, dirname } from 'path';
 import { generateSVGString, type Config, type ConfigInput } from '@intosoft/qrcode';
 import sharp from 'sharp';
 
-export interface SaveQRCodeOptions extends ConfigInput {
+export interface SaveQRCodeOptions {
+    config: ConfigInput;
     filePath: string;
-
     format?: 'svg' | 'png' | 'jpeg' | 'webp' | 'avif';
-
     quality?: number;
-
     progressive?: boolean;
-
     compressionLevel?: number;
-
     createDirectories?: boolean;
 }
 
-export interface QRCodeBufferOptions extends ConfigInput {
+export interface QRCodeBufferOptions {
+    config: ConfigInput;
     format: 'png' | 'jpeg' | 'webp' | 'avif';
-
     quality?: number;
-
     progressive?: boolean;
-
     compressionLevel?: number;
 }
 
-export interface QRCodeMiddlewareOptions extends ConfigInput {
+export interface QRCodeMiddlewareOptions {
+    defaultConfig?: Partial<ConfigInput>;
     textParam?: string;
-
     format?: 'svg' | 'png' | 'jpeg' | 'webp' | 'avif';
-
     quality?: number;
-
     cacheControl?: string;
-
     filename?: string | ((text: string) => string);
 }
 
-export async function saveQRCodeToFile(text: string, options: SaveQRCodeOptions): Promise<void> {
+export async function saveQRCodeToFile(options: SaveQRCodeOptions): Promise<void> {
     const {
+        config,
         filePath,
         format,
         quality = 90,
         progressive = false,
         compressionLevel = 6,
         createDirectories = true,
-        ...qrOptions
     } = options;
 
     if (!filePath) {
@@ -63,11 +54,11 @@ export async function saveQRCodeToFile(text: string, options: SaveQRCodeOptions)
         const outputFormat = format || getFormatFromExtension(filePath);
 
         if (outputFormat === 'svg') {
-            const svgString = await generateSVGString(text, qrOptions);
+            const svgString = generateSVGString(config);
             await fs.writeFile(filePath, svgString, 'utf-8');
         } else {
-            const buffer = await generateQRCodeBuffer(text, {
-                ...qrOptions,
+            const buffer = await generateQRCodeBuffer({
+                config,
                 format: outputFormat,
                 quality,
                 progressive,
@@ -82,20 +73,17 @@ export async function saveQRCodeToFile(text: string, options: SaveQRCodeOptions)
     }
 }
 
-export async function generateQRCodeBuffer(
-    text: string,
-    options: QRCodeBufferOptions,
-): Promise<Buffer> {
+export async function generateQRCodeBuffer(options: QRCodeBufferOptions): Promise<Buffer> {
     const {
+        config,
         format,
         quality = 90,
         progressive = false,
         compressionLevel = 6,
-        ...qrOptions
     } = options;
 
     try {
-        const svgString = await generateSVGString(text, qrOptions);
+        const svgString = generateSVGString(config);
         const svgBuffer = Buffer.from(svgString);
 
         let sharpInstance = sharp(svgBuffer);
@@ -137,15 +125,15 @@ export async function generateQRCodeBuffer(
 
 export function createQRCodeMiddleware(options: QRCodeMiddlewareOptions = {}) {
     const {
+        defaultConfig = {},
         textParam = 'text',
         format = 'png',
         quality = 90,
         cacheControl,
         filename,
-        ...defaultQROptions
     } = options;
 
-    return async (req: any, res: any, next: any) => {
+    return async (req: any, res: any, _next: any) => {
         try {
             const text = req.query[textParam] || req.params[textParam];
 
@@ -155,10 +143,11 @@ export function createQRCodeMiddleware(options: QRCodeMiddlewareOptions = {}) {
                 });
             }
 
-            const qrOptions = {
-                ...defaultQROptions,
-                width: parseInt(req.query.width) || defaultQROptions.width,
-                height: parseInt(req.query.height) || defaultQROptions.height,
+            const config: ConfigInput = {
+                ...defaultConfig,
+                value: text,
+                length: parseInt(req.query.length) || defaultConfig.length,
+                padding: parseInt(req.query.padding) || defaultConfig.padding,
             };
 
             const mimeType = getMimeType(format);
@@ -174,12 +163,12 @@ export function createQRCodeMiddleware(options: QRCodeMiddlewareOptions = {}) {
             }
 
             if (format === 'svg') {
-                const svgString = await generateSVGString(text, qrOptions);
+                const svgString = generateSVGString(config);
                 res.send(svgString);
             } else {
-                const buffer = await generateQRCodeBuffer(text, {
-                    ...qrOptions,
-                    format: format as any,
+                const buffer = await generateQRCodeBuffer({
+                    config,
+                    format: format as 'png' | 'jpeg' | 'webp' | 'avif',
                     quality,
                 });
                 res.send(buffer);
@@ -194,19 +183,22 @@ export function createQRCodeMiddleware(options: QRCodeMiddlewareOptions = {}) {
     };
 }
 
+export interface BatchItem {
+    config: ConfigInput;
+    filePath: string;
+    format?: 'svg' | 'png' | 'jpeg' | 'webp' | 'avif';
+}
+
 export async function batchGenerateQRCodes(
-    items: Array<{
-        text: string;
-        filePath: string;
-        [key: string]: any;
-    }>,
-    baseOptions: Partial<SaveQRCodeOptions> = {},
+    items: BatchItem[],
+    baseOptions: Partial<Omit<SaveQRCodeOptions, 'config' | 'filePath'>> = {},
 ): Promise<void> {
-    const promises = items.map(({ text, filePath, ...itemOptions }) =>
-        saveQRCodeToFile(text, {
+    const promises = items.map(({ config, filePath, format }) =>
+        saveQRCodeToFile({
             ...baseOptions,
-            ...itemOptions,
+            config,
             filePath,
+            format,
         }),
     );
 
@@ -219,24 +211,26 @@ export async function batchGenerateQRCodes(
     }
 }
 
-export async function streamQRCodeGeneration(
-    texts: Iterable<string>,
-    generateFileName: (text: string, index: number) => string,
-    options: Partial<SaveQRCodeOptions> = {},
-): Promise<void> {
+export async function* streamQRCodeGeneration(
+    configs: Iterable<ConfigInput>,
+    generateFileName: (config: ConfigInput, index: number) => string,
+    options: Partial<Omit<SaveQRCodeOptions, 'config' | 'filePath'>> = {},
+): AsyncGenerator<{ index: number; filePath: string }, void, unknown> {
     let index = 0;
 
-    for (const text of texts) {
-        const filePath = generateFileName(text, index);
+    for (const config of configs) {
+        const filePath = generateFileName(config, index);
 
         try {
-            await saveQRCodeToFile(text, {
+            await saveQRCodeToFile({
                 ...options,
+                config,
                 filePath,
             });
+            yield { index, filePath };
             index++;
         } catch (error) {
-            console.error(`Failed to generate QR code for "${text}":`, error);
+            console.error(`Failed to generate QR code for index ${index}:`, error);
             throw error;
         }
     }

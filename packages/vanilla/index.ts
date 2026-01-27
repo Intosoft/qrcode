@@ -1,37 +1,30 @@
 import { generateSVGString, type Config, type ConfigInput } from '@intosoft/qrcode';
 
-export interface QRCodeElementOptions extends ConfigInput {
+export interface QRCodeElementOptions {
     element: HTMLElement;
-
+    config: ConfigInput;
     replace?: boolean;
-
     className?: string;
-
     style?: Partial<CSSStyleDeclaration>;
 }
 
-export interface QRCodeDownloadOptions extends ConfigInput {
+export interface QRCodeDownloadOptions {
+    config: ConfigInput;
     filename?: string;
-
     format?: 'svg' | 'png' | 'jpeg';
-
     quality?: number;
-
     scale?: number;
 }
 
-export async function createQRCodeElement(
-    text: string,
-    options: QRCodeElementOptions,
-): Promise<SVGElement> {
-    const { element, replace = true, className, style, ...qrOptions } = options;
+export function createQRCodeElement(options: QRCodeElementOptions): SVGElement {
+    const { element, config, replace = true, className, style } = options;
 
     if (!element) {
         throw new Error('Target element is required');
     }
 
     try {
-        const svgString = await generateSVGString(text, qrOptions);
+        const svgString = generateSVGString(config);
 
         const parser = new DOMParser();
         const doc = parser.parseFromString(svgString, 'image/svg+xml');
@@ -59,71 +52,78 @@ export async function createQRCodeElement(
     }
 }
 
-export async function downloadQRCode(
-    text: string,
-    options: QRCodeDownloadOptions = {},
-): Promise<void> {
-    const { filename = 'qrcode', format = 'svg', quality = 0.9, scale = 1, ...qrOptions } = options;
+export function downloadQRCode(options: QRCodeDownloadOptions): Promise<void> {
+    const { config, filename = 'qrcode', format = 'svg', quality = 0.9, scale = 1 } = options;
 
-    try {
-        const svgString = await generateSVGString(text, qrOptions);
+    return new Promise((resolve, reject) => {
+        try {
+            const svgString = generateSVGString(config);
 
-        if (format === 'svg') {
-            downloadFile(svgString, `${filename}.svg`, 'image/svg+xml');
-        } else {
-            const canvas = await svgToCanvas(svgString, scale);
-            const mimeType = format === 'png' ? 'image/png' : 'image/jpeg';
+            if (format === 'svg') {
+                downloadFile(svgString, `${filename}.svg`, 'image/svg+xml');
+                resolve();
+            } else {
+                svgToCanvas(svgString, scale)
+                    .then((canvas) => {
+                        const mimeType = format === 'png' ? 'image/png' : 'image/jpeg';
 
-            canvas.toBlob(
-                (blob) => {
-                    if (blob) {
-                        const url = URL.createObjectURL(blob);
-                        const link = document.createElement('a');
-                        link.href = url;
-                        link.download = `${filename}.${format}`;
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                        URL.revokeObjectURL(url);
-                    }
-                },
-                mimeType,
-                quality,
-            );
+                        canvas.toBlob(
+                            (blob) => {
+                                if (blob) {
+                                    const url = URL.createObjectURL(blob);
+                                    const link = document.createElement('a');
+                                    link.href = url;
+                                    link.download = `${filename}.${format}`;
+                                    document.body.appendChild(link);
+                                    link.click();
+                                    document.body.removeChild(link);
+                                    URL.revokeObjectURL(url);
+                                    resolve();
+                                } else {
+                                    reject(new Error('Failed to create blob'));
+                                }
+                            },
+                            mimeType,
+                            quality,
+                        );
+                    })
+                    .catch(reject);
+            }
+        } catch (error) {
+            reject(new Error(
+                `Failed to download QR code: ${error instanceof Error ? error.message : 'Unknown error'}`,
+            ));
         }
-    } catch (error) {
-        throw new Error(
-            `Failed to download QR code: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        );
-    }
+    });
 }
 
-export async function copyQRCodeToClipboard(
-    text: string,
-    options: ConfigInput = {},
-): Promise<void> {
+export function copyQRCodeToClipboard(config: ConfigInput): Promise<void> {
     if (!navigator.clipboard) {
-        throw new Error('Clipboard API not available');
+        return Promise.reject(new Error('Clipboard API not available'));
     }
 
     try {
-        const svgString = await generateSVGString(text, options);
-        await navigator.clipboard.writeText(svgString);
+        const svgString = generateSVGString(config);
+        return navigator.clipboard.writeText(svgString);
     } catch (error) {
-        throw new Error(
+        return Promise.reject(new Error(
             `Failed to copy QR code to clipboard: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        );
+        ));
     }
 }
 
-export async function createQRCodeDataURL(
-    text: string,
-    options: QRCodeDownloadOptions = {},
-): Promise<string> {
-    const { format = 'png', quality = 0.9, scale = 1, ...qrOptions } = options;
+export interface CreateDataURLOptions {
+    config: ConfigInput;
+    format?: 'svg' | 'png' | 'jpeg';
+    quality?: number;
+    scale?: number;
+}
+
+export async function createQRCodeDataURL(options: CreateDataURLOptions): Promise<string> {
+    const { config, format = 'png', quality = 0.9, scale = 1 } = options;
 
     try {
-        const svgString = await generateSVGString(text, qrOptions);
+        const svgString = generateSVGString(config);
 
         if (format === 'svg') {
             const encodedSvg = encodeURIComponent(svgString);
@@ -140,7 +140,7 @@ export async function createQRCodeDataURL(
     }
 }
 
-async function svgToCanvas(svgString: string, scale: number = 1): Promise<HTMLCanvasElement> {
+function svgToCanvas(svgString: string, scale: number = 1): Promise<HTMLCanvasElement> {
     return new Promise((resolve, reject) => {
         const img = new Image();
         const canvas = document.createElement('canvas');

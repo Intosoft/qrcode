@@ -1,33 +1,24 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { SvgFromXml } from 'react-native-svg';
 import { ViewStyle, View, Text } from 'react-native';
-import { generateSVGString, type Config, type ConfigInput } from '@intosoft/qrcode';
+import { generateSVGString, type Config, type ConfigInput, type ReactNativeQRResult } from '@intosoft/qrcode';
 import { ImageRN } from './Image';
 
-export interface QRCodeProps extends ConfigInput {
-    text: string;
-
+export interface QRCodeProps {
+    config: ConfigInput;
     style?: ViewStyle;
-
     svgStyle?: ViewStyle;
-
     logoSource?: string | number;
-
     logoSize?: number;
-
     logoStyle?: ViewStyle;
-
     loadingComponent?: React.ReactNode;
-
     errorComponent?: React.ReactNode;
-
     onError?: (error: Error) => void;
-
     onSuccess?: (svgString: string) => void;
 }
 
 export const QRCode: React.FC<QRCodeProps> = ({
-    text,
+    config,
     style = {},
     svgStyle = {},
     logoSource,
@@ -37,47 +28,38 @@ export const QRCode: React.FC<QRCodeProps> = ({
     errorComponent,
     onError,
     onSuccess,
-    ...qrOptions
 }) => {
-    const [svgString, setSvgString] = useState<string>('');
+    const [result, setResult] = useState<ReactNativeQRResult | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
 
     useEffect(() => {
-        if (!text) {
-            setError(new Error('Text is required'));
+        if (!config.value) {
+            setError(new Error('Config value is required'));
             setIsLoading(false);
             return;
         }
 
-        const generateQR = async () => {
-            try {
-                setIsLoading(true);
-                setError(null);
+        try {
+            setIsLoading(true);
+            setError(null);
 
-                const svg = await generateSVGString(text, {
-                    ...qrOptions,
-                    isReactNative: true,
-                });
-
-                setSvgString(svg);
-                onSuccess?.(svg);
-            } catch (err) {
-                const error = err instanceof Error ? err : new Error('Failed to generate QR code');
-                setError(error);
-                onError?.(error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        generateQR();
-    }, [text, JSON.stringify(qrOptions), onError, onSuccess]);
+            const qrResult = generateSVGString(config, { forReactNative: true }) as ReactNativeQRResult;
+            setResult(qrResult);
+            onSuccess?.(qrResult.svgString);
+        } catch (err) {
+            const error = err instanceof Error ? err : new Error('Failed to generate QR code');
+            setError(error);
+            onError?.(error);
+        } finally {
+            setIsLoading(false);
+        }
+    }, [JSON.stringify(config), onError, onSuccess]);
 
     const logoPixelSize = useMemo(() => {
-        const size = Math.min(qrOptions.width || 200, qrOptions.height || 200);
+        const size = config.length || 300;
         return size * logoSize;
-    }, [qrOptions.width, qrOptions.height, logoSize]);
+    }, [config.length, logoSize]);
 
     if (isLoading) {
         return (
@@ -87,10 +69,10 @@ export const QRCode: React.FC<QRCodeProps> = ({
         );
     }
 
-    if (error) {
+    if (error || !result) {
         return (
             <View style={[{ alignItems: 'center', justifyContent: 'center' }, style]}>
-                {errorComponent || <Text style={{ color: 'red' }}>Error: {error.message}</Text>}
+                {errorComponent || <Text style={{ color: 'red' }}>Error: {error?.message || 'Unknown error'}</Text>}
             </View>
         );
     }
@@ -106,7 +88,7 @@ export const QRCode: React.FC<QRCodeProps> = ({
                 style,
             ]}
         >
-            <SvgFromXml xml={svgString} style={svgStyle} />
+            <SvgFromXml xml={result.svgString} style={svgStyle} />
             {logoSource && (
                 <ImageRN
                     source={logoSource}
@@ -125,14 +107,14 @@ export const QRCode: React.FC<QRCodeProps> = ({
     );
 };
 
-export function useQRCode(text: string, options: ConfigInput = {}) {
-    const [svgString, setSvgString] = useState<string>('');
+export function useQRCode(config: ConfigInput) {
+    const [result, setResult] = useState<ReactNativeQRResult | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
 
-    const generateQR = async () => {
-        if (!text) {
-            setError(new Error('Text is required'));
+    const generateQR = () => {
+        if (!config.value) {
+            setError(new Error('Config value is required'));
             setIsLoading(false);
             return;
         }
@@ -141,12 +123,8 @@ export function useQRCode(text: string, options: ConfigInput = {}) {
             setIsLoading(true);
             setError(null);
 
-            const svg = await generateSVGString(text, {
-                ...options,
-                isReactNative: true,
-            });
-
-            setSvgString(svg);
+            const qrResult = generateSVGString(config, { forReactNative: true }) as ReactNativeQRResult;
+            setResult(qrResult);
         } catch (err) {
             const error = err instanceof Error ? err : new Error('Failed to generate QR code');
             setError(error);
@@ -157,17 +135,18 @@ export function useQRCode(text: string, options: ConfigInput = {}) {
 
     useEffect(() => {
         generateQR();
-    }, [text, JSON.stringify(options)]);
+    }, [JSON.stringify(config)]);
 
     return {
-        svgString,
+        svgString: result?.svgString ?? null,
+        cellSize: result?.cellSize ?? 0,
         isLoading,
         error,
         regenerate: generateQR,
     };
 }
 
-export function useQRCodeShare(text: string, options: ConfigInput = {}) {
+export function useQRCodeShare(config: ConfigInput) {
     const [isSharing, setIsSharing] = useState(false);
     const [error, setError] = useState<Error | null>(null);
 
@@ -180,16 +159,13 @@ export function useQRCodeShare(text: string, options: ConfigInput = {}) {
             setIsSharing(true);
             setError(null);
 
-            const svgString = await generateSVGString(text, {
-                ...options,
-                isReactNative: true,
-            });
+            const qrResult = generateSVGString(config, { forReactNative: true }) as ReactNativeQRResult;
 
             const { Share } = await import('react-native');
 
             await Share.share({
                 title: shareOptions?.title || 'QR Code',
-                message: shareOptions?.message || `QR Code: ${text}\n\nSVG:\n${svgString}`,
+                message: shareOptions?.message || `QR Code: ${config.value}\n\nSVG:\n${qrResult.svgString}`,
                 subject: shareOptions?.subject || 'QR Code',
             });
         } catch (err) {
@@ -207,35 +183,8 @@ export function useQRCodeShare(text: string, options: ConfigInput = {}) {
     };
 }
 
-export async function saveQRCodeToFile(
-    text: string,
-    fileName: string,
-    options: ConfigInput = {},
-): Promise<string> {
-    try {
-        const svgString = await generateSVGString(text, {
-            ...options,
-            isReactNative: true,
-        });
-
-        throw new Error(
-            'File saving requires additional setup. Please implement with react-native-fs or similar package.',
-        );
-    } catch (error) {
-        throw new Error(
-            `Failed to save QR code: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        );
-    }
+export async function generateQRCodeForReactNative(config: ConfigInput): Promise<ReactNativeQRResult> {
+    return generateSVGString(config, { forReactNative: true }) as ReactNativeQRResult;
 }
 
-export async function generateQRCodeForReactNative(
-    text: string,
-    options: ConfigInput = {},
-): Promise<string> {
-    return generateSVGString(text, {
-        ...options,
-        isReactNative: true,
-    });
-}
-
-export { generateSVGString, type Config, type ConfigInput } from '@intosoft/qrcode';
+export { generateSVGString, type Config, type ConfigInput, type ReactNativeQRResult } from '@intosoft/qrcode';

@@ -48,6 +48,7 @@ export const pathGenerator = ({
     neighbors,
     isXFirst,
     isXLast,
+    isYFirst,
     isYLast,
 }: GeneratorPathProps) => {
     const path = '';
@@ -444,45 +445,43 @@ export const pathGenerator = ({
         case 'edge-cut': {
             const x = j * cellSize;
             const y = i * cellSize;
+            const cutSize = cellSize * 0.2;
+            
+            let path = `M${x + cutSize},${y}`;
+            path += `L${x + cellSize - cutSize},${y}`;
+            
+            if (!neighbors.top && !neighbors.right) {
+                path += `L${x + cellSize},${y}`;
+            } else {
+                path += `L${x + cellSize},${y + cutSize}`;
+            }
+            
+            path += `L${x + cellSize},${y + cellSize - cutSize}`;
+            
+            if (!neighbors.bottom && !neighbors.right) {
+                path += `L${x + cellSize},${y + cellSize}`;
+            } else {
+                path += `L${x + cellSize - cutSize},${y + cellSize}`;
+            }
+            
+            path += `L${x + cutSize},${y + cellSize}`;
+            
+            if (!neighbors.bottom && !neighbors.left) {
+                path += `L${x},${y + cellSize}`;
+            } else {
+                path += `L${x},${y + cellSize - cutSize}`;
+            }
+            
+            path += `L${x},${y + cutSize}`;
             
             if (!neighbors.top && !neighbors.left) {
-                return generateRoundedCornerEyeballPath({
-                    x,
-                    y,
-                    cellSize,
-                    length: cellSize,
-                    roundedCorners: [],
-                });
+                path += `L${x},${y}`;
+            } else {
+                path += `L${x + cutSize},${y}`;
             }
-            if (!neighbors.top && !neighbors.right) {
-                return generateRoundedCornerEyeballPath({
-                    x,
-                    y,
-                    cellSize,
-                    length: cellSize,
-                    roundedCorners: [],
-                });
-            }
-            if (!neighbors.bottom && !neighbors.left) {
-                return generateRoundedCornerEyeballPath({
-                    x,
-                    y,
-                    cellSize,
-                    length: cellSize,
-                    roundedCorners: [],
-                });
-            }
-            if (!neighbors.bottom && !neighbors.right) {
-                return generateRoundedCornerEyeballPath({
-                    x,
-                    y,
-                    cellSize,
-                    length: cellSize,
-                    roundedCorners: [],
-                });
-            }
-
-            return generateSquarePath({ i, j, cellSize });
+            
+            path += 'Z';
+            return path;
         }
         case 'japanese': {
             const x = j * cellSize;

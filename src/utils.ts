@@ -176,20 +176,36 @@ export const getLogoPathPositions = (matrixLength: number, size?: number) => {
     return [];
 };
 
-export const isTransparent = (color: string) => {
-    if (color === 'transparent') {
+export const isTransparent = (color: string): boolean => {
+    const normalized = color.toLowerCase().trim();
+    
+    if (normalized === 'transparent' || normalized === 'none') {
         return true;
     }
-    if (color.startsWith('#')) {
-        return color === '#00000000' || color === '#0000';
+    
+    if (normalized.startsWith('#')) {
+        if (normalized.length === 5) {
+            return normalized[4] === '0';
+        }
+        if (normalized.length === 9) {
+            return normalized.slice(7) === '00';
+        }
+        return false;
     }
-    if (color.startsWith('rgba')) {
-        const rgbaValues = color.slice(5, -1).split(',');
-        const alpha = parseFloat(rgbaValues[3]);
-        return alpha === 0;
+    
+    if (normalized.startsWith('rgba')) {
+        const match = normalized.match(/rgba\s*\(\s*[\d.]+\s*,\s*[\d.]+\s*,\s*[\d.]+\s*,\s*([\d.]+)\s*\)/);
+        if (match) {
+            return parseFloat(match[1]) === 0;
+        }
     }
-    if (color.startsWith('rgb')) {
-        return color === 'rgba(0,0,0,0)' || color === 'rgba(0, 0, 0, 0)';
+    
+    if (normalized.startsWith('hsla')) {
+        const match = normalized.match(/hsla\s*\(\s*[\d.]+\s*,\s*[\d.%]+\s*,\s*[\d.%]+\s*,\s*([\d.]+)\s*\)/);
+        if (match) {
+            return parseFloat(match[1]) === 0;
+        }
     }
+    
     return false;
 };

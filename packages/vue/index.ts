@@ -1,4 +1,4 @@
-import { defineComponent, computed, ref, watch, PropType } from 'vue';
+import { defineComponent, computed, ref, watch, PropType, Ref, readonly } from 'vue';
 import { generateSVGString, ConfigInput } from '@intosoft/qrcode';
 
 export const QRCode = defineComponent({
@@ -117,5 +117,3 @@ export const useQRCodeDownload = (config: ConfigInput | Ref<ConfigInput>) => {
 
     return downloadQR;
 };
-
-import { Ref, readonly } from 'vue';
