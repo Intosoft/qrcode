@@ -1,6 +1,6 @@
 node_modules
 /test-svg.svg
-/dist
+# /dist - kept in git for GitHub installation support
 .DS_Store
 /web
 /examples
